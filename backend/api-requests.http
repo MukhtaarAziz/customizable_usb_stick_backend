@@ -5,12 +5,14 @@
 @adminPass = password
 @clientEmail = test@example.com
 @clientPass = password
-@adminToken = 1|ucAFRKoibH22Ix0kxYA4nGazGzRDBxhb847EF9BP8ac5f174
+@adminToken = 1|aYpC6guTDRiuhQ4gZvHD3kDDzM23LgBFY1ps35pJf85b0d9a
 @clientToken = 
+@acceptJson = application/json; charset=utf-8
 
 ### Login as Admin
 POST {{baseUrl}}/api/login
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 
 {
   "email": "{{adminEmail}}",
@@ -19,7 +21,8 @@ Content-Type: application/json
 
 ### Login as Client
 POST {{baseUrl}}/api/login
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 
 {
   "email": "{{clientEmail}}",
@@ -28,17 +31,21 @@ Content-Type: application/json
 
 ### Get current authenticated user (admin or client)
 GET {{baseUrl}}/api/me
+Accept: {{acceptJson}}
 Authorization: Bearer {{adminToken}}
 
 ### List games (public)
 GET {{baseUrl}}/api/games
+Accept: {{acceptJson}}
 
 ### List categories (public)
 GET {{baseUrl}}/api/categories
+Accept: {{acceptJson}}
 
 ### Create category (admin only)
 POST {{baseUrl}}/api/categories
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 Authorization: Bearer {{adminToken}}
 
 {
@@ -50,7 +57,8 @@ Authorization: Bearer {{adminToken}}
 
 ### Create category as client (should fail with 403)
 POST {{baseUrl}}/api/categories
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 Authorization: Bearer {{clientToken}}
 
 {
@@ -62,7 +70,8 @@ Authorization: Bearer {{clientToken}}
 
 ### Create game (admin only)
 POST {{baseUrl}}/api/games
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 Authorization: Bearer {{adminToken}}
 
 {
@@ -81,17 +90,20 @@ Authorization: Bearer {{adminToken}}
 ### Logout (admin or client)
 POST {{baseUrl}}/api/logout
 Authorization: Bearer {{adminToken}}
-
+Accept: {{acceptJson}}
 
 ### Pagination
 GET http://127.0.0.1:8000/api/games?per_page=1&page=2
+Accept: {{acceptJson}}
 
 ### Get single category (public)
 GET {{baseUrl}}/api/categories/1
+Accept: {{acceptJson}}
 
 ### Update category (admin only)
 PUT {{baseUrl}}/api/categories/1
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 Authorization: Bearer {{adminToken}}
 
 {
@@ -104,13 +116,15 @@ Authorization: Bearer {{adminToken}}
 ### Delete category (admin only)
 DELETE {{baseUrl}}/api/categories/1
 Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}
 
 ### List platforms (public)
 GET {{baseUrl}}/api/platforms
+Accept: {{acceptJson}}
 
 ### Create platform (admin only)
 POST {{baseUrl}}/api/platforms
-Content-Type: application/json
+Content-Type: {{acceptJson}}
 Authorization: Bearer {{adminToken}}
 
 {
@@ -122,7 +136,8 @@ Authorization: Bearer {{adminToken}}
 
 ### Update platform (admin only)
 PUT {{baseUrl}}/api/platforms/1
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 Authorization: Bearer {{adminToken}}
 
 {
@@ -135,13 +150,16 @@ Authorization: Bearer {{adminToken}}
 ### Delete platform (admin only)
 DELETE {{baseUrl}}/api/platforms/1
 Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}
 
 ### Get single game (public)
 GET {{baseUrl}}/api/games/1
+Accept: {{acceptJson}}
 
 ### Update game (admin only)
 PUT {{baseUrl}}/api/games/1
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 Authorization: Bearer {{adminToken}}
 
 {
@@ -160,6 +178,7 @@ Authorization: Bearer {{adminToken}}
 ### Delete game (admin only)
 DELETE {{baseUrl}}/api/games/1
 Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}
 
 ### Upload game image (admin only)
 POST {{baseUrl}}/api/games/1/images
@@ -184,16 +203,19 @@ Cover image for Stone Quest
 ### Delete game image (admin only)
 DELETE {{baseUrl}}/api/games/1/images/1
 Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}
 
 ### List USB sticks (public)
 GET {{baseUrl}}/api/usb-sticks
+Accept: {{acceptJson}}
 
 ### Get single USB stick (public)
 GET {{baseUrl}}/api/usb-sticks/1
+Accept: {{acceptJson}}
 
 ### Create USB stick (admin only)
 POST {{baseUrl}}/api/usb-sticks
-Content-Type: application/json
+Content-Type: {{acceptJson}}
 Authorization: Bearer {{adminToken}}
 
 {
@@ -207,7 +229,8 @@ Authorization: Bearer {{adminToken}}
 
 ### Update USB stick (admin only)
 PUT {{baseUrl}}/api/usb-sticks/1
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 Authorization: Bearer {{adminToken}}
 
 {
@@ -219,41 +242,272 @@ Authorization: Bearer {{adminToken}}
 ### Delete USB stick (admin only)
 DELETE {{baseUrl}}/api/usb-sticks/1
 Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}
 
 ### List governorates (public)
 GET {{baseUrl}}/api/governorates
+Accept: {{acceptJson}}
 
-### Register as customer (public)
+### ============== CUSTOMERS MANAGEMENT ==============
+
+### Register as customer with valid Korek number (public)
 POST {{baseUrl}}/api/customers
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 
 {
   "name": "Ahmed Mohammed",
-  "phone": "9647812345678",
+  "phone": "9647701234567",
   "email": "ahmed@example.com",
   "governorate_id": 1,
   "address": "Main Street, Downtown",
   "nearest_service_point": "Baghdad Central"
 }
 
+### Register as customer with valid Zain number (public)
+POST {{baseUrl}}/api/customers
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+
+{
+  "name": "Fatima Ali",
+  "phone": "9647901234567",
+  "email": "fatima@example.com",
+  "governorate_id": 2,
+  "address": "Secondary Street, Najaf",
+  "nearest_service_point": "Najaf Center"
+}
+
+### Register as customer with valid Asiacell number (public)
+POST {{baseUrl}}/api/customers
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+
+{
+  "name": "Mohammed Karim",
+  "phone": "9647801234567",
+  "email": "mohammed@example.com",
+  "governorate_id": 3,
+  "address": "Main Avenue, Karbala",
+  "nearest_service_point": "Karbala Downtown"
+}
+
+### Register as customer with invalid phone number (should fail)
+POST {{baseUrl}}/api/customers
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+
+{
+  "name": "Invalid Customer",
+  "phone": "9645001234567",
+  "email": "invalid@example.com",
+  "governorate_id": 1,
+  "address": "Test Street",
+  "nearest_service_point": "Test Center"
+}
+
+### Register as customer with short phone number (should fail)
+POST {{baseUrl}}/api/customers
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+
+{
+  "name": "Short Phone Customer",
+  "phone": "077012345",
+  "email": "short@example.com",
+  "governorate_id": 1,
+  "address": "Test Street",
+  "nearest_service_point": "Test Center"
+}
+
+### Register as customer with old format phone (should work)
+POST {{baseUrl}}/api/customers
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+
+{
+  "name": "Local Format Customer",
+  "phone": "07701234567",
+  "email": "localformat@example.com",
+  "governorate_id": 1,
+  "address": "Test Street",
+  "nearest_service_point": "Test Center"
+}
+
 ### Get customer (public)
 GET {{baseUrl}}/api/customers/1
+Accept: {{acceptJson}}
 
 ### List all customers (admin only)
 GET {{baseUrl}}/api/customers
 Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}
 
-### Update customer (admin only)
+### Update customer with valid phone (admin only)
 PUT {{baseUrl}}/api/customers/1
-Content-Type: application/json
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
 Authorization: Bearer {{adminToken}}
 
 {
   "name": "Ahmed Mohammed Updated",
-  "address": "New Address",
+  "phone": "9647911234567",
+  "address": "New Address, Bagdad",
   "nearest_service_point": "Karbala Center"
+}
+
+### Update customer with invalid phone (should fail)
+PUT {{baseUrl}}/api/customers/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Ahmed With Bad Phone",
+  "phone": "9645001234567",
+  "address": "Updated Address"
+}
+
+### Update customer name only (admin only)
+PUT {{baseUrl}}/api/customers/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Ahmed Mohammed Abdul-Aziz"
 }
 
 ### Delete customer (admin only)
 DELETE {{baseUrl}}/api/customers/1
 Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}
+
+### ============== PACKAGES MANAGEMENT ==============
+
+### List packages (public)
+GET {{baseUrl}}/api/packages
+Accept: {{acceptJson}}
+
+### List packages with pagination
+GET {{baseUrl}}/api/packages?per_page=5&page=1
+Accept: {{acceptJson}}
+
+### Get single package (public)
+GET {{baseUrl}}/api/packages/1
+Accept: {{acceptJson}}
+
+### Create package (admin only)
+POST {{baseUrl}}/api/packages
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "Ultimate Gaming Bundle",
+  "name_ar": "حزمة الألعاب المتميزة",
+  "description_en": "A collection of the best racing and action games.",
+  "description_ar": "مجموعة من أفضل ألعاب السباق والأكشن.",
+  "platform_id": 6,
+  "cover_id": null,
+  "game_ids": [1, 2, 3, 4, 5]
+}
+
+### Create package with specific games (admin only)
+POST {{baseUrl}}/api/packages
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "Action Pack 2024",
+  "name_ar": "حزمة الأكشن 2024",
+  "description_en": "Top action games for PS5 console.",
+  "description_ar": "أفضل ألعاب الأكشن لجهاز بلاي ستيشن 5.",
+  "platform_id": 6,
+  "game_ids": [9, 10, 11, 12, 13]
+}
+
+### Create package without games (admin only)
+POST {{baseUrl}}/api/packages
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "Empty Racing Bundle",
+  "name_ar": "حزمة السباق الفارغة",
+  "description_en": "A racing package to be filled with games.",
+  "description_ar": "حزمة سباق يتم ملؤها بالألعاب.",
+  "platform_id": 1
+}
+
+### Update package (admin only)
+PUT {{baseUrl}}/api/packages/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "Ultimate Gaming Bundle Updated",
+  "name_ar": "حزمة الألعاب المتميزة المحدثة",
+  "description_en": "Updated collection of the best games.",
+  "description_ar": "مجموعة محدثة من أفضل الألعاب.",
+  "game_ids": [1, 2, 3, 4, 5, 6, 7]
+}
+
+### Update package with new games (admin only)
+PUT {{baseUrl}}/api/packages/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "game_ids": [2, 4, 6, 8, 10, 12]
+}
+
+### Update package description only (admin only)
+PUT {{baseUrl}}/api/packages/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "description_en": "Newly updated description for this package.",
+  "description_ar": "وصف محدث جديد لهذه الحزمة."
+}
+
+### Update package cover image (admin only)
+PUT {{baseUrl}}/api/packages/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "cover_id": 2
+}
+
+### Update package platform (admin only)
+PUT {{baseUrl}}/api/packages/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "platform_id": 5
+}
+
+### Increment package views (admin only)
+POST {{baseUrl}}/api/packages/1/views
+Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}
+
+### Increment package orders count (admin only)
+POST {{baseUrl}}/api/packages/1/orders
+Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}
+
+### Delete package (admin only)
+DELETE {{baseUrl}}/api/packages/1
+Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}

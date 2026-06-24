@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Governorate;
+use App\Rules\IraqiPhoneNumber;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -24,7 +25,7 @@ class CustomerController extends Controller
         
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|unique:customers,phone',
+            'phone' => ['required', 'string', 'unique:customers,phone', new IraqiPhoneNumber()],
             'email' => 'nullable|email|unique:customers,email',
             'governorate_id' => 'required|integer|in:' . implode(',', $governorateIds),
             'address' => 'nullable|string',
@@ -41,7 +42,7 @@ class CustomerController extends Controller
         
         $data = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'phone' => 'sometimes|required|string|unique:customers,phone,' . $customer->id,
+            'phone' => ['sometimes', 'required', 'string', 'unique:customers,phone,' . $customer->id, new IraqiPhoneNumber()],
             'email' => 'nullable|email|unique:customers,email,' . $customer->id,
             'governorate_id' => 'sometimes|required|integer|in:' . implode(',', $governorateIds),
             'address' => 'nullable|string',

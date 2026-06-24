@@ -7,6 +7,7 @@ use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\GameImageController;
 use App\Http\Controllers\UsbStickController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\PackageController;
 use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,7 @@ Route::get('me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
 Route::apiResource('platforms', PlatformController::class)->only(['index', 'show']);
 Route::apiResource('games', GameController::class)->only(['index', 'show']);
+Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
 Route::apiResource('usb-sticks', UsbStickController::class)->only(['index', 'show']);
 
 // Customer routes - public register and view
@@ -32,6 +34,10 @@ Route::middleware(['auth:sanctum', EnsureAdmin::class])->group(function () {
     Route::apiResource('categories', CategoryController::class)->only(['store', 'update', 'destroy']);
     Route::apiResource('platforms', PlatformController::class)->only(['store', 'update', 'destroy']);
     Route::apiResource('games', GameController::class)->only(['store', 'update', 'destroy']);
+    Route::apiResource('packages', PackageController::class)->only(['store', 'update', 'destroy']);
+    // Admin: increment views and orders for packages
+    Route::post('packages/{package}/views', [PackageController::class, 'incrementViews']);
+    Route::post('packages/{package}/orders', [PackageController::class, 'incrementOrders']);
     // Admin: upload and delete images for a game
     Route::post('games/{game}/images', [GameImageController::class, 'store']);
     Route::delete('games/{game}/images/{image}', [GameImageController::class, 'destroy']);
