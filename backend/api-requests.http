@@ -1,0 +1,259 @@
+# Laravel API requests for REST Client
+
+@baseUrl = http://127.0.0.1:8000
+@adminEmail = admin@example.com
+@adminPass = password
+@clientEmail = test@example.com
+@clientPass = password
+@adminToken = 1|ucAFRKoibH22Ix0kxYA4nGazGzRDBxhb847EF9BP8ac5f174
+@clientToken = 
+
+### Login as Admin
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "email": "{{adminEmail}}",
+  "password": "{{adminPass}}"
+}
+
+### Login as Client
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "email": "{{clientEmail}}",
+  "password": "{{clientPass}}"
+}
+
+### Get current authenticated user (admin or client)
+GET {{baseUrl}}/api/me
+Authorization: Bearer {{adminToken}}
+
+### List games (public)
+GET {{baseUrl}}/api/games
+
+### List categories (public)
+GET {{baseUrl}}/api/categories
+
+### Create category (admin only)
+POST {{baseUrl}}/api/categories
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "Adventure",
+  "name_ar": "مغامرة",
+  "description_en": "Adventure games with exploration.",
+  "description_ar": "ألعاب مغامرات مع استكشاف."
+}
+
+### Create category as client (should fail with 403)
+POST {{baseUrl}}/api/categories
+Content-Type: application/json
+Authorization: Bearer {{clientToken}}
+
+{
+  "name_en": "Hacked",
+  "name_ar": "هاكد",
+  "description_en": "Should not be allowed.",
+  "description_ar": "يجب أن يُرفض هذا الطلب."
+}
+
+### Create game (admin only)
+POST {{baseUrl}}/api/games
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "Stone Quest",
+  "name_ar": "مهمة الحجر",
+  "description_en": "A new RPG adventure.",
+  "description_ar": "مغامرة RPG جديدة.",
+  "category_id": 1,
+  "platform_id": 1,
+  "tags": ["rpg", "adventure"],
+  "size_gb": 1.75,
+  "downloads": 1000,
+  "date_release": "2025-10-10"
+}
+
+### Logout (admin or client)
+POST {{baseUrl}}/api/logout
+Authorization: Bearer {{adminToken}}
+
+
+### Pagination
+GET http://127.0.0.1:8000/api/games?per_page=1&page=2
+
+### Get single category (public)
+GET {{baseUrl}}/api/categories/1
+
+### Update category (admin only)
+PUT {{baseUrl}}/api/categories/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "Adventure Updated",
+  "name_ar": "مغامرة محدثة",
+  "description_en": "Updated category description.",
+  "description_ar": "وصف الفئة بعد التحديث."
+}
+
+### Delete category (admin only)
+DELETE {{baseUrl}}/api/categories/1
+Authorization: Bearer {{adminToken}}
+
+### List platforms (public)
+GET {{baseUrl}}/api/platforms
+
+### Create platform (admin only)
+POST {{baseUrl}}/api/platforms
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "PC",
+  "name_ar": "الحاسوب",
+  "description_en": "Personal computer platform.",
+  "description_ar": "منصة الحاسوب الشخصي."
+}
+
+### Update platform (admin only)
+PUT {{baseUrl}}/api/platforms/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "PC Updated",
+  "name_ar": "الحاسوب المحدث",
+  "description_en": "Updated platform description.",
+  "description_ar": "الوصف المحدث للمنصة."
+}
+
+### Delete platform (admin only)
+DELETE {{baseUrl}}/api/platforms/1
+Authorization: Bearer {{adminToken}}
+
+### Get single game (public)
+GET {{baseUrl}}/api/games/1
+
+### Update game (admin only)
+PUT {{baseUrl}}/api/games/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "Stone Quest Updated",
+  "name_ar": "مهمة الحجر المحدثة",
+  "description_en": "Updated game description.",
+  "description_ar": "الوصف المحدث للعبة.",
+  "category_id": 1,
+  "platform_id": 1,
+  "tags": ["rpg", "updated"],
+  "size_gb": 1.8,
+  "downloads": 1200,
+  "date_release": "2025-11-01"
+}
+
+### Delete game (admin only)
+DELETE {{baseUrl}}/api/games/1
+Authorization: Bearer {{adminToken}}
+
+### Upload game image (admin only)
+POST {{baseUrl}}/api/games/1/images
+Authorization: Bearer {{adminToken}}
+Content-Type: multipart/form-data
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="cover.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/cover.jpg
+--boundary
+Content-Disposition: form-data; name="type"
+
+cover
+--boundary
+Content-Disposition: form-data; name="alt"
+
+Cover image for Stone Quest
+--boundary--
+
+### Delete game image (admin only)
+DELETE {{baseUrl}}/api/games/1/images/1
+Authorization: Bearer {{adminToken}}
+
+### List USB sticks (public)
+GET {{baseUrl}}/api/usb-sticks
+
+### Get single USB stick (public)
+GET {{baseUrl}}/api/usb-sticks/1
+
+### Create USB stick (admin only)
+POST {{baseUrl}}/api/usb-sticks
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "FastFlash 32GB",
+  "name_ar": "فلاشة سريعة 32 جيجا",
+  "description_en": "High performance USB stick.",
+  "description_ar": "فلاشة عالية الأداء.",
+  "size_gb": 32,
+  "interface": "3.1"
+}
+
+### Update USB stick (admin only)
+PUT {{baseUrl}}/api/usb-sticks/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name_en": "FastFlash 64GB",
+  "size_gb": 64,
+  "interface": "3.2"
+}
+
+### Delete USB stick (admin only)
+DELETE {{baseUrl}}/api/usb-sticks/1
+Authorization: Bearer {{adminToken}}
+
+### List governorates (public)
+GET {{baseUrl}}/api/governorates
+
+### Register as customer (public)
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+
+{
+  "name": "Ahmed Mohammed",
+  "phone": "9647812345678",
+  "email": "ahmed@example.com",
+  "governorate_id": 1,
+  "address": "Main Street, Downtown",
+  "nearest_service_point": "Baghdad Central"
+}
+
+### Get customer (public)
+GET {{baseUrl}}/api/customers/1
+
+### List all customers (admin only)
+GET {{baseUrl}}/api/customers
+Authorization: Bearer {{adminToken}}
+
+### Update customer (admin only)
+PUT {{baseUrl}}/api/customers/1
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Ahmed Mohammed Updated",
+  "address": "New Address",
+  "nearest_service_point": "Karbala Center"
+}
+
+### Delete customer (admin only)
+DELETE {{baseUrl}}/api/customers/1
+Authorization: Bearer {{adminToken}}
