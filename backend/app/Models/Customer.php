@@ -3,17 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Customer extends Model
+class Customer extends Authenticatable
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory;
 
     protected $fillable = [
         'name',
         'phone',
         'email',
+        'password',
         'governorate_id',
         'address',
         'nearest_service_point',
@@ -22,5 +24,21 @@ class Customer extends Model
     public function governorate(): BelongsTo
     {
         return $this->belongsTo(Governorate::class);
+    }
+
+    /**
+     * Get the customized USB stick orders for this customer.
+     */
+    public function usbStickOrders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(UsbStickOrder::class);
+    }
+
+    /**
+     * Get the custom USB orders for this customer.
+     */
+    public function customUsbOrders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CustomUsbOrder::class);
     }
 }

@@ -1,0 +1,84 @@
+.support-page {
+  min-height: 100vh;
+}
+
+.support-card {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 1rem;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+  transition: all 0.3s ease;
+}
+
+.support-card:hover {
+  box-shadow: 0 12px 30px rgba(13, 110, 253, 0.15);
+  transform: translateY(-4px);
+}
+
+.support-icon {
+  color: #0d6efd;
+}
+
+.faq-item {
+  padding: 1.5rem;
+  background: rgba(13, 110, 253, 0.05);
+  border-left: 4px solid #0d6efd;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  background: rgba(13, 110, 253, 0.08);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.1);
+}
+
+.contact-form-section {
+  background: rgba(13, 110, 253, 0.04);
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(13, 110, 253, 0.1);
+}
+
+.contact-form-section .card {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+/* Dark Mode */
+body.theme-dark .support-card {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(71, 85, 105, 0.3);
+}
+
+body.theme-dark .support-card:hover {
+  box-shadow: 0 12px 30px rgba(13, 110, 253, 0.2);
+}
+
+body.theme-dark .faq-item {
+  background: rgba(30, 58, 138, 0.15);
+  border-left-color: #3b82f6;
+}
+
+body.theme-dark .faq-item:hover {
+  background: rgba(30, 58, 138, 0.25);
+}
+
+body.theme-dark .contact-form-section {
+  background: rgba(30, 58, 138, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+body.theme-dark .contact-form-section .card {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(71, 85, 105, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .support-page {
+    padding-top: 100px;
+  }
+
+  .contact-form-section {
+    padding: 1rem;
+  }
+}

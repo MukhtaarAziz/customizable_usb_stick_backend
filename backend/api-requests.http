@@ -224,7 +224,8 @@ Authorization: Bearer {{adminToken}}
   "description_en": "High performance USB stick.",
   "description_ar": "فلاشة عالية الأداء.",
   "size_gb": 32,
-  "interface": "3.1"
+  "interface": "3.1",
+  "price_iqd": 25000
 }
 
 ### Update USB stick (admin only)
@@ -236,7 +237,8 @@ Authorization: Bearer {{adminToken}}
 {
   "name_en": "FastFlash 64GB",
   "size_gb": 64,
-  "interface": "3.2"
+  "interface": "3.2",
+  "price_iqd": 35000
 }
 
 ### Delete USB stick (admin only)
@@ -510,4 +512,113 @@ Accept: {{acceptJson}}
 ### Delete package (admin only)
 DELETE {{baseUrl}}/api/packages/1
 Authorization: Bearer {{adminToken}}
+Accept: {{acceptJson}}
+
+### ============== CUSTOM USB ORDERS ==============
+
+### List my custom USB orders (authenticated customer)
+GET {{baseUrl}}/api/custom-usb-orders
+Accept: {{acceptJson}}
+Authorization: Bearer {{clientToken}}
+
+### Get single custom USB order (authenticated customer)
+GET {{baseUrl}}/api/custom-usb-orders/1
+Accept: {{acceptJson}}
+Authorization: Bearer {{clientToken}}
+
+### Create custom USB order (authenticated customer)
+POST {{baseUrl}}/api/custom-usb-orders
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{clientToken}}
+
+{
+  "usb_stick_id": 1,
+  "game_ids": [1, 2, 3, 4, 5],
+  "notes": "Please include a personalized message on the USB stick.",
+  "custom_message": "Happy Birthday Ahmed!",
+  "delivery_address": "123 Main Street, Baghdad, Iraq",
+  "phone": "9647701234567"
+}
+
+### Create custom USB order with different games (authenticated customer)
+POST {{baseUrl}}/api/custom-usb-orders
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{clientToken}}
+
+{
+  "usb_stick_id": 2,
+  "game_ids": [6, 7, 8],
+  "notes": "Racing games only please.",
+  "custom_message": "For my son's graduation gift",
+  "delivery_address": "456 Al-Rasheed Street, Najaf, Iraq",
+  "phone": "9647901234567"
+}
+
+### Update custom USB order (authenticated customer - only own orders)
+PUT {{baseUrl}}/api/custom-usb-orders/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{clientToken}}
+
+{
+  "notes": "Updated notes - please deliver before Friday.",
+  "delivery_address": "789 New Address Street, Karbala, Iraq",
+  "phone": "9647801234567"
+}
+
+### Update custom USB order games (authenticated customer)
+PUT {{baseUrl}}/api/custom-usb-orders/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{clientToken}}
+
+{
+  "game_ids": [1, 3, 5, 7, 9]
+}
+
+### Update custom USB order status to processing (authenticated customer)
+PUT {{baseUrl}}/api/custom-usb-orders/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{clientToken}}
+
+{
+  "status": "processing"
+}
+
+### Update custom USB order status to shipped (authenticated customer)
+PUT {{baseUrl}}/api/custom-usb-orders/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{clientToken}}
+
+{
+  "status": "shipped"
+}
+
+### Update custom USB order status to delivered (authenticated customer)
+PUT {{baseUrl}}/api/custom-usb-orders/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{clientToken}}
+
+{
+  "status": "delivered"
+}
+
+### Update custom USB order status to cancelled (authenticated customer)
+PUT {{baseUrl}}/api/custom-usb-orders/1
+Content-Type: {{acceptJson}}
+Accept: {{acceptJson}}
+Authorization: Bearer {{clientToken}}
+
+{
+  "status": "cancelled"
+}
+
+### Delete custom USB order (authenticated customer - only own orders)
+DELETE {{baseUrl}}/api/custom-usb-orders/1
+Authorization: Bearer {{clientToken}}
 Accept: {{acceptJson}}

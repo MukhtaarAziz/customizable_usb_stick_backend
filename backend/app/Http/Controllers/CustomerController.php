@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Governorate;
 use App\Rules\IraqiPhoneNumber;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
 {
@@ -27,11 +28,13 @@ class CustomerController extends Controller
             'name' => 'required|string|max:255',
             'phone' => ['required', 'string', 'unique:customers,phone', new IraqiPhoneNumber()],
             'email' => 'nullable|email|unique:customers,email',
+            'password' => ['required', 'string', 'min:8', 'regex:/^\S+$/'],
             'governorate_id' => 'required|integer|in:' . implode(',', $governorateIds),
             'address' => 'nullable|string',
             'nearest_service_point' => 'nullable|string|max:255',
         ]);
 
+        $data['password'] = Hash::make($data['password']);
         $customer = Customer::create($data);
         return response()->json($customer->load('governorate'), 201);
     }

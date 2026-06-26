@@ -1,0 +1,487 @@
+.usb-preview-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 1.25rem;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+body.theme-dark .usb-preview-card {
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(71, 85, 105, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.usb-preview-card.over-capacity {
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 20px 40px rgba(239, 68, 68, 0.08);
+}
+
+/* Horizontal display on wider screens */
+@media (min-width: 576px) and (max-width: 991px) {
+  .usb-preview-card {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .usb-preview-card__visual {
+    flex: 0 0 120px;
+  }
+  
+  .usb-preview-card__details {
+    flex: 1;
+  }
+}
+
+/* USB Stick Visual Model */
+.usb-preview-card__visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.usb-stick-model {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90px;
+  position: relative;
+}
+
+/* Metal Connector */
+.usb-stick-model__connector {
+  width: 32px;
+  height: 22px;
+  background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 50%, #cbd5e1 100%);
+  border: 1.5px solid #64748b;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.usb-stick-model__connector-pins {
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  right: 6px;
+  height: 4px;
+  background: transparent;
+  display: flex;
+  justify-content: space-between;
+}
+
+.usb-stick-model__connector-pins::before,
+.usb-stick-model__connector-pins::after {
+  content: '';
+  width: 5px;
+  height: 4px;
+  background: #475569;
+  border-radius: 1px;
+}
+
+/* Main USB Body */
+.usb-stick-model__body {
+  width: 52px;
+  height: 96px;
+  background: #f1f5f9;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+body.theme-dark .usb-stick-model__body {
+  background: #1e293b;
+  border-color: #475569;
+}
+
+.usb-preview-card.over-capacity .usb-stick-model__body {
+  border-color: #f87171;
+}
+
+/* Liquid/Fluid Progress Filler */
+.usb-stick-model__fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, #3b82f6 0%, #06b6d4 100%);
+  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 0 6px 6px;
+}
+
+.usb-stick-model__fill.fill-danger {
+  background: linear-gradient(to top, #ef4444 0%, #f43f5e 100%);
+  animation: pulseDangerFill 2s infinite ease-in-out;
+}
+
+@keyframes pulseDangerFill {
+  0% { opacity: 0.95; }
+  50% { opacity: 0.75; }
+  100% { opacity: 0.95; }
+}
+
+/* Shine overlay */
+.usb-stick-model__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 50%);
+  pointer-events: none;
+}
+
+/* LED Indicator Light */
+.usb-stick-model__led {
+  position: absolute;
+  top: 10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  transition: all 0.3s ease;
+}
+
+body.theme-dark .usb-stick-model__led {
+  background: #475569;
+}
+
+.usb-stick-model__led.active {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981, 0 0 16px #10b981;
+}
+
+.usb-stick-model__led.danger {
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444, 0 0 16px #ef4444;
+  animation: blinkLed 1s infinite steps(2);
+}
+
+@keyframes blinkLed {
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+
+/* Label on USB Stick */
+.usb-stick-model__label {
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #1e293b;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+}
+
+body.theme-dark .usb-stick-model__label {
+  background: rgba(15, 23, 42, 0.85);
+  color: #f1f5f9;
+}
+
+/* Details Section */
+.usb-preview-card__details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.usb-preview-card__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: #0f172a;
+}
+
+body.theme-dark .usb-preview-card__title {
+  color: #f8fafc;
+}
+
+.usb-preview-card__price {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0d6efd;
+  margin-bottom: 1rem;
+}
+
+body.theme-dark .usb-preview-card__price {
+  color: #3b82f6;
+}
+
+.usb-preview-card__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.usb-preview-card__stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(241, 245, 249, 0.7);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+body.theme-dark .usb-preview-card__stat-item {
+  background: rgba(30, 41, 59, 0.5);
+  border-color: rgba(71, 85, 105, 0.25);
+}
+
+.usb-preview-card__stat-icon {
+  font-size: 1.1rem;
+  color: #64748b;
+}
+
+body.theme-dark .usb-preview-card__stat-icon {
+  color: #94a3b8;
+}
+
+.usb-preview-card__stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.68rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+body.theme-dark .stat-label {
+  color: #94a3b8;
+}
+
+.stat-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+body.theme-dark .stat-value {
+  color: #cbd5e1;
+}
+
+/* Storage Meter styling */
+.usb-storage-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.usb-storage-meter__header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+body.theme-dark .usb-storage-meter__header {
+  color: #94a3b8;
+}
+
+.usb-storage-meter__bar-bg {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+body.theme-dark .usb-storage-meter__bar-bg {
+  background: #334155;
+}
+
+.usb-storage-meter__bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease, background-color 0.3s ease;
+}
+
+.usb-storage-meter__footer {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.1rem;
+}
+
+.usb-status-alert {
+  display: flex;
+  align-items: center;
+}
+
+/* Technical Specifications Panel */
+.usb-specs-panel {
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  padding-top: 1.25rem;
+}
+
+body.theme-dark .usb-specs-panel {
+  border-top-color: rgba(71, 85, 105, 0.3);
+}
+
+.usb-specs-panel__title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+}
+
+body.theme-dark .usb-specs-panel__title {
+  color: #f1f5f9;
+}
+
+.usb-specs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.usb-spec-card {
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  transition: all 0.25s ease;
+}
+
+body.theme-dark .usb-spec-card {
+  background: rgba(30, 41, 59, 0.3);
+  border-color: rgba(71, 85, 105, 0.2);
+}
+
+.usb-spec-card:hover {
+  transform: translateY(-1px);
+  background: rgba(248, 250, 252, 0.95);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+body.theme-dark .usb-spec-card:hover {
+  background: rgba(30, 41, 59, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.usb-spec-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.usb-spec-card__icon {
+  font-size: 0.85rem;
+}
+
+.usb-spec-card__label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+body.theme-dark .usb-spec-card__label {
+  color: #94a3b8;
+}
+
+.usb-spec-card__value {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+body.theme-dark .usb-spec-card__value {
+  color: #f8fafc;
+}
+
+/* Speed Visual Meters */
+.usb-speed-meters {
+  background: rgba(248, 250, 252, 0.5);
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+
+body.theme-dark .usb-speed-meters {
+  background: rgba(15, 23, 42, 0.2);
+  border-color: rgba(71, 85, 105, 0.15);
+}
+
+.usb-speed-meter__labels {
+  margin-bottom: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.usb-speed-meter__progress {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+body.theme-dark .usb-speed-meter__progress {
+  background: #334155;
+}
+
+.usb-speed-meter__fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Specs Description Bubble */
+.usb-specs-description {
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.03) 0%, rgba(13, 110, 253, 0.01) 100%);
+  border-left: 3px solid #0d6efd;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+body.theme-dark .usb-specs-description {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.02) 100%);
+  border-left-color: #3b82f6;
+}
+
+.usb-specs-description__text {
+  font-style: italic;
+  line-height: 1.4;
+  color: #475569;
+}
+
+body.theme-dark .usb-specs-description__text {
+  color: #cbd5e1;
+}
+
+/* RTL Adjustment for Arabic description border */
+[dir="rtl"] .usb-specs-description,
+.rtl .usb-specs-description {
+  border-left: none;
+  border-right: 3px solid #0d6efd;
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+body.theme-dark [dir="rtl"] .usb-specs-description,
+body.theme-dark .rtl .usb-specs-description {
+  border-right-color: #3b82f6;
+}

@@ -7,6 +7,7 @@ use Database\Seeders\CategoryPlatformGameSeeder;
 use Database\Seeders\GovernoratesTableSeeder;
 use Database\Seeders\CustomersTableSeeder;
 use Database\Seeders\PackagesTableSeeder;
+use Database\Seeders\GamePackagesSeeder;
 use Database\Seeders\UsbSticksTableSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -35,6 +36,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CategoryPlatformGameSeeder::class);
         $this->call(PackagesTableSeeder::class);
+        $this->call(GamePackagesSeeder::class);
         $this->call(GovernoratesTableSeeder::class);
         $this->call(CustomersTableSeeder::class);
         $this->call(UsbSticksTableSeeder::class);

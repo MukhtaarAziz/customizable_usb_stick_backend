@@ -10,9 +10,28 @@ class PackageController extends Controller
     /**
      * Display a listing of packages.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $packages = Package::with(['cover', 'platform', 'games'])->paginate(15);
+        $query = Package::with(['cover', 'platform', 'games']);
+
+        if ($request->filled('search')) {
+            $search = $request->string('search');
+            $query->where(function ($subQuery) use ($search) {
+                $subQuery->where('name_en', 'like', "%{$search}%")
+                    ->orWhere('name_ar', 'like', "%{$search}%")
+                    ->orWhere('description_en', 'like', "%{$search}%")
+                    ->orWhere('description_ar', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('platform_id')) {
+            $query->where('platform_id', $request->integer('platform_id'));
+        }
+
+        $perPage = min(max((int) $request->query('per_page', 15), 1), 100);
+
+        $packages = $query->paginate($perPage);
+
         return response()->json($packages);
     }
 

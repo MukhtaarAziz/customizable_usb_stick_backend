@@ -1,0 +1,169 @@
+.usb-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.usb-selection-card {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.usb-selection-card:hover {
+  border-color: #667eea;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+}
+
+.usb-selection-card.selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.usb-selection-card__icon-wrap {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: white;
+}
+
+.usb-selection-card__svg {
+  width: 32px;
+  height: 32px;
+}
+
+.usb-selection-card__details-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.usb-selection-card__name-capacity {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+}
+
+.usb-selection-card__name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #212529;
+  margin-bottom: 0;
+}
+
+.usb-selection-card__capacity {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #e9ecef;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #495057;
+  white-space: nowrap;
+}
+
+.usb-selection-card__meta {
+  margin-bottom: 0.5rem;
+}
+
+.usb-selection-card__interface-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.usb-selection-card__description {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.usb-selection-card__price-tag {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.usb-selection-card__price-value {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #0d6efd;
+}
+
+.usb-selection-card__badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50%;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+[dir="rtl"] .usb-selection-card__badge {
+  right: auto;
+  left: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .usb-selection-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .usb-selection-card {
+    padding: 1rem;
+  }
+
+  .usb-selection-card__icon-wrap {
+    width: 50px;
+    height: 50px;
+  }
+
+  .usb-selection-card__svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .usb-selection-card__name {
+    font-size: 1rem;
+  }
+
+  .usb-selection-card__price-value {
+    font-size: 1rem;
+  }
+}

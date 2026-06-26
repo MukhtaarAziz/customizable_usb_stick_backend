@@ -1,0 +1,162 @@
+/* ============================================
+   MobileBottomNav - Modern Design
+   ============================================ */
+
+.mobile-bottom-nav {
+  position: fixed !important;
+  bottom: 1.5rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 9999 !important;
+  background: #ffffff !important;
+  display: none !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+  border-radius: 30px !important;
+  width: calc(100% - 2rem) !important;
+  max-width: 420px !important;
+}
+
+.mobile-bottom-nav__inner {
+  display: flex !important;
+  justify-content: space-around !important;
+  align-items: flex-end !important;
+  padding: 0.5rem 0.5rem 0.4rem !important;
+}
+
+/* Regular Items */
+.mbn-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0.2rem !important;
+  text-decoration: none !important;
+  color: #9ca3af !important;
+  padding: 0.3rem !important;
+  min-width: 50px !important;
+  transition: color 0.2s ease !important;
+}
+
+.mbn-item:hover {
+  color: #6366f1 !important;
+}
+
+.mbn-item--active {
+  color: #6366f1 !important;
+}
+
+.mbn-icon {
+  font-size: 1.3rem !important;
+  line-height: 1 !important;
+}
+
+.mbn-text {
+  font-size: 0.65rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+
+/* ============================================
+   Center Design Button - Protruding from top
+   ============================================ */
+.mbn-item--center {
+  margin-top: -2.2rem !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.mbn-icon--center {
+  width: 72px !important;
+  height: 72px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%) !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  font-size: 2rem !important;
+  box-shadow: 0 8px 30px rgba(255, 107, 53, 0.5) !important;
+  border: 4px solid #ffffff !important;
+  transition: all 0.3s ease !important;
+  animation: mbn-breathe 3s ease-in-out infinite !important;
+  position: relative !important;
+}
+
+/* Outer glow ring that breathes with the button */
+.mbn-icon--center::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -8px !important;
+  left: -8px !important;
+  right: -8px !important;
+  bottom: -8px !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: 3px solid rgba(255, 107, 53, 0.25) !important;
+  animation: mbn-ring-breathe 3s ease-in-out infinite !important;
+}
+
+.mbn-icon--center:hover {
+  transform: scale(1.12) !important;
+  box-shadow: 0 10px 35px rgba(255, 107, 53, 0.7) !important;
+  animation: none !important;
+}
+
+.mbn-icon--center:hover::before {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+.mbn-icon--center:active {
+  transform: scale(0.92) !important;
+}
+
+.mbn-text--center {
+  display: none !important;
+}
+
+/* Breathing Animation - expands and contracts slowly */
+@keyframes mbn-breathe {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 8px 30px rgba(255, 107, 53, 0.4);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 12px 40px rgba(255, 107, 53, 0.7);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 30px rgba(255, 107, 53, 0.4);
+  }
+}
+
+/* Ring breathes in sync with button */
+@keyframes mbn-ring-breathe {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+}
+
+/* ============================================
+   Responsive - Show on mobile only
+   ============================================ */
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: block !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}

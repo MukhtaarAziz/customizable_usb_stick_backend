@@ -1,0 +1,172 @@
+/* Premium UsbDetailsModal Styles */
+
+/* ================================================
+   Force modal to appear ABOVE mobile nav (z-1100)
+   and FAB (z-1090)
+   ================================================ */
+.usb-details-modal {
+  z-index: 1200 !important;
+}
+
+/* Backdrop for USB details modal - must be below modal but above nav */
+.usb-details-modal__backdrop {
+  z-index: 1199 !important;
+}
+
+/* Hide mobile nav while USB details modal is open */
+body:has(.usb-details-modal.show) .mobile-bottom-nav {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Hide FAB while modal is open */
+body:has(.usb-details-modal.show) .design-usb__fab {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.7);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.usb-details-modal__content {
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 1.5rem !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15);
+}
+
+body.theme-dark .usb-details-modal__content {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(51, 65, 85, 0.35);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.usb-details-modal__close-btn {
+  background: rgba(15, 23, 42, 0.05);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+body.theme-dark .usb-details-modal__close-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+}
+
+.usb-details-modal__close-btn:hover {
+  background: #ef4444;
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.usb-details-modal__games-card {
+  padding: 1.25rem;
+  background: rgba(248, 250, 252, 0.6);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  max-height: 400px;
+}
+
+body.theme-dark .usb-details-modal__games-card {
+  background: rgba(30, 41, 59, 0.3);
+  border-color: rgba(71, 85, 105, 0.2);
+}
+
+.usb-details-modal__sidebar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  flex-grow: 1;
+}
+
+.usb-details-modal__sidebar-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.usb-details-modal__sidebar-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.usb-details-modal__sidebar-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+body.theme-dark .usb-details-modal__sidebar-list::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.usb-details-modal__sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+body.theme-dark .usb-details-modal__sidebar-item {
+  background: rgba(30, 41, 59, 0.5);
+  border-color: rgba(71, 85, 105, 0.15);
+}
+
+.usb-details-modal__sidebar-item:hover {
+  background: var(--bs-white);
+  border-color: rgba(226, 232, 240, 0.8);
+}
+
+body.theme-dark .usb-details-modal__sidebar-item:hover {
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(71, 85, 105, 0.3);
+}
+
+.usb-details-modal__sidebar-item-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.theme-dark .usb-details-modal__sidebar-item-name {
+  color: #cbd5e1;
+}
+
+.usb-details-modal__sidebar-item-size {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.usb-details-modal__sidebar-item-remove {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  padding: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.usb-details-modal__sidebar-item-remove:hover {
+  transform: scale(1.1);
+  color: #dc2626;
+}

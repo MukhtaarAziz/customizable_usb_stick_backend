@@ -16,9 +16,19 @@ class UsbStick extends Model
         'description_ar',
         'size_gb',
         'interface',
+        'price_iqd',
     ];
 
     protected $casts = [
         'size_gb' => 'double',
+        'price_iqd' => 'decimal:2',
     ];
+
+    /**
+     * Get the orders associated with this USB stick type.
+     */
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(UsbStickOrder::class);
+    }
 }

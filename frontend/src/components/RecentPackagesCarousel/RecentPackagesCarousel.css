@@ -1,0 +1,139 @@
+.recent-packages-carousel {
+  background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+}
+
+.carousel-container {
+  margin-top: 2rem;
+}
+
+.carousel-slide {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  width: 100%;
+}
+
+.carousel-text {
+  padding: 20px;
+}
+
+.carousel-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.carousel-description {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.carousel-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 0.95rem;
+}
+
+.stat-item {
+  color: #555;
+}
+
+.stat-item strong {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.carousel-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.carousel-image img {
+  max-height: 350px;
+  object-fit: contain;
+}
+
+/* Dark mode support */
+.theme-dark .carousel-slide {
+  background: #222;
+}
+
+.theme-dark .carousel-title {
+  color: #fff;
+}
+
+.theme-dark .carousel-description {
+  color: #ccc;
+}
+
+.theme-dark .stat-item {
+  color: #bbb;
+}
+
+/* RTL support */
+[dir="rtl"] .carousel-content {
+  direction: rtl;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .carousel-slide {
+    min-height: auto;
+    padding: 30px 15px;
+  }
+
+  .carousel-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .carousel-title {
+    font-size: 1.5rem;
+  }
+
+  .carousel-image img {
+    max-height: 250px;
+  }
+
+  .carousel-stats {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel-slide {
+    min-height: auto;
+    padding: 20px 10px;
+  }
+
+  .carousel-text {
+    padding: 10px;
+  }
+
+  .carousel-title {
+    font-size: 1.2rem;
+  }
+
+  .carousel-description {
+    font-size: 0.9rem;
+  }
+
+  .carousel-image {
+    display: none;
+  }
+}

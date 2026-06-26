@@ -15,7 +15,24 @@ class GameController extends Controller
         $perPage = (int) $request->query('per_page', 15);
         $perPage = max(1, min($perPage, 100));
 
-        return Game::with(['category', 'platform'])
+        $query = Game::with(['category', 'platform', 'images']);
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($builder) use ($search) {
+                $builder->where('name_en', 'like', "%{$search}%")
+                    ->orWhere('name_ar', 'like', "%{$search}%");
+            });
+        }
+
+        if ($platformId = $request->query('platform_id')) {
+            $query->where('platform_id', $platformId);
+        }
+
+        if ($categoryId = $request->query('category_id')) {
+            $query->where('category_id', $categoryId);
+        }
+
+        return $query
             ->paginate($perPage)
             ->appends($request->query());
     }

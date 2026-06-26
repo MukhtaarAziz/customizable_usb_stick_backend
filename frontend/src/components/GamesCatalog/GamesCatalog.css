@@ -1,0 +1,63 @@
+.games-catalog {
+  width: 100%;
+}
+
+.games-catalog__filters {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.games-catalog__controls {
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.view-mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-mode-toggle__btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-mode-toggle__btn:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.view-mode-toggle__btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .games-catalog__filters {
+    padding: 1rem;
+  }
+
+  .games-catalog__controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .view-mode-toggle {
+    align-self: flex-end;
+  }
+}

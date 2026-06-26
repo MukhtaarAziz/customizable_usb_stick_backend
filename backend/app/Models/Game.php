@@ -44,4 +44,12 @@ class Game extends Model
     {
         return $this->hasMany(Image::class);
     }
+
+    /**
+     * Get the customized USB stick orders containing this game.
+     */
+    public function usbStickOrders(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(UsbStickOrder::class, 'game_usb_stick_order');
+    }
 }

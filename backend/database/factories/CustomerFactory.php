@@ -25,6 +25,7 @@ class CustomerFactory extends Factory
             'name' => $this->faker->name(),
             'phone' => $this->faker->unique()->phoneNumber(),
             'email' => $this->faker->unique()->safeEmail(),
+            'password' => bcrypt('password123'),
             'governorate_id' => Governorate::inRandomOrder()->first()->id ?? 1,
             'address' => $this->faker->address(),
             'nearest_service_point' => $this->faker->randomElement($servicePoints),

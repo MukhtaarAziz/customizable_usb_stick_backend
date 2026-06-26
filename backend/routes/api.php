@@ -8,6 +8,7 @@ use App\Http\Controllers\GameImageController;
 use App\Http\Controllers\UsbStickController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PackageController;
+use App\Http\Controllers\CustomUsbOrderController;
 use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,11 @@ Route::apiResource('usb-sticks', UsbStickController::class)->only(['index', 'sho
 Route::post('customers', [CustomerController::class, 'store']);
 Route::get('customers/{customer}', [CustomerController::class, 'show']);
 Route::get('governorates', [CustomerController::class, 'governorates']);
+
+// Custom USB Order routes (authenticated customers)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('custom-usb-orders', CustomUsbOrderController::class);
+});
 
 // Public access to an image via request (served from storage)
 Route::get('games/{game}/images/{image}', [GameImageController::class, 'show']);

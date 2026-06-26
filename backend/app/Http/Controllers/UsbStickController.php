@@ -26,6 +26,7 @@ class UsbStickController extends Controller
             'description_ar' => 'nullable|string',
             'size_gb' => 'required|numeric',
             'interface' => 'required|string',
+            'price_iqd' => 'nullable|numeric|min:0',
         ]);
 
         $usb = UsbStick::create($data);
@@ -41,6 +42,7 @@ class UsbStickController extends Controller
             'description_ar' => 'nullable|string',
             'size_gb' => 'sometimes|required|numeric',
             'interface' => 'sometimes|required|string',
+            'price_iqd' => 'nullable|numeric|min:0',
         ]);
 
         $usbStick->update($data);

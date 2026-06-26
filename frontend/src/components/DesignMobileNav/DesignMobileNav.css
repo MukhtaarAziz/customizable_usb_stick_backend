@@ -1,0 +1,181 @@
+/* ============================================
+   DesignMobileNav — Exact same dimensions as MobileBottomNav
+   ============================================ */
+
+.design-mobile-nav {
+  position: fixed !important;
+  bottom: 1.5rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 9999 !important;
+  background: #ffffff !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+  border-radius: 30px !important;
+  width: calc(100% - 2rem) !important;
+  max-width: 420px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem 1rem 0.4rem !important;
+  padding-bottom: env(safe-area-inset-bottom, 0) !important;
+}
+
+/* Exit Button - exact same dimensions as MobileBottomNav items */
+.design-mobile-nav__exit {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.2rem !important;
+  padding: 0.3rem 0.75rem !important;
+  border: none !important;
+  border-radius: 8px !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #ef4444 !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  font-family: inherit !important;
+  min-width: 50px !important;
+}
+
+.design-mobile-nav__exit:hover,
+.design-mobile-nav__exit:focus {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  transform: scale(1.04) !important;
+  outline: none !important;
+}
+
+.design-mobile-nav__exit:active {
+  transform: scale(0.97) !important;
+}
+
+.design-mobile-nav__exit-icon {
+  font-size: 0.85rem !important;
+  transition: transform 0.2s ease !important;
+}
+
+.design-mobile-nav__exit:hover .design-mobile-nav__exit-icon {
+  transform: translateX(-3px) !important;
+}
+
+[dir="rtl"] .design-mobile-nav__exit:hover .design-mobile-nav__exit-icon {
+  transform: translateX(3px) !important;
+}
+
+/* USB Details Button - same padding as MobileBottomNav items */
+.design-mobile-nav__usb-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+  padding: 0.4rem 0.75rem !important;
+  border: none !important;
+  border-radius: 8px !important;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%) !important;
+  color: #ffffff !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  font-family: inherit !important;
+  min-width: 50px !important;
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.35) !important;
+}
+
+.design-mobile-nav__usb-btn:hover {
+  transform: scale(1.04) !important;
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5) !important;
+}
+
+.design-mobile-nav__usb-btn:active {
+  transform: scale(0.97) !important;
+}
+
+.design-mobile-nav__usb-icon {
+  width: 18px !important;
+  height: 18px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Step info text - same padding as MobileBottomNav items */
+.design-mobile-nav__step-info {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.design-mobile-nav__step-num {
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: #9ca3af !important;
+  padding: 0.3rem 0.65rem !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-radius: 8px !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+}
+
+/* Hide on large screens - same as MobileBottomNav */
+@media (min-width: 769px) {
+  .design-mobile-nav {
+    display: none !important;
+  }
+}
+
+/* Responsive for small screens */
+@media (max-width: 400px) {
+  .design-mobile-nav {
+    padding: 0.4rem 0.75rem !important;
+    width: calc(100% - 1.5rem) !important;
+  }
+
+  .design-mobile-nav__exit,
+  .design-mobile-nav__usb-btn {
+    padding: 0.3rem 0.5rem !important;
+    font-size: 0.7rem !important;
+  }
+
+  .design-mobile-nav__exit-label {
+    display: none !important;
+  }
+
+  .design-mobile-nav__exit-icon {
+    font-size: 1rem !important;
+    margin: 0 !important;
+  }
+}
+
+/* Dark mode */
+body.theme-dark .design-mobile-nav {
+  background: #1e293b !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.theme-dark .design-mobile-nav__exit {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #f87171 !important;
+}
+
+body.theme-dark .design-mobile-nav__exit:hover {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+body.theme-dark .design-mobile-nav__step-num {
+  color: #64748b !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Hide when modal is open */
+body:has(.usb-details-modal.show) .design-mobile-nav,
+body:has(.modal.show) .design-mobile-nav {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateX(-50%) translateY(80px) !important;
+  pointer-events: none !important;
+  transition: all 0.3s ease !important;
+}

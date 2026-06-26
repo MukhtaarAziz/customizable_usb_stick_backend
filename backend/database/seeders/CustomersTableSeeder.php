@@ -9,6 +9,7 @@ class CustomersTableSeeder extends Seeder
 {
     public function run()
     {
-        Customer::factory()->count(20)->create();
+        // create 10 customers with seeded data
+        Customer::factory()->count(10)->create();
     }
 }
