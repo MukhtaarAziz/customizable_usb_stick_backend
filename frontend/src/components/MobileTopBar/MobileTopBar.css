@@ -1,3 +1,8 @@
+/* MobileTopBar design tokens */
+.mobile-top-bar {
+  --mtb-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+}
+
 .mobile-top-bar {
   position: fixed;
   inset: 0 auto auto 0;
@@ -5,19 +10,24 @@
   padding: 0.6rem;
 }
 
+[dir="rtl"] .mobile-top-bar {
+  inset: 0 0 auto auto;
+}
+
 .mobile-top-bar__controls {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--surface-card);
   backdrop-filter: blur(18px);
-  border: 1px solid rgba(226, 232, 240, 0.75);
-  border-radius: 999px;
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
   padding: 0.35rem 0.45rem;
-  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+  box-shadow: var(--mtb-shadow);
 }
 
 body.theme-dark .mobile-top-bar__controls {
-  background: rgba(15, 23, 42, 0.95);
-  border-color: rgba(71, 85, 105, 0.75);
+  background: var(--surface-overlay);
+  border-color: var(--border-color);
 }

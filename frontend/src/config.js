@@ -12,9 +12,16 @@ export const AUTH_CONFIG = {
   minPasswordLength: 8,
 }
 
+export const CATALOG_TYPES = {
+  ALL: 'all',
+  GAME: 'game',
+  PROGRAM: 'program',
+}
+
 export default {
   API_BASE,
   PER_PAGE_OPTIONS,
   VIEW_MODES,
   AUTH_CONFIG,
+  CATALOG_TYPES,
 }

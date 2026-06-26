@@ -1,49 +1,67 @@
+/* UsbSelectionGrid design tokens */
+.usb-selection-grid {
+  --usg-card-hover-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
+  --usg-card-selected-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  --usg-icon-wrap-size: 60px;
+  --usg-svg-size: 32px;
+  --usg-badge-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+  --usg-card-bg-dark: rgba(30, 41, 59, 0.6);
+  --usg-card-border-dark: rgba(71, 85, 105, 0.3);
+}
+
 .usb-selection-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
 .usb-selection-card {
   position: relative;
   display: flex;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 16px;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--surface-card);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-base);
+}
+
+body.theme-dark .usb-selection-card {
+  --usg-card-bg-dark: rgba(30, 41, 59, 0.6);
+  --usg-card-border-dark: rgba(71, 85, 105, 0.3);
+  background: var(--usg-card-bg-dark);
+  border-color: var(--usg-card-border-dark);
 }
 
 .usb-selection-card:hover {
-  border-color: #667eea;
+  border-color: var(--color-primary);
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+  box-shadow: var(--usg-card-hover-shadow);
 }
 
 .usb-selection-card.selected {
-  border-color: #667eea;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  border-color: var(--color-primary);
+  background: var(--gradient-primary-light);
+  box-shadow: var(--usg-card-selected-shadow);
 }
 
 .usb-selection-card__icon-wrap {
   flex-shrink: 0;
-  width: 60px;
-  height: 60px;
+  width: var(--usg-icon-wrap-size);
+  height: var(--usg-icon-wrap-size);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-md);
   color: white;
 }
 
 .usb-selection-card__svg {
-  width: 32px;
-  height: 32px;
+  width: var(--usg-svg-size);
+  height: var(--usg-svg-size);
 }
 
 .usb-selection-card__details-block {
@@ -62,18 +80,18 @@
 .usb-selection-card__name {
   font-weight: 600;
   font-size: 1.1rem;
-  color: #212529;
+  color: var(--text-primary);
   margin-bottom: 0;
 }
 
 .usb-selection-card__capacity {
   display: inline-block;
   padding: 0.25rem 0.75rem;
-  background: #e9ecef;
-  border-radius: 20px;
+  background: var(--surface-page);
+  border-radius: var(--radius-xl);
   font-size: 0.85rem;
   font-weight: 600;
-  color: #495057;
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
@@ -85,16 +103,16 @@
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.75rem;
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
+  background: var(--surface-page);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 0.8rem;
-  color: #6c757d;
+  color: var(--text-muted);
 }
 
 .usb-selection-card__description {
   font-size: 0.85rem;
-  color: #6c757d;
+  color: var(--text-muted);
   margin-bottom: 0.75rem;
   line-height: 1.4;
   display: -webkit-box;
@@ -108,13 +126,13 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 0.75rem;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border-color);
 }
 
 .usb-selection-card__price-value {
   font-weight: 700;
   font-size: 1.1rem;
-  color: #0d6efd;
+  color: var(--color-info);
 }
 
 .usb-selection-card__badge {
@@ -126,11 +144,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   color: white;
   border-radius: 50%;
-  font-size: 1rem;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  font-size: var(--font-base);
+  box-shadow: var(--usg-badge-shadow);
 }
 
 [dir="rtl"] .usb-selection-card__badge {
@@ -138,15 +156,14 @@
   left: 1rem;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .usb-selection-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: var(--space-md);
   }
 
   .usb-selection-card {
-    padding: 1rem;
+    padding: var(--space-md);
   }
 
   .usb-selection-card__icon-wrap {
@@ -160,10 +177,10 @@
   }
 
   .usb-selection-card__name {
-    font-size: 1rem;
+    font-size: var(--font-base);
   }
 
   .usb-selection-card__price-value {
-    font-size: 1rem;
+    font-size: var(--font-base);
   }
 }

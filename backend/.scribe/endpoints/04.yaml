@@ -1,0 +1,777 @@
+name: Packages
+description: |-
+
+  Manage game packages (bundles of games for USB sticks).
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/packages
+    metadata:
+      custom: []
+      groupName: Packages
+      groupDescription: |-
+
+        Manage game packages (bundles of games for USB sticks).
+      subgroup: Public
+      subgroupDescription: ''
+      title: 'List packages'
+      description: |-
+        Get a paginated list of game packages with their cover, platform, and games.
+        Supports search and platform filtering.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      search:
+        custom: []
+        name: search
+        description: 'Search by name or description (English/Arabic).'
+        required: false
+        example: 'game bundle'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      platform_id:
+        custom: []
+        name: platform_id
+        description: 'Filter by platform ID.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Results per page (1-100). Defaults to 15.'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      search: 'game bundle'
+      platform_id: 1
+      per_page: 15
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"current_page":1,"data":[],"first_page_url":"http:\/\/localhost\/api\/packages?page=1","from":null,"last_page":1,"last_page_url":"http:\/\/localhost\/api\/packages?page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/packages?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost\/api\/packages","per_page":15,"prev_page_url":null,"to":null,"total":0}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields:
+      'data[].id':
+        custom: []
+        name: 'data[].id'
+        description: 'Package ID.'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].name_en':
+        custom: []
+        name: 'data[].name_en'
+        description: 'English name.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].name_ar':
+        custom: []
+        name: 'data[].name_ar'
+        description: 'Arabic name.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].views':
+        custom: []
+        name: 'data[].views'
+        description: 'View count.'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].order_count':
+        custom: []
+        name: 'data[].order_count'
+        description: 'Order count.'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].cover':
+        custom: []
+        name: 'data[].cover'
+        description: 'Cover image.'
+        required: false
+        example: null
+        type: object|null
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].platform':
+        custom: []
+        name: 'data[].platform'
+        description: 'The gaming platform.'
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].games':
+        custom: []
+        name: 'data[].games'
+        description: 'List of included games.'
+        required: false
+        example: null
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/packages/{id}'
+    metadata:
+      custom: []
+      groupName: Packages
+      groupDescription: |-
+
+        Manage game packages (bundles of games for USB sticks).
+      subgroup: Public
+      subgroupDescription: ''
+      title: 'Show a package'
+      description: 'Get details of a single package with its cover, platform, and games.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the package.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      package:
+        custom: []
+        name: package
+        description: 'The package ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+      package: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "name_en": "Ultimate Bundle",
+            "name_ar": "الحزمة المثالية",
+            "views": 42,
+            "order_count": 5,
+            "cover": {...},
+            "platform": {...},
+            "games": [...]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/packages
+    metadata:
+      custom: []
+      groupName: Packages
+      groupDescription: |-
+
+        Manage game packages (bundles of games for USB sticks).
+      subgroup: Admin
+      subgroupDescription: ''
+      title: 'Create a package'
+      description: 'Add a new game package. Admin only.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
+        custom: []
+        name: name_en
+        description: 'English name.'
+        required: true
+        example: 'Ultimate Bundle'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Arabic name.'
+        required: true
+        example: 'الحزمة المثالية'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: 'English description.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: 'Arabic description.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      cover_id:
+        custom: []
+        name: cover_id
+        description: 'Cover image ID.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      platform_id:
+        custom: []
+        name: platform_id
+        description: 'Platform ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      game_ids:
+        custom: []
+        name: game_ids
+        description: 'Array of game IDs to include.'
+        required: false
+        example:
+          - 1
+          - 2
+          - 3
+        type: 'integer[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name_en: 'Ultimate Bundle'
+      name_ar: 'الحزمة المثالية'
+      description_en: architecto
+      description_ar: architecto
+      cover_id: 16
+      platform_id: 1
+      game_ids:
+        - 1
+        - 2
+        - 3
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "id": 1,
+            "name_en": "Ultimate Bundle",
+            "name_ar": "الحزمة المثالية",
+            "platform_id": 1,
+            "views": 0,
+            "order_count": 0,
+            "cover": null,
+            "platform": {...},
+            "games": [...]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/packages/{id}'
+    metadata:
+      custom: []
+      groupName: Packages
+      groupDescription: |-
+
+        Manage game packages (bundles of games for USB sticks).
+      subgroup: Admin
+      subgroupDescription: ''
+      title: 'Update a package'
+      description: 'Update an existing game package. Admin only.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the package.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      package:
+        custom: []
+        name: package
+        description: 'The package ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+      package: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
+        custom: []
+        name: name_en
+        description: 'English name.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Arabic name.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: 'English description.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: 'Arabic description.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      cover_id:
+        custom: []
+        name: cover_id
+        description: 'Cover image ID.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      platform_id:
+        custom: []
+        name: platform_id
+        description: 'Platform ID.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      game_ids:
+        custom: []
+        name: game_ids
+        description: 'Array of game IDs.'
+        required: false
+        example:
+          - 16
+        type: 'integer[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      views:
+        custom: []
+        name: views
+        description: 'View count.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      order_count:
+        custom: []
+        name: order_count
+        description: 'Order count.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name_en: architecto
+      name_ar: architecto
+      description_en: architecto
+      description_ar: architecto
+      cover_id: 16
+      platform_id: 16
+      game_ids:
+        - 16
+      views: 16
+      order_count: 16
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "name_en": "Ultimate Bundle",
+            "name_ar": "الحزمة المثالية",
+            "cover": {...},
+            "platform": {...},
+            "games": [...]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/packages/{id}'
+    metadata:
+      custom: []
+      groupName: Packages
+      groupDescription: |-
+
+        Manage game packages (bundles of games for USB sticks).
+      subgroup: Admin
+      subgroupDescription: ''
+      title: 'Delete a package'
+      description: 'Remove a game package. Admin only.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the package.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      package:
+        custom: []
+        name: package
+        description: 'The package ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+      package: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 204
+        content: ''
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/packages/{package_id}/views'
+    metadata:
+      custom: []
+      groupName: Packages
+      groupDescription: |-
+
+        Manage game packages (bundles of games for USB sticks).
+      subgroup: Analytics
+      subgroupDescription: ''
+      title: 'Increment views'
+      description: 'Increment the view counter for a package. Admin only.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      package_id:
+        custom: []
+        name: package_id
+        description: 'The ID of the package.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      package:
+        custom: []
+        name: package
+        description: 'The package ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      package_id: 1
+      package: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"views": 43}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/packages/{package_id}/orders'
+    metadata:
+      custom: []
+      groupName: Packages
+      groupDescription: |-
+
+        Manage game packages (bundles of games for USB sticks).
+      subgroup: Analytics
+      subgroupDescription: ''
+      title: 'Increment orders'
+      description: 'Increment the order counter for a package. Admin only.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      package_id:
+        custom: []
+        name: package_id
+        description: 'The ID of the package.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      package:
+        custom: []
+        name: package
+        description: 'The package ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      package_id: 1
+      package: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"order_count": 6}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

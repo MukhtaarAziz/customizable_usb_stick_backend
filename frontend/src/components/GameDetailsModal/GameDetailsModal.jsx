@@ -1,26 +1,35 @@
 import { Modal, Button, Badge, Row, Col } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGamepad, faCode, faDownload, faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
 
-function GameDetailsModal({ show, onHide, game, locale }) {
-  if (!game) {
+function GameDetailsModal({ show, onHide, item, locale }) {
+  if (!item) {
     return null
   }
 
+  const isGame = item.type === 'game'
   const platformName = locale === 'ar'
-    ? game.platform?.name_ar || game.platform?.name_en
-    : game.platform?.name_en || game.platform?.name_ar
+    ? item.platform?.name_ar || item.platform?.name_en
+    : item.platform?.name_en || item.platform?.name_ar
   const categoryName = locale === 'ar'
-    ? game.category?.name_ar || game.category?.name_en
-    : game.category?.name_en || game.category?.name_ar
-  const name = locale === 'ar' ? game.name_ar || game.name_en : game.name_en || game.name_ar
+    ? item.category?.name_ar || item.category?.name_en
+    : item.category?.name_en || item.category?.name_ar
+  const name = locale === 'ar' ? item.name_ar || item.name_en : item.name_en || item.name_ar
   const description = locale === 'ar'
-    ? game.description_ar || game.description_en || (locale === 'ar' ? 'لا يوجد وصف' : 'No description')
-    : game.description_en || game.description_ar || (locale === 'ar' ? 'لا يوجد وصف' : 'No description')
-  const sizeLabel = game.size_gb ? `${Number(game.size_gb).toFixed(1)} GB` : (locale === 'ar' ? 'غير متوفر' : 'Unavailable')
+    ? item.description_ar || item.description_en || (locale === 'ar' ? 'لا يوجد وصف' : 'No description')
+    : item.description_en || item.description_ar || (locale === 'ar' ? 'لا يوجد وصف' : 'No description')
+  const sizeLabel = item.size_gb ? `${Number(item.size_gb).toFixed(1)} GB` : (locale === 'ar' ? 'غير متوفر' : 'Unavailable')
 
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title>{name}</Modal.Title>
+        <Modal.Title>
+          <Badge bg={isGame ? 'primary' : 'indigo'} className="me-2 py-1 px-2" style={isGame ? {} : { background: '#6366f1' }}>
+            <FontAwesomeIcon icon={isGame ? faGamepad : faCode} className="me-1" />
+            {isGame ? (locale === 'ar' ? 'لعبة' : 'Game') : (locale === 'ar' ? 'برنامج' : 'Program')}
+          </Badge>
+          {name}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row className="g-3">
@@ -40,12 +49,18 @@ function GameDetailsModal({ show, onHide, game, locale }) {
           </Col>
           <Col xs={12} md={6}>
             <div className="mb-3">
-              <h6>{locale === 'ar' ? 'التحميلات' : 'Downloads'}</h6>
-              <p className="mb-0">{game.downloads ?? 0}</p>
+              <h6>
+                <FontAwesomeIcon icon={faDownload} className="me-1" />
+                {locale === 'ar' ? 'التحميلات' : 'Downloads'}
+              </h6>
+              <p className="mb-0">{item.downloads ?? 0}</p>
             </div>
             <div className="mb-3">
-              <h6>{locale === 'ar' ? 'تاريخ الإصدار' : 'Release date'}</h6>
-              <p className="mb-0">{game.date_release ? new Date(game.date_release).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US') : '-'}</p>
+              <h6>
+                <FontAwesomeIcon icon={faCalendarAlt} className="me-1" />
+                {locale === 'ar' ? 'تاريخ الإصدار' : 'Release date'}
+              </h6>
+              <p className="mb-0">{item.date_release ? new Date(item.date_release).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US') : '-'}</p>
             </div>
           </Col>
         </Row>

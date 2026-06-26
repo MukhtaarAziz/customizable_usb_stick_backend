@@ -8,10 +8,36 @@ use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 use App\Models\Customer;
 
+/**
+ * @group Authentication
+ *
+ * Endpoints for authenticating users and customers.
+ */
 class AuthController extends Controller
 {
-    //
-
+    /**
+     * Login
+     *
+     * Authenticate using email or phone with a password. Returns a Sanctum token and user data.
+     * Works for both admin users and customers.
+     *
+     * @subgroup Login & Registration
+     * @unauthenticated
+     *
+     * @bodyParam email string The email address (required if phone is not provided). Example: user@example.com
+     * @bodyParam phone string The phone number (required if email is not provided). Example: 07701234567
+     * @bodyParam password string required The account password. Example: secret123
+     *
+     * @responseField user object The authenticated user or customer object.
+     * @responseField token string The Sanctum plain-text token.
+     *
+     * @response status=200 {
+     *   "user": {"id": 1, "name": "John", "email": "user@example.com", "role": "customer"},
+     *   "token": "1|abc123..."
+     * }
+     * @response status=422 {"message": "Identifier (email or phone) is required."}
+     * @response status=401 {"message": "Invalid credentials."}
+     */
     public function login(Request $request)
     {
         // Accept either email or phone for identifier
@@ -59,6 +85,16 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Logout
+     *
+     * Revoke the current Sanctum access token.
+     *
+     * @subgroup Session Management
+     * @authenticated
+     *
+     * @response status=200 {"message": "Logged out successfully."}
+     */
     public function logout(Request $request)
     {
         $user = $request->user('sanctum');
@@ -70,6 +106,20 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out successfully.']);
     }
 
+    /**
+     * Get current user
+     *
+     * Return the authenticated user's information.
+     *
+     * @subgroup Session Management
+     * @authenticated
+     *
+     * @responseField id int The user ID.
+     * @responseField name string The user's name.
+     * @responseField email string The user's email.
+     *
+     * @response status=200 {"id": 1, "name": "John", "email": "user@example.com", "role": "customer"}
+     */
     public function me(Request $request)
     {
         return response()->json($request->user('sanctum'));

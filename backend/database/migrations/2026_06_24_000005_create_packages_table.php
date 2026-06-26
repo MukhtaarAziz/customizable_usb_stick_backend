@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('packages', function (Blueprint $table) {
+        Schema::create('game_packages', function (Blueprint $table) {
             $table->id();
             $table->string('name_en');
             $table->text('description_en')->nullable();
             $table->string('name_ar');
             $table->text('description_ar')->nullable();
-            $table->foreignId('cover_id')->nullable()->constrained('images')->nullOnDelete();
-            $table->foreignId('platform_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('cover_id')->nullable()->constrained('game_images')->nullOnDelete();
+            $table->foreignId('game_platform_id')->constrained('game_platforms')->cascadeOnDelete();
             $table->unsignedBigInteger('views')->default(0);
             $table->unsignedBigInteger('order_count')->default(0);
             $table->timestamps();
@@ -27,9 +27,9 @@ return new class extends Migration
         Schema::create('game_package', function (Blueprint $table) {
             $table->id();
             $table->foreignId('game_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete();
+            $table->foreignId('game_package_id')->constrained('game_packages')->cascadeOnDelete();
             $table->timestamps();
-            $table->unique(['game_id', 'package_id']);
+            $table->unique(['game_id', 'game_package_id']);
         });
     }
 
@@ -39,6 +39,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('game_package');
-        Schema::dropIfExists('packages');
+        Schema::dropIfExists('game_packages');
     }
 };

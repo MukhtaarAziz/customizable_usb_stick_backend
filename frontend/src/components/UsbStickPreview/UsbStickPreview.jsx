@@ -13,11 +13,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import './UsbStickPreview.css'
 
-export default function UsbStickPreview({ usb, selectedGames, locale }) {
+export default function UsbStickPreview({ usb, selectedItems = [], locale }) {
   if (!usb) return null
 
   const totalCapacity = Number(usb.size_gb) || 0
-  const usedCapacity = selectedGames.reduce((acc, game) => acc + (Number(game.size_gb) || 0), 0)
+  const usedCapacity = selectedItems.reduce((acc, item) => acc + (Number(item.size_gb) || 0), 0)
   const remainingCapacity = Math.max(0, totalCapacity - usedCapacity)
   const usedPercentage = totalCapacity > 0 ? Math.min((usedCapacity / totalCapacity) * 100, 100) : 0
   const isOverCapacity = usedCapacity > totalCapacity
@@ -111,7 +111,7 @@ export default function UsbStickPreview({ usb, selectedGames, locale }) {
             <div className="usb-stick-model__shine"></div>
             
             {/* LED Status Light */}
-            <div className={`usb-stick-model__led ${selectedGames.length > 0 ? 'active' : ''} ${isOverCapacity ? 'danger' : ''}`}></div>
+            <div className={`usb-stick-model__led ${selectedItems.length > 0 ? 'active' : ''} ${isOverCapacity ? 'danger' : ''}`}></div>
             
             {/* Text Overlay on USB Stick */}
             <div className="usb-stick-model__label">
@@ -145,8 +145,8 @@ export default function UsbStickPreview({ usb, selectedGames, locale }) {
               <FontAwesomeIcon icon={faGamepad} />
             </div>
             <div className="usb-preview-card__stat-info">
-              <span className="stat-label">{locale === 'ar' ? 'الألعاب المضافة' : 'Games Added'}</span>
-              <span className="stat-value">{selectedGames.length}</span>
+              <span className="stat-label">{locale === 'ar' ? 'العناصر المضافة' : 'Items Added'}</span>
+              <span className="stat-value">{selectedItems.length}</span>
             </div>
           </div>
         </div>

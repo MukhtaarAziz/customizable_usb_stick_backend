@@ -1,9 +1,9 @@
-import { Card } from 'react-bootstrap'
+import { Card, Badge } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHdd, faGamepad, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
+import { faHdd, faGamepad, faMapMarkerAlt, faCode } from '@fortawesome/free-solid-svg-icons'
 import './OrderReceipt.css'
 
-function OrderReceipt({ selectedUsb, selectedGames, totalGamesSize, locale, langText }) {
+function OrderReceipt({ selectedUsb, selectedItems, totalItemsSize, locale, langText }) {
   return (
     <Card className="order-receipt-card h-100">
       <Card.Body className="p-4">
@@ -29,12 +29,12 @@ function OrderReceipt({ selectedUsb, selectedGames, totalGamesSize, locale, lang
 
           <div className="receipt-item">
             <span className="text-muted">{langText.totalSize}</span>
-            <span className="text-info fw-bold">{totalGamesSize.toFixed(1)} GB</span>
+            <span className="text-info fw-bold">{totalItemsSize.toFixed(1)} GB</span>
           </div>
 
           <div className="receipt-item">
             <span className="text-muted">{langText.capacityUsed}</span>
-            <span>{Math.round((totalGamesSize / (selectedUsb?.size_gb || 1)) * 100)}%</span>
+            <span>{Math.round((totalItemsSize / (selectedUsb?.size_gb || 1)) * 100)}%</span>
           </div>
 
           <div className="receipt-item total">
@@ -46,20 +46,27 @@ function OrderReceipt({ selectedUsb, selectedGames, totalGamesSize, locale, lang
         </div>
 
         <h6 className="fw-bold mt-4 mb-2">
-          {locale === 'ar' ? 'قائمة الألعاب المضمنة' : 'Included Games'} ({selectedGames.length})
+          {locale === 'ar' ? 'قائمة العناصر المضمنة' : 'Included Items'} ({selectedItems.length})
         </h6>
         <div className="receipt-games-list" style={{ maxHeight: '250px' }}>
-          {selectedGames.map((game, index) => (
-            <div key={game.id} className="receipt-game-item">
-              <span className="receipt-game-number">{index + 1}.</span>
-              <span className="receipt-game-name flex-grow-1">
-                {locale === 'ar' ? game.name_ar || game.name_en : game.name_en || game.name_ar}
-              </span>
-              <span className="receipt-game-size text-muted">
-                {Number(game.size_gb).toFixed(1)} GB
-              </span>
-            </div>
-          ))}
+          {selectedItems.map((item, index) => {
+            const isGame = item.type === 'game'
+            return (
+              <div key={`${item.type}-${item.id}`} className="receipt-game-item">
+                <span className="receipt-game-number">{index + 1}.</span>
+                <span className="receipt-game-name flex-grow-1">
+                  {locale === 'ar' ? item.name_ar || item.name_en : item.name_en || item.name_ar}
+                </span>
+                <Badge bg={isGame ? 'primary' : 'indigo'} className="me-1 py-0 px-1" style={isGame ? {} : { background: '#6366f1' }}>
+                  <FontAwesomeIcon icon={isGame ? faGamepad : faCode} className="me-1" />
+                  {isGame ? (locale === 'ar' ? 'لعبة' : 'Game') : (locale === 'ar' ? 'برنامج' : 'App')}
+                </Badge>
+                <span className="receipt-game-size text-muted ms-2">
+                  {Number(item.size_gb).toFixed(1)} GB
+                </span>
+              </div>
+            )
+          })}
         </div>
       </Card.Body>
     </Card>

@@ -22,7 +22,7 @@ function PackagesPage({ locale, t }) {
   useEffect(() => {
     async function loadPlatforms() {
       try {
-        const response = await fetch('/api/platforms')
+        const response = await fetch('/api/game-platforms')
         if (!response.ok) throw new Error('Failed to load platforms.')
         const data = await response.json()
         setPlatforms(data.data ?? data)
@@ -46,7 +46,7 @@ function PackagesPage({ locale, t }) {
         if (search) query.set('search', search)
         if (platformId) query.set('platform_id', platformId)
 
-        const response = await fetch(`/api/packages?${query.toString()}`)
+        const response = await fetch(`/api/game-packages?${query.toString()}`)
         if (!response.ok) {
           throw new Error(locale === 'ar' ? 'تعذر تحميل الحزم.' : 'Unable to load packages.')
         }

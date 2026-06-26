@@ -1,17 +1,18 @@
 import { useState } from 'react'
 import { Row, Col, Form, InputGroup, Button, Spinner, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faFilter, faList, faLayerGroup, faFolderOpen } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faFilter, faList, faLayerGroup, faFolderOpen, faGamepad, faCode } from '@fortawesome/free-solid-svg-icons'
 import GameCard from '../GameCard/GameCard.jsx'
 import CustomPagination from '../CustomPagination/CustomPagination.jsx'
 import { PER_PAGE_OPTIONS } from '../../config'
 import './GamesCatalog.css'
 
 function GamesCatalog({
-  games,
+  items,
   loading,
   error,
   search,
+  catalogType,
   platformId,
   categoryId,
   perPage,
@@ -20,23 +21,32 @@ function GamesCatalog({
   platforms,
   categories,
   viewMode,
-  selectedGameIds,
+  selectedIds,
   onSearchChange,
+  onSearchSubmit,
+  onSearchClear,
+  onTypeChange,
   onPlatformChange,
   onCategoryChange,
   onPerPageChange,
   onPageChange,
   onViewModeChange,
-  onViewGameDetails,
-  onAddGame,
+  onViewItemDetails,
+  onAddItem,
   locale
 }) {
+  const typeOptions = [
+    { value: 'all', labelEn: 'All', labelAr: 'الكل', icon: null },
+    { value: 'game', labelEn: 'Games', labelAr: 'ألعاب', icon: faGamepad },
+    { value: 'program', labelEn: 'Programs', labelAr: 'برامج', icon: faCode },
+  ]
+
   if (loading) {
     return (
       <div className="text-center py-5">
         <Spinner animation="border" variant="primary" />
         <p className="mt-3 text-muted">
-          {locale === 'ar' ? 'جارٍ تحميل الألعاب...' : 'Loading games...'}
+          {locale === 'ar' ? 'جارٍ تحميل العناصر...' : 'Loading items...'}
         </p>
       </div>
     )
@@ -46,65 +56,85 @@ function GamesCatalog({
     return <Alert variant="danger">{error}</Alert>
   }
 
-  if (games.length === 0) {
-    return (
-      <div className="text-center py-5">
-        <FontAwesomeIcon icon={faFolderOpen} className="text-muted mb-3" style={{ fontSize: '3rem' }} />
-        <h5>{locale === 'ar' ? 'لم يتم العثور على ألعاب' : 'No games found'}</h5>
-      </div>
-    )
-  }
+  const filteredPlatforms = catalogType === 'all'
+    ? platforms
+    : platforms.filter(p => p.type === catalogType)
+
+  const filteredCategories = catalogType === 'all'
+    ? categories
+    : categories.filter(c => c.type === catalogType)
 
   return (
     <div className="games-catalog">
       {/* Filters */}
       <div className="games-catalog__filters mb-4">
         <Row className="g-3">
-          <Col xs={12} md={4}>
+          <Col xs={12} md={3}>
             <InputGroup>
               <InputGroup.Text className="bg-transparent">
                 <FontAwesomeIcon icon={faSearch} className="text-muted" />
               </InputGroup.Text>
               <Form.Control
                 type="search"
-                placeholder={locale === 'ar' ? 'ابحث باسم اللعبة...' : 'Search by game name...'}
+                placeholder={locale === 'ar' ? 'ابحث بالاسم...' : 'Search by name...'}
                 value={search}
                 onChange={onSearchChange}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); onSearchSubmit?.() } }}
               />
               {search && (
-                <Button variant="outline-secondary" onClick={() => onSearchChange({ target: { value: '' } })}>
+                <Button variant="outline-secondary" onClick={onSearchClear}>
                   {locale === 'ar' ? 'مسح' : 'Clear'}
                 </Button>
               )}
+              <Button variant="primary" onClick={onSearchSubmit}>
+                <FontAwesomeIcon icon={faSearch} />
+              </Button>
             </InputGroup>
           </Col>
 
-          <Col xs={12} md={4}>
+          <Col xs={12} md={3}>
             <InputGroup>
               <InputGroup.Text className="bg-transparent">
                 <FontAwesomeIcon icon={faFilter} className="text-muted" />
               </InputGroup.Text>
-              <Form.Select value={platformId} onChange={onPlatformChange}>
-                <option value="">{locale === 'ar' ? 'كل المنصات' : 'All platforms'}</option>
-                {platforms.map((platform) => (
-                  <option key={platform.id} value={platform.id}>
-                    {locale === 'ar' ? platform.name_ar || platform.name_en : platform.name_en || platform.name_ar}
+              <Form.Select value={catalogType} onChange={onTypeChange}>
+                {typeOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {locale === 'ar' ? opt.labelAr : opt.labelEn}
                   </option>
                 ))}
               </Form.Select>
             </InputGroup>
           </Col>
 
-          <Col xs={12} md={4}>
+          <Col xs={12} md={3}>
+            <InputGroup>
+              <InputGroup.Text className="bg-transparent">
+                <FontAwesomeIcon icon={faFilter} className="text-muted" />
+              </InputGroup.Text>
+              <Form.Select value={platformId} onChange={onPlatformChange}>
+                <option value="">{locale === 'ar' ? 'كل المنصات' : 'All platforms'}</option>
+                {filteredPlatforms.map((platform) => (
+                  <option key={`${platform.type}-${platform.id}`} value={platform.id}>
+                    {locale === 'ar' ? platform.name_ar || platform.name_en : platform.name_en || platform.name_ar}
+                    {catalogType === 'all' && ` [${platform.type === 'game' ? (locale === 'ar' ? 'لعبة' : 'Game') : (locale === 'ar' ? 'برنامج' : 'App')}]`}
+                  </option>
+                ))}
+              </Form.Select>
+            </InputGroup>
+          </Col>
+
+          <Col xs={12} md={3}>
             <InputGroup>
               <InputGroup.Text className="bg-transparent">
                 <FontAwesomeIcon icon={faList} className="text-muted" />
               </InputGroup.Text>
               <Form.Select value={categoryId} onChange={onCategoryChange}>
                 <option value="">{locale === 'ar' ? 'كل التصنيفات' : 'All categories'}</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
+                {filteredCategories.map((category) => (
+                  <option key={`${category.type}-${category.id}`} value={category.id}>
                     {locale === 'ar' ? category.name_ar || category.name_en : category.name_en || category.name_ar}
+                    {catalogType === 'all' && ` [${category.type === 'game' ? (locale === 'ar' ? 'لعبة' : 'Game') : (locale === 'ar' ? 'برنامج' : 'App')}]`}
                   </option>
                 ))}
               </Form.Select>
@@ -113,21 +143,28 @@ function GamesCatalog({
         </Row>
       </div>
 
-      {/* Games Grid */}
-      <Row xs={1} md={viewMode === 'grid' ? 2 : 1} lg={viewMode === 'grid' ? 3 : 1} className="g-4">
-        {games.map((game) => (
-          <Col key={game.id}>
-            <GameCard
-              game={game}
-              locale={locale}
-              viewMode={viewMode}
-              onView={onViewGameDetails}
-              onAdd={onAddGame}
-              added={selectedGameIds.includes(game.id)}
+      {/* Items Grid */}
+      {items.length === 0 ? (
+        <div className="text-center py-5">
+          <FontAwesomeIcon icon={faFolderOpen} className="text-muted mb-3" style={{ fontSize: '3rem' }} />
+          <h5>{locale === 'ar' ? 'لم يتم العثور على عناصر' : 'No items found'}</h5>
+        </div>
+      ) : (
+        <Row xs={1} md={viewMode === 'grid' ? 2 : 1} lg={viewMode === 'grid' ? 3 : 1} className="g-4">
+          {items.map((item) => (
+            <Col key={`${item.type}-${item.id}`}>
+              <GameCard
+                item={item}
+                locale={locale}
+                viewMode={viewMode}
+                onView={onViewItemDetails}
+              onAdd={onAddItem}
+              added={selectedIds.includes(`${item.type}-${item.id}`)}
             />
           </Col>
         ))}
       </Row>
+      )}
 
       {/* Bottom Controls */}
       <div className="games-catalog__controls d-flex flex-row justify-content-between align-items-center mt-4 gap-2">

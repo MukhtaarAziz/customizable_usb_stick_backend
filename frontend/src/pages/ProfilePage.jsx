@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faEnvelope, faPhone, faArrowLeft, faBox, faCog } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faEnvelope, faPhone, faArrowLeft, faArrowRightFromBracket, faBox, faLocationDot, faMapLocation } from '@fortawesome/free-solid-svg-icons'
 import OrderList from '../components/OrderList/OrderList.jsx'
 import CustomPagination from '../components/CustomPagination/CustomPagination.jsx'
 import './ProfilePage.css'
@@ -16,28 +16,27 @@ function ProfilePage({ user, onLogout, locale, t }) {
   const [lastPage, setLastPage] = useState(1)
   const ordersPerPage = 5
 
-  // Load user orders
   useEffect(() => {
     async function loadOrders(page = 1) {
       try {
         setLoading(true)
         setError(null)
-        
+
         if (!user) {
           setError(locale === 'ar' ? 'يرجى تسجيل الدخول' : 'Please login')
           setLoading(false)
           return
         }
-        
+
         const token = user?.token || localStorage.getItem('authToken')
-        
+
         if (!token) {
           setError(locale === 'ar' ? 'يرجى تسجيل الدخول' : 'Please login')
           setLoading(false)
           return
         }
 
-        const response = await fetch(`/api/custom-usb-orders?page=${page}&per_page=${ordersPerPage}`, {
+        const response = await fetch(`/api/usb-stick-orders?page=${page}&per_page=${ordersPerPage}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'
@@ -49,8 +48,7 @@ function ProfilePage({ user, onLogout, locale, t }) {
         }
 
         const data = await response.json()
-        
-        // Handle different response formats
+
         let ordersArray = []
         if (Array.isArray(data)) {
           ordersArray = data
@@ -62,7 +60,7 @@ function ProfilePage({ user, onLogout, locale, t }) {
           ordersArray = [data.data]
           setLastPage(1)
         }
-        
+
         setOrders(ordersArray)
         setCurrentPage(page)
       } catch (err) {
@@ -84,7 +82,6 @@ function ProfilePage({ user, onLogout, locale, t }) {
     navigate('/')
   }
 
-  // Show login prompt if no user
   if (!user) {
     return (
       <div className="profile-page">
@@ -102,53 +99,53 @@ function ProfilePage({ user, onLogout, locale, t }) {
 
   return (
     <div className="profile-page">
-      <Container className="py-5">
-        <Row className="mb-4">
+      <Container className="py-4 py-md-5">
+        <Row className="mb-3 mb-md-4">
           <Col>
             <Button
               variant="outline-secondary"
               onClick={() => navigate(-1)}
-              className="mb-3"
+              size="sm"
+              className="rounded-pill px-3"
             >
-              <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
-              {locale === 'ar' ? 'رجوع' : 'Back'}
+              <FontAwesomeIcon icon={faArrowLeft} className={locale === 'ar' ? '' : 'me-1'} />
+              <span className={locale === 'ar' ? 'me-1' : ''}>{locale === 'ar' ? 'رجوع' : 'Back'}</span>
             </Button>
           </Col>
         </Row>
 
         <Row>
-          <Col lg={10} className="mx-auto">
-            {/* Profile Header Card */}
-            <Card className="profile-header-card shadow mb-4">
-              <Card.Body className="p-4">
-                <div className="d-flex align-items-center">
-                  <div className="profile-avatar-lg me-4">
+          <Col xl={10} className="mx-auto">
+            <Card className="profile-header-card shadow-sm mb-4">
+              <Card.Body className="p-3 p-md-4">
+                <div className="d-flex align-items-center flex-wrap gap-3">
+                  <div className="profile-avatar-lg">
                     <FontAwesomeIcon icon={faUser} size="3x" />
                   </div>
-                  <div className="flex-grow-1">
+                  <div className="flex-grow-1 text-center text-md-start">
                     <h2 className="fw-bold mb-1">{user.name}</h2>
-                    <p className="text-muted mb-0">
+                    <p className="mb-0" style={{ opacity: 0.8 }}>
                       {locale === 'ar' ? 'الملف الشخصي' : 'Profile'}
                     </p>
                   </div>
                   <Button
                     variant="outline-danger"
                     onClick={handleLogout}
+                    size="sm"
+                    className="rounded-pill px-3"
                   >
-                    <FontAwesomeIcon icon={faArrowLeft} className={locale === 'ar' ? 'ms-2' : 'me-2'} />
+                    <FontAwesomeIcon icon={faArrowRightFromBracket} className={locale === 'ar' ? 'ms-1' : 'me-1'} />
                     {locale === 'ar' ? 'تسجيل الخروج' : 'Logout'}
                   </Button>
                 </div>
               </Card.Body>
             </Card>
 
-            {/* Grid Layout for Panels */}
-            <Row className="g-4">
-              {/* Personal Info Panel */}
-              <Col lg={5}>
-                <Card className="profile-panel shadow h-100">
-                  <Card.Body className="p-4">
-                    <div className="d-flex align-items-center mb-4">
+            <Row className="g-3 g-md-4">
+              <Col xs={12} lg={5}>
+                <Card className="profile-panel shadow-sm h-100">
+                  <Card.Body className="p-3 p-md-4">
+                    <div className="d-flex align-items-center gap-3 mb-3 mb-md-4">
                       <div className="panel-icon">
                         <FontAwesomeIcon icon={faUser} />
                       </div>
@@ -157,57 +154,49 @@ function ProfilePage({ user, onLogout, locale, t }) {
                       </h5>
                     </div>
 
-                    <div className="profile-info-panel">
-                      <div className="info-row mb-3">
+                    <div className="d-flex flex-column gap-2 gap-md-3">
+                      <div className="info-row">
                         <div className="info-icon">
                           <FontAwesomeIcon icon={faUser} />
                         </div>
                         <div className="info-content">
-                          <label className="info-label">
-                            {locale === 'ar' ? 'الاسم الكامل' : 'Full Name'}
-                          </label>
-                          <p className="info-value fw-semibold">{user.name}</p>
+                          <span className="info-label">{locale === 'ar' ? 'الاسم الكامل' : 'Full Name'}</span>
+                          <p className="info-value">{user.name}</p>
                         </div>
                       </div>
 
                       {user.email && (
-                        <div className="info-row mb-3">
+                        <div className="info-row">
                           <div className="info-icon">
                             <FontAwesomeIcon icon={faEnvelope} />
                           </div>
                           <div className="info-content">
-                            <label className="info-label">
-                              {locale === 'ar' ? 'البريد الإلكتروني' : 'Email'}
-                            </label>
-                            <p className="info-value fw-semibold">{user.email}</p>
+                            <span className="info-label">{locale === 'ar' ? 'البريد الإلكتروني' : 'Email'}</span>
+                            <p className="info-value">{user.email}</p>
                           </div>
                         </div>
                       )}
 
                       {user.phone && (
-                        <div className="info-row mb-3">
+                        <div className="info-row">
                           <div className="info-icon">
                             <FontAwesomeIcon icon={faPhone} />
                           </div>
                           <div className="info-content">
-                            <label className="info-label">
-                              {locale === 'ar' ? 'رقم الهاتف' : 'Phone Number'}
-                            </label>
-                            <p className="info-value fw-semibold">{user.phone}</p>
+                            <span className="info-label">{locale === 'ar' ? 'رقم الهاتف' : 'Phone Number'}</span>
+                            <p className="info-value" dir="ltr">{user.phone}</p>
                           </div>
                         </div>
                       )}
 
                       {user.governorate && (
-                        <div className="info-row mb-3">
+                        <div className="info-row">
                           <div className="info-icon">
-                            <FontAwesomeIcon icon={faCog} />
+                            <FontAwesomeIcon icon={faLocationDot} />
                           </div>
                           <div className="info-content">
-                            <label className="info-label">
-                              {locale === 'ar' ? 'المحافظة' : 'Governorate'}
-                            </label>
-                            <p className="info-value fw-semibold">
+                            <span className="info-label">{locale === 'ar' ? 'المحافظة' : 'Governorate'}</span>
+                            <p className="info-value">
                               {locale === 'ar' ? user.governorate.name_ar : user.governorate.name_en}
                             </p>
                           </div>
@@ -217,13 +206,11 @@ function ProfilePage({ user, onLogout, locale, t }) {
                       {user.address && (
                         <div className="info-row">
                           <div className="info-icon">
-                            <FontAwesomeIcon icon={faCog} />
+                            <FontAwesomeIcon icon={faMapLocation} />
                           </div>
                           <div className="info-content">
-                            <label className="info-label">
-                              {locale === 'ar' ? 'العنوان' : 'Address'}
-                            </label>
-                            <p className="info-value fw-semibold">{user.address}</p>
+                            <span className="info-label">{locale === 'ar' ? 'العنوان' : 'Address'}</span>
+                            <p className="info-value">{user.address}</p>
                           </div>
                         </div>
                       )}
@@ -232,11 +219,10 @@ function ProfilePage({ user, onLogout, locale, t }) {
                 </Card>
               </Col>
 
-              {/* Orders Panel */}
-              <Col lg={7}>
-                <Card className="profile-panel shadow h-100">
-                  <Card.Body className="p-4">
-                    <div className="d-flex align-items-center mb-4">
+              <Col xs={12} lg={7}>
+                <Card className="profile-panel shadow-sm h-100">
+                  <Card.Body className="p-3 p-md-4">
+                    <div className="d-flex align-items-center gap-3 mb-3 mb-md-4">
                       <div className="panel-icon panel-icon--orders">
                         <FontAwesomeIcon icon={faBox} />
                       </div>
@@ -251,20 +237,20 @@ function ProfilePage({ user, onLogout, locale, t }) {
                     </div>
 
                     <div className="orders-content-wrapper">
-                      <OrderList 
-                        orders={orders} 
-                        locale={locale} 
-                        loading={loading} 
-                        error={error} 
+                      <OrderList
+                        orders={orders}
+                        locale={locale}
+                        loading={loading}
+                        error={error}
                       />
-                      
+
                       {!loading && !error && orders.length > 0 && (
-                        <div className="orders-pagination mt-4">
-                          <CustomPagination 
-                            page={currentPage} 
-                            lastPage={lastPage} 
-                            onPageChange={handlePageChange} 
-                            locale={locale} 
+                        <div className="orders-pagination mt-3 mt-md-4">
+                          <CustomPagination
+                            page={currentPage}
+                            lastPage={lastPage}
+                            onPageChange={handlePageChange}
+                            locale={locale}
                           />
                         </div>
                       )}

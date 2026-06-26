@@ -8,10 +8,11 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('game_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('game_id')->constrained()->onDelete('cascade');
             $table->string('path');
+            $table->string('thumb_path')->nullable();
             $table->string('type')->nullable();
             $table->string('alt')->nullable();
             $table->integer('sort_order')->default(0);
@@ -24,6 +25,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('game_images');
     }
 };

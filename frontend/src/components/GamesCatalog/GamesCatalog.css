@@ -1,19 +1,35 @@
+/* GamesCatalog design tokens */
+.games-catalog {
+  --gc-filters-bg-dark: rgba(30, 41, 59, 0.6);
+  --gc-controls-bg-dark: rgba(30, 41, 59, 0.6);
+}
+
 .games-catalog {
   width: 100%;
 }
 
 .games-catalog__filters {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: var(--surface-card);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+body.theme-dark .games-catalog__filters {
+  --gc-filters-bg-dark: rgba(30, 41, 59, 0.6);
+  background: var(--gc-filters-bg-dark);
 }
 
 .games-catalog__controls {
-  background: white;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: var(--surface-card);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+body.theme-dark .games-catalog__controls {
+  --gc-controls-bg-dark: rgba(30, 41, 59, 0.6);
+  background: var(--gc-controls-bg-dark);
 }
 
 .view-mode-toggle {
@@ -27,34 +43,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  color: #6c757d;
+  background: var(--surface-card);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-base);
 }
 
 .view-mode-toggle__btn:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .view-mode-toggle__btn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #667eea;
+  background: var(--gradient-primary);
+  border-color: var(--color-primary);
   color: white;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .games-catalog__filters {
-    padding: 1rem;
+    padding: var(--space-md);
   }
 
   .games-catalog__controls {
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-md);
   }
 
   .view-mode-toggle {

@@ -1,13 +1,21 @@
+/* OrderReceipt design tokens */
+.order-receipt {
+  --or-total-font: 1.2rem;
+  --or-total-price-font: 1.3rem;
+  --or-receipt-price-font: 1.3rem;
+}
+
 .order-receipt-card {
   border: none;
-  border-radius: 16px;
-  background: white;
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-md);
 }
 
 .order-receipt {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 
 .receipt-item {
@@ -15,7 +23,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .receipt-item:last-child {
@@ -23,18 +31,26 @@
 }
 
 .receipt-item.total {
-  padding-top: 1rem;
+  padding-top: var(--space-md);
   margin-top: 0.5rem;
-  border-top: 2px solid #e0e0e0;
+  border-top: 2px solid var(--border-color);
   border-bottom: none;
-  font-size: 1.2rem;
+  font-size: var(--or-total-font);
   font-weight: 600;
 }
 
+.receipt-item.total .receipt-price {
+  font-size: var(--or-total-price-font);
+}
+
 .receipt-price {
-  color: #0d6efd;
+  color: var(--color-info);
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: var(--or-receipt-price-font);
+}
+
+body.theme-dark .receipt-price {
+  color: var(--color-info);
 }
 
 .receipt-games-list {
@@ -52,7 +68,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #f8f9fa;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .receipt-game-item:last-child {
@@ -60,7 +76,7 @@
 }
 
 .receipt-game-number {
-  color: #6c757d;
+  color: var(--text-muted);
   font-weight: 500;
   min-width: 24px;
 }
@@ -68,29 +84,28 @@
 .receipt-game-name {
   flex: 1;
   font-size: 0.9rem;
-  color: #212529;
+  color: var(--text-primary);
 }
 
 .receipt-game-size {
   font-size: 0.85rem;
-  font-family: monospace;
+  font-family: var(--font-mono);
 }
 
-/* Scrollbar styling */
 .receipt-games-list::-webkit-scrollbar {
   width: 6px;
 }
 
 .receipt-games-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
+  background: var(--surface-page);
+  border-radius: var(--radius-sm);
 }
 
 .receipt-games-list::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 10px;
+  background: var(--border-color);
+  border-radius: var(--radius-sm);
 }
 
 .receipt-games-list::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: var(--text-muted);
 }

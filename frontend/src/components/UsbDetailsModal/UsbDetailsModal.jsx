@@ -1,15 +1,15 @@
 import React from 'react'
-import { Modal, Button, Alert } from 'react-bootstrap'
+import { Modal, Button, Alert, Badge } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashAlt, faPaperPlane, faTimes, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import { faTrashAlt, faPaperPlane, faTimes, faExclamationTriangle, faGamepad, faCode } from '@fortawesome/free-solid-svg-icons'
 import UsbStickPreview from '../UsbStickPreview/UsbStickPreview.jsx'
 import './UsbDetailsModal.css'
 
-export default function UsbDetailsModal({ show, onHide, usb, selectedGames, locale, onRemoveGame, onCheckout }) {
+export default function UsbDetailsModal({ show, onHide, usb, selectedItems, locale, onRemoveItem, onCheckout }) {
   if (!usb) return null
 
   const totalCapacity = Number(usb.size_gb) || 0
-  const usedCapacity = selectedGames.reduce((acc, game) => acc + (Number(game.size_gb) || 0), 0)
+  const usedCapacity = selectedItems.reduce((acc, item) => acc + (Number(item.size_gb) || 0), 0)
   const isOverCapacity = usedCapacity > totalCapacity
 
   const handleCheckoutClick = () => {
@@ -43,47 +43,54 @@ export default function UsbDetailsModal({ show, onHide, usb, selectedGames, loca
           <div className="col-12 col-md-6">
             <UsbStickPreview
               usb={usb}
-              selectedGames={selectedGames}
+              selectedItems={selectedItems}
               locale={locale}
             />
           </div>
 
-          {/* Right Column - Selected Games list & Checkout details */}
+          {/* Right Column - Selected Items list & Checkout details */}
           <div className="col-12 col-md-6 d-flex flex-column">
             <div className="usb-details-modal__games-card flex-grow-1">
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h6 className="fw-bold mb-0">
-                  {locale === 'ar' ? 'قائمة الألعاب المختارة' : 'Selected Games List'}
+                  {locale === 'ar' ? 'قائمة العناصر المختارة' : 'Selected Items List'}
                 </h6>
-                <span className="badge bg-primary rounded-pill">{selectedGames.length}</span>
+                <span className="badge bg-primary rounded-pill">{selectedItems.length}</span>
               </div>
 
-              {selectedGames.length === 0 ? (
+              {selectedItems.length === 0 ? (
                 <div className="text-center py-5 text-muted small">
-                  {locale === 'ar' ? 'لم تقم بإضافة أي ألعاب بعد.' : 'No games added yet.'}
+                  {locale === 'ar' ? 'لم تقم بإضافة أي عناصر بعد.' : 'No items added yet.'}
                 </div>
               ) : (
                 <div className="usb-details-modal__sidebar-list mb-3">
-                  {selectedGames.map((game) => (
-                    <div key={game.id} className="usb-details-modal__sidebar-item">
-                      <div className="usb-details-modal__sidebar-item-name">
-                        {locale === 'ar' ? game.name_ar || game.name_en : game.name_en || game.name_ar}
+                  {selectedItems.map((item) => {
+                    const isGame = item.type === 'game'
+                    return (
+                      <div key={`${item.type}-${item.id}`} className="usb-details-modal__sidebar-item">
+                        <div className="usb-details-modal__sidebar-item-name d-flex align-items-center gap-2">
+                          <Badge bg={isGame ? 'primary' : 'indigo'} className="py-0 px-1" style={isGame ? {} : { background: '#6366f1' }}>
+                            <FontAwesomeIcon icon={isGame ? faGamepad : faCode} className="me-1" />
+                            {isGame ? (locale === 'ar' ? 'لعبة' : 'Game') : (locale === 'ar' ? 'برنامج' : 'App')}
+                          </Badge>
+                          {locale === 'ar' ? item.name_ar || item.name_en : item.name_en || item.name_ar}
+                        </div>
+                        <div className="d-flex align-items-center gap-2">
+                          <span className="usb-details-modal__sidebar-item-size text-muted small">
+                            {item.size_gb ? `${Number(item.size_gb).toFixed(1)} GB` : '0 GB'}
+                          </span>
+                          <button
+                            type="button"
+                            className="usb-details-modal__sidebar-item-remove"
+                            onClick={() => onRemoveItem(item.id, item.type)}
+                            title={locale === 'ar' ? 'إزالة' : 'Remove'}
+                          >
+                            <FontAwesomeIcon icon={faTrashAlt} />
+                          </button>
+                        </div>
                       </div>
-                      <div className="d-flex align-items-center gap-2">
-                        <span className="usb-details-modal__sidebar-item-size text-muted small">
-                          {game.size_gb ? `${Number(game.size_gb).toFixed(1)} GB` : '0 GB'}
-                        </span>
-                        <button
-                          type="button"
-                          className="usb-details-modal__sidebar-item-remove"
-                          onClick={() => onRemoveGame(game.id)}
-                          title={locale === 'ar' ? 'إزالة' : 'Remove'}
-                        >
-                          <FontAwesomeIcon icon={faTrashAlt} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
 
@@ -91,8 +98,8 @@ export default function UsbDetailsModal({ show, onHide, usb, selectedGames, loca
                 <Alert variant="danger" className="py-2 px-3 small mb-3">
                   <FontAwesomeIcon icon={faExclamationTriangle} className="me-2" />
                   {locale === 'ar'
-                    ? 'لقد تجاوزت المساحة المتاحة بالفلاش! يرجى إزالة بعض الألعاب.'
-                    : 'Storage limit exceeded! Please remove some games.'}
+                    ? 'لقد تجاوزت المساحة المتاحة بالفلاش! يرجى إزالة بعض العناصر.'
+                    : 'Storage limit exceeded! Please remove some items.'}
                 </Alert>
               )}
             </div>
@@ -104,7 +111,7 @@ export default function UsbDetailsModal({ show, onHide, usb, selectedGames, loca
         <Button
           variant="success"
           className="px-4 py-2 wizard-btn-next wizard-btn-next--success"
-          disabled={selectedGames.length === 0 || isOverCapacity}
+          disabled={selectedItems.length === 0 || isOverCapacity}
           onClick={handleCheckoutClick}
         >
           <FontAwesomeIcon icon={faPaperPlane} className={locale === 'ar' ? 'ms-2' : 'me-2'} />

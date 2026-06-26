@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import HeroSection from './components/HeroSection/HeroSection.jsx'
 import PackageList from './components/PackageList/PackageList.jsx'
-import RecentPackagesCarousel from './components/RecentPackagesCarousel/RecentPackagesCarousel.jsx'
+import LatestPackagesCarousel from './components/LatestPackagesCarousel/LatestPackagesCarousel.jsx'
 import PackageDetailsModal from './components/PackageDetailsModal/PackageDetailsModal.jsx'
 import MobileBottomNav from './components/MobileBottomNav/MobileBottomNav.jsx'
 import DesignMobileNav from './components/DesignMobileNav/DesignMobileNav.jsx'
@@ -96,7 +96,7 @@ function App() {
 
   // Lifted Customizer selection states
   const [selectedUsbId, setSelectedUsbId] = useState('')
-  const [selectedGames, setSelectedGames] = useState([])
+  const [selectedItems, setSelectedItems] = useState([])
   const [showUsbModal, setShowUsbModal] = useState(false)
   const [activeStep, setActiveStep] = useState(1)
   const packagesRef = useRef(null)
@@ -105,7 +105,7 @@ function App() {
   useEffect(() => {
     async function loadPackages() {
       try {
-        const response = await fetch('/api/packages')
+        const response = await fetch('/api/game-packages')
         if (!response.ok) {
           throw new Error(locale === 'ar' ? 'تعذر تحميل الحزم من الخادم.' : 'Unable to load packages from server.')
         }
@@ -186,7 +186,7 @@ function App() {
     if (
       location.pathname === '/design' &&
       activeStep !== 4 &&
-      (selectedUsbId || selectedGames.length > 0)
+      (selectedUsbId || selectedItems.length > 0)
     ) {
       const msg = locale === 'ar'
         ? 'لديك إعدادات USB نشطة. مغادرة هذه الصفحة ستؤدي إلى مسح اختياراتك. هل أنت متأكد من المغادرة؟'
@@ -197,7 +197,7 @@ function App() {
       }
       // If confirmed, reset configuration
       setSelectedUsbId('')
-      setSelectedGames([])
+      setSelectedItems([])
       setActiveStep(1)
     }
     navigate(path)
@@ -226,7 +226,7 @@ function App() {
       <>
         <HeroSection onBrowse={scrollToPackages} t={t} />
 
-        <RecentPackagesCarousel locale={locale} t={t} onViewPackage={handleViewPackage} />
+        <LatestPackagesCarousel locale={locale} t={t} onViewPackage={handleViewPackage} />
 
         <Container className="py-5" ref={packagesRef} id="packages-section">
           <div className="text-center mb-5">
@@ -328,9 +328,7 @@ function App() {
         onToggleLocale={toggleLocale}
         onShowAuth={() => setShowAuth(true)}
         onLogout={handleLogout}
-        selectedGames={selectedGames}
         onNavigate={confirmLeaveDesign}
-        onShowUsbModal={() => setShowUsbModal(true)}
       />
 
       <MobileTopBar
@@ -351,10 +349,11 @@ function App() {
               locale={locale}
               t={t}
               user={user}
+              onShowAuth={() => setShowAuth(true)}
               selectedUsbId={selectedUsbId}
               setSelectedUsbId={setSelectedUsbId}
-              selectedGames={selectedGames}
-              setSelectedGames={setSelectedGames}
+              selectedItems={selectedItems}
+              setSelectedItems={setSelectedItems}
               showUsbModal={showUsbModal}
               setShowUsbModal={setShowUsbModal}
               activeStep={activeStep}
@@ -367,20 +366,20 @@ function App() {
       </Routes>
 
       {/* On /design route: show DesignMobileNav; otherwise show regular MobileBottomNav */}
-      {location.pathname === '/design' ? (
+      {location.pathname === '/design' && !showAuth ? (
         <DesignMobileNav
           locale={locale}
           activeStep={activeStep}
-          selectedGames={selectedGames}
           selectedUsb={selectedUsbId ? { id: selectedUsbId } : null}
           onShowUsbModal={() => setShowUsbModal(true)}
           onExit={() => confirmLeaveDesign('/')}
         />
-      ) : (
+      ) : !showAuth ? (
         <MobileBottomNav
           locale={locale}
+          onProfileClick={handleProfileClick}
         />
-      )}
+      ) : null}
       <AuthModal show={showAuth} onClose={() => setShowAuth(false)} onAuth={handleAuth} locale={locale} />
     </>
   )

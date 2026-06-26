@@ -1,3 +1,10 @@
+/* HeroSection design tokens */
+.landing-hero {
+  --hero-blur: blur(120px);
+  --hero-glow-light: radial-gradient(circle at center, rgba(255, 255, 255, 0.35), transparent 55%);
+  --hero-glow-accent: radial-gradient(circle at center, rgba(99, 102, 241, 0.35), rgba(59, 130, 246, 0.12) 40%, transparent 72%);
+}
+
 .landing-hero {
   position: relative;
   overflow: hidden;
@@ -11,7 +18,7 @@
   position: absolute;
   width: 42%;
   height: 42%;
-  filter: blur(120px);
+  filter: var(--hero-blur);
   opacity: 0.75;
   pointer-events: none;
   transform: translateZ(0);
@@ -20,13 +27,23 @@
 .landing-hero::before {
   top: -12%;
   left: -8%;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.35), transparent 55%);
+  background: var(--hero-glow-light);
 }
 
 .landing-hero::after {
   bottom: -18%;
   right: -6%;
-  background: radial-gradient(circle at center, rgba(99, 102, 241, 0.35), rgba(59, 130, 246, 0.12) 40%, transparent 72%);
+  background: var(--hero-glow-accent);
+}
+
+[dir="rtl"] .landing-hero::before {
+  left: auto;
+  right: -8%;
+}
+
+[dir="rtl"] .landing-hero::after {
+  right: auto;
+  left: -6%;
 }
 
 .landing-hero .container {

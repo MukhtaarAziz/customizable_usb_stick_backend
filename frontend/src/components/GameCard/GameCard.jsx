@@ -13,26 +13,49 @@ import {
   faPlus,
   faEye,
   faLayerGroup,
-  faMicrochip
+  faMicrochip,
+  faCode,
+  faPalette,
+  faShieldHalved,
+  faWrench,
+  faFileLines,
+  faHeadphones
 } from '@fortawesome/free-solid-svg-icons'
 import './GameCard.css'
 
-function GameCard({ game, locale, viewMode, onView, onAdd, added }) {
-  const platformName = locale === 'ar'
-    ? game.platform?.name_ar || game.platform?.name_en
-    : game.platform?.name_en || game.platform?.name_ar
-  const categoryName = locale === 'ar'
-    ? game.category?.name_ar || game.category?.name_en
-    : game.category?.name_en || game.category?.name_ar
-  const name = locale === 'ar' ? game.name_ar || game.name_en : game.name_en || game.name_ar
-  const description = locale === 'ar'
-    ? game.description_ar || game.description_en || 'لا يوجد وصف متاح لهذه اللعبة.'
-    : game.description_en || game.description_ar || 'No description available for this game.'
-  const sizeLabel = game.size_gb ? `${Number(game.size_gb).toFixed(1)} GB` : (locale === 'ar' ? 'غير متوفر' : 'N/A')
+const programCategoryIcons = {
+  office: faFileLines,
+  design: faPalette,
+  development: faCode,
+  multimedia: faHeadphones,
+  security: faShieldHalved,
+  utility: faWrench,
+}
 
-  // Get category-specific details
-  const getCategoryDetails = (catNameEn) => {
+function GameCard({ item, locale, viewMode, onView, onAdd, added }) {
+  const platformName = locale === 'ar'
+    ? item.platform?.name_ar || item.platform?.name_en
+    : item.platform?.name_en || item.platform?.name_ar
+  const categoryName = locale === 'ar'
+    ? item.category?.name_ar || item.category?.name_en
+    : item.category?.name_en || item.category?.name_ar
+  const name = locale === 'ar' ? item.name_ar || item.name_en : item.name_en || item.name_ar
+  const description = locale === 'ar'
+    ? item.description_ar || item.description_en || (locale === 'ar' ? 'لا يوجد وصف متاح.' : 'No description available.')
+    : item.description_en || item.description_ar || (locale === 'ar' ? 'لا يوجد وصف متاح.' : 'No description available.')
+  const sizeLabel = item.size_gb ? `${Number(item.size_gb).toFixed(1)} GB` : (locale === 'ar' ? 'غير متوفر' : 'N/A')
+  const isGame = item.type === 'game'
+
+  const getCategoryDetails = (catNameEn, type) => {
     const nameLower = String(catNameEn).toLowerCase()
+    if (type === 'program') {
+      const icon = programCategoryIcons[Object.keys(programCategoryIcons).find(k => nameLower.includes(k))] || faCode
+      return {
+        gradient: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
+        icon,
+        shadow: 'rgba(99, 102, 241, 0.15)'
+      }
+    }
     if (nameLower.includes('action') || nameLower.includes('أكشن')) {
       return {
         gradient: 'linear-gradient(135deg, #f43f5e 0%, #be123c 100%)',
@@ -66,10 +89,12 @@ function GameCard({ game, locale, viewMode, onView, onAdd, added }) {
     }
   }
 
-  const catDetails = getCategoryDetails(game.category?.name_en || '')
+  const catDetails = getCategoryDetails(item.category?.name_en || '', item.type)
 
-  const hasImage = game.images && game.images.length > 0
-  const releaseYear = game.date_release ? new Date(game.date_release).getFullYear() : null
+  const hasImage = item.images && item.images.length > 0
+  const imageUrl = hasImage
+    ? `/api/${isGame ? 'games' : 'programs'}/${item.id}/images/${item.images[0].id}/thumbnail`
+    : null
 
   return (
     <Card className={`game-card h-100 ${viewMode === 'list' ? 'game-card--list' : ''} ${added ? 'game-card--added' : ''}`} style={{ '--card-shadow': catDetails.shadow }}>
@@ -79,7 +104,7 @@ function GameCard({ game, locale, viewMode, onView, onAdd, added }) {
         {hasImage ? (
           <img
             className="game-card__image"
-            src={`/api/games/${game.id}/images/${game.images[0].id}/thumbnail`}
+            src={imageUrl}
             alt={name}
             loading="lazy"
           />
@@ -98,6 +123,11 @@ function GameCard({ game, locale, viewMode, onView, onAdd, added }) {
         <div className="game-card__footer-container bg-light d-flex flex-column gap-2 p-3 mt-auto">
           <div className="game-card__tags d-flex flex-wrap justify-content-center gap-1">
             <Badge bg="white" text="dark" className="border shadow-sm fw-normal">
+              <Badge bg={isGame ? 'primary' : 'indigo'} className={`me-1 py-0 px-1 ${isGame ? 'bg-primary' : ''}`} style={isGame ? {} : { background: '#6366f1' }}>
+                {isGame ? (locale === 'ar' ? 'لعبة' : 'Game') : (locale === 'ar' ? 'برنامج' : 'App')}
+              </Badge>
+            </Badge>
+            <Badge bg="white" text="dark" className="border shadow-sm fw-normal">
               <FontAwesomeIcon icon={faHdd} className={locale === 'ar' ? 'ms-1 text-muted' : 'me-1 text-muted'} />
               {sizeLabel}
             </Badge>
@@ -115,7 +145,7 @@ function GameCard({ game, locale, viewMode, onView, onAdd, added }) {
             <Button
               variant="outline-primary"
               className="game-card__btn-view-icon"
-              onClick={() => onView(game)}
+              onClick={() => onView(item)}
               title={locale === 'ar' ? 'عرض التفاصيل' : 'View Details'}
               aria-label="View Details"
             >
@@ -125,7 +155,7 @@ function GameCard({ game, locale, viewMode, onView, onAdd, added }) {
             <Button
               variant={added ? 'success' : 'primary'}
               className={`game-card__btn-add-icon ${added ? 'disabled-success' : ''}`}
-              onClick={() => onAdd(game)}
+              onClick={() => onAdd(item)}
               disabled={added}
               title={added ? (locale === 'ar' ? 'تمت الإضافة' : 'Added') : (locale === 'ar' ? 'إضافة للفلاش' : 'Add to USB')}
               aria-label={added ? "Added" : "Add to USB"}

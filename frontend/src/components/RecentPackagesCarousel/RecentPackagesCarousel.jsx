@@ -10,7 +10,7 @@ function RecentPackagesCarousel({ locale, t, onViewPackage }) {
   useEffect(() => {
     async function loadRecentPackages() {
       try {
-        const response = await fetch('/api/packages?per_page=100')
+        const response = await fetch('/api/game-packages?per_page=100')
         if (!response.ok) {
           throw new Error(locale === 'ar' ? 'تعذر تحميل الحزم الحديثة.' : 'Unable to load recent packages.')
         }

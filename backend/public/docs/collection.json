@@ -1,0 +1,2291 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/localhost"
+        }
+    ],
+    "info": {
+        "name": "Laravel API Documentation",
+        "_postman_id": "3ab06fa9-c4da-4eb5-9124-d4547b21e763",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "description": "\nEndpoints for authenticating users and customers.",
+            "item": [
+                {
+                    "name": "Login & Registration",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Login",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/login",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/login"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"password\":\"secret123\",\"email\":\"user@example.com\",\"phone\":\"07701234567\"}"
+                                },
+                                "description": "Authenticate using email or phone with a password. Returns a Sanctum token and user data.\nWorks for both admin users and customers.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"user\": {\"id\": 1, \"name\": \"John\", \"email\": \"user@example.com\", \"role\": \"customer\"},\n  \"token\": \"1|abc123...\"\n}",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 401,
+                                    "body": "{\"message\": \"Invalid credentials.\"}",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 422,
+                                    "body": "{\"message\": \"Identifier (email or phone) is required.\"}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Session Management",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Logout",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/logout",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/logout"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Revoke the current Sanctum access token."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"message\": \"Logged out successfully.\"}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Get current user",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/me",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/me"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Return the authenticated user's information."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name\": \"John\", \"email\": \"user@example.com\", \"role\": \"customer\"}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Categories",
+            "description": "\nManage game categories.",
+            "item": [
+                {
+                    "name": "Public",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "List categories",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/categories",
+                                    "query": [
+                                        {
+                                            "key": "per_page",
+                                            "value": "15",
+                                            "description": "Number of results per page (1-100). Defaults to 15.",
+                                            "disabled": false
+                                        }
+                                    ],
+                                    "raw": "{{baseUrl}}\/api\/categories?per_page=15"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get a paginated list of game categories.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [
+                                        {
+                                            "key": "cache-control",
+                                            "value": "no-cache, private"
+                                        },
+                                        {
+                                            "key": "content-type",
+                                            "value": "application\/json"
+                                        },
+                                        {
+                                            "key": "access-control-allow-origin",
+                                            "value": "*"
+                                        }
+                                    ],
+                                    "code": 200,
+                                    "body": "{\"current_page\":1,\"data\":[{\"id\":1,\"name_en\":\"Action\",\"name_ar\":\"\u0623\u0643\u0634\u0646\",\"description_en\":\"Fast paced action games.\",\"description_ar\":\"\u0623\u0644\u0639\u0627\u0628 \u0623\u0643\u0634\u0646 \u0633\u0631\u064a\u0639\u0629 \u0627\u0644\u062a\u0641\u0627\u0639\u0644.\",\"created_at\":null,\"updated_at\":null},{\"id\":2,\"name_en\":\"Sport\",\"name_ar\":\"\u0631\u064a\u0627\u0636\u0629\",\"description_en\":\"Sports and athletic simulation games.\",\"description_ar\":\"\u0623\u0644\u0639\u0627\u0628 \u0631\u064a\u0627\u0636\u064a\u0629 \u0648\u0645\u062d\u0627\u0643\u0627\u0629 \u0627\u0644\u0623\u062f\u0627\u0621.\",\"created_at\":null,\"updated_at\":null},{\"id\":3,\"name_en\":\"Racing\",\"name_ar\":\"\u0633\u0628\u0627\u0642\",\"description_en\":\"High speed racing games.\",\"description_ar\":\"\u0623\u0644\u0639\u0627\u0628 \u0633\u0628\u0627\u0642 \u0628\u0633\u0631\u0639\u0627\u062a \u0639\u0627\u0644\u064a\u0629.\",\"created_at\":null,\"updated_at\":null},{\"id\":4,\"name_en\":\"RPG\",\"name_ar\":\"RPG\",\"description_en\":\"Role playing games with story and progression.\",\"description_ar\":\"\u0623\u0644\u0639\u0627\u0628 \u062a\u0642\u0645\u0635 \u0627\u0644\u0623\u062f\u0648\u0627\u0631 \u0628\u0642\u0635\u0629 \u0648\u062a\u0637\u0648\u0631.\",\"created_at\":null,\"updated_at\":null},{\"id\":5,\"name_en\":\"Indie\",\"name_ar\":\"\u0645\u0633\u062a\u0642\u0644\u0629\",\"description_en\":\"Independent games from small studios.\",\"description_ar\":\"\u0623\u0644\u0639\u0627\u0628 \u0645\u0633\u062a\u0642\u0644\u0629 \u0645\u0646 \u0627\u0633\u062a\u0648\u062f\u064a\u0648\u0647\u0627\u062a \u0635\u063a\u064a\u0631\u0629.\",\"created_at\":null,\"updated_at\":null}],\"first_page_url\":\"http:\\\/\\\/localhost\\\/api\\\/categories?per_page=15&page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost\\\/api\\\/categories?per_page=15&page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost\\\/api\\\/categories?per_page=15&page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost\\\/api\\\/categories\",\"per_page\":15,\"prev_page_url\":null,\"to\":5,\"total\":5}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Show a category",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/categories\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/categories\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The category ID."
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get details of a single category by ID.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name_en\": \"Action\", \"name_ar\": \"\u0623\u0643\u0634\u0646\", \"description_en\": \"Action games\", \"description_ar\": null}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Admin",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Create a category",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/categories",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/categories"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name_en\":\"Action\",\"name_ar\":\"\u0623\u0643\u0634\u0646\",\"description_en\":\"Action games\",\"description_ar\":\"\u0623\u0644\u0639\u0627\u0628 \u0627\u0644\u0623\u0643\u0634\u0646\"}"
+                                },
+                                "description": "Add a new game category. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 201,
+                                    "body": "{\"id\": 1, \"name_en\": \"Action\", \"name_ar\": \"\u0623\u0643\u0634\u0646\", \"description_en\": null, \"description_ar\": null}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update a category",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/categories\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/categories\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The category ID."
+                                        }
+                                    ]
+                                },
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name_en\":\"Racing\",\"name_ar\":\"\u0633\u0628\u0627\u0642\",\"description_en\":\"Racing games\",\"description_ar\":\"\u0623\u0644\u0639\u0627\u0628 \u0627\u0644\u0633\u0628\u0627\u0642\"}"
+                                },
+                                "description": "Update an existing game category. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name_en\": \"Racing\", \"name_ar\": \"\u0633\u0628\u0627\u0642\", \"description_en\": \"Racing games\", \"description_ar\": null}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Delete a category",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/categories\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/categories\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The category ID."
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Remove a game category. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": "",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Custom USB Orders",
+            "description": "\nPlace and manage custom USB stick orders.",
+            "item": [
+                {
+                    "name": "Orders",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "List my orders",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/custom-usb-orders",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/custom-usb-orders"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get all custom USB orders for the authenticated customer."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "[{\"id\": 1, \"usb_stick\": {...}, \"games\": [...], \"total_price\": 15000, \"status\": \"pending\", ...}]",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Place an order",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/custom-usb-orders",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/custom-usb-orders"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"usb_stick_id\":1,\"game_ids\":[1,2,3],\"notes\":\"architecto\",\"custom_message\":\"architecto\",\"delivery_address\":\"Baghdad, Al-Mansour, Street 14\",\"phone\":\"07701234567\"}"
+                                },
+                                "description": "Create a new custom USB stick order with selected games."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 201,
+                                    "body": "{\n  \"id\": 1,\n  \"usb_stick_id\": 1,\n  \"total_price\": 15000,\n  \"status\": \"pending\",\n  \"notes\": null,\n  \"custom_message\": null,\n  \"delivery_address\": \"Baghdad, Al-Mansour, Street 14\",\n  \"phone\": \"07701234567\",\n  \"usbStick\": {...},\n  \"games\": [...]\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Show an order",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/custom-usb-orders\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/custom-usb-orders\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The ID of the custom usb order."
+                                        },
+                                        {
+                                            "id": "custom_usb_order",
+                                            "key": "custom_usb_order",
+                                            "value": 1,
+                                            "description": "The order ID."
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get details of a single custom USB order."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"id\": 1,\n  \"usb_stick_id\": 1,\n  \"total_price\": 15000,\n  \"status\": \"pending\",\n  \"delivery_address\": \"Baghdad, Al-Mansour, Street 14\",\n  \"phone\": \"07701234567\",\n  \"usbStick\": {...},\n  \"games\": [...]\n}",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 403,
+                                    "body": "{\"message\": \"Unauthorized\"}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update an order",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/custom-usb-orders\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/custom-usb-orders\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The ID of the custom usb order."
+                                        },
+                                        {
+                                            "id": "custom_usb_order",
+                                            "key": "custom_usb_order",
+                                            "value": 1,
+                                            "description": "The order ID."
+                                        }
+                                    ]
+                                },
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"notes\":\"architecto\",\"custom_message\":\"architecto\",\"delivery_address\":\"architecto\",\"phone\":\"architecto\",\"status\":\"processing\",\"game_ids\":[16]}"
+                                },
+                                "description": "Update an existing custom USB order (notes, games, address, etc.)."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"id\": 1,\n  \"status\": \"processing\",\n  \"usbStick\": {...},\n  \"games\": [...]\n}",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 403,
+                                    "body": "{\"message\": \"Unauthorized\"}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Cancel an order",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/custom-usb-orders\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/custom-usb-orders\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The ID of the custom usb order."
+                                        },
+                                        {
+                                            "id": "custom_usb_order",
+                                            "key": "custom_usb_order",
+                                            "value": 1,
+                                            "description": "The order ID."
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Delete (cancel) a custom USB order."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": "",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 403,
+                                    "body": "{\"message\": \"Unauthorized\"}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Customers",
+            "description": "\nManage customer accounts and governorates.",
+            "item": [
+                {
+                    "name": "Public",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Register a customer",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/customers",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/customers"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name\":\"John Doe\",\"phone\":\"07701234567\",\"email\":\"john@example.com\",\"password\":\"secret123\",\"governorate_id\":1,\"address\":\"architecto\",\"nearest_service_point\":\"architecto\"}"
+                                },
+                                "description": "Create a new customer account. Public endpoint.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 201,
+                                    "body": "{\"id\": 1, \"name\": \"John Doe\", \"phone\": \"07701234567\", \"governorate\": {...}}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "List governorates",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/governorates",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/governorates"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get a list of all Iraqi governorates for address selection.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "[{\"id\": 1, \"name_en\": \"Baghdad\", \"name_ar\": \"\u0628\u063a\u062f\u0627\u062f\"}, ...]",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Admin",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Show a customer",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/customers\/:customer_id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/customers\/:customer_id",
+                                    "variable": [
+                                        {
+                                            "id": "customer_id",
+                                            "key": "customer_id",
+                                            "value": 1,
+                                            "description": "The ID of the customer."
+                                        },
+                                        {
+                                            "id": "customer",
+                                            "key": "customer",
+                                            "value": 1,
+                                            "description": "The customer ID."
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get details of a single customer. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name\": \"John Doe\", \"phone\": \"07701234567\", \"email\": \"john@example.com\", \"governorate\": {...}}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "List customers",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/customers",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/customers"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get all registered customers with their governorates. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [
+                                        {
+                                            "key": "cache-control",
+                                            "value": "no-cache, private"
+                                        },
+                                        {
+                                            "key": "content-type",
+                                            "value": "application\/json"
+                                        },
+                                        {
+                                            "key": "access-control-allow-origin",
+                                            "value": "*"
+                                        }
+                                    ],
+                                    "code": 401,
+                                    "body": "{\"message\":\"Unauthenticated.\"}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update a customer",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/customers\/:customer_id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/customers\/:customer_id",
+                                    "variable": [
+                                        {
+                                            "id": "customer_id",
+                                            "key": "customer_id",
+                                            "value": 1,
+                                            "description": "The ID of the customer."
+                                        },
+                                        {
+                                            "id": "customer",
+                                            "key": "customer",
+                                            "value": 1,
+                                            "description": "The customer ID."
+                                        }
+                                    ]
+                                },
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name\":\"architecto\",\"phone\":\"architecto\",\"email\":\"gbailey@example.net\",\"governorate_id\":16,\"address\":\"architecto\",\"nearest_service_point\":\"architecto\"}"
+                                },
+                                "description": "Update an existing customer's information. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name\": \"John Doe\", \"phone\": \"07701234567\", \"governorate\": {...}}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Delete a customer",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/customers\/:customer_id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/customers\/:customer_id",
+                                    "variable": [
+                                        {
+                                            "id": "customer_id",
+                                            "key": "customer_id",
+                                            "value": 1,
+                                            "description": "The ID of the customer."
+                                        },
+                                        {
+                                            "id": "customer",
+                                            "key": "customer",
+                                            "value": 1,
+                                            "description": "The customer ID."
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Remove a customer account. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": "",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Game Images",
+            "description": "\nUpload, serve, and delete game images.",
+            "item": [
+                {
+                    "name": "Viewing",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Get an image",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/games\/:game_id\/images\/:image_id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/games\/:game_id\/images\/:image_id",
+                                    "variable": [
+                                        {
+                                            "id": "game_id",
+                                            "key": "game_id",
+                                            "value": 1,
+                                            "description": "The ID of the game."
+                                        },
+                                        {
+                                            "id": "image_id",
+                                            "key": "image_id",
+                                            "value": 16,
+                                            "description": "The ID of the image."
+                                        },
+                                        {
+                                            "id": "game",
+                                            "key": "game",
+                                            "value": 1,
+                                            "description": "The game ID."
+                                        },
+                                        {
+                                            "id": "image",
+                                            "key": "image",
+                                            "value": 1,
+                                            "description": "The image ID."
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Serve the full-size image file directly.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "(image\/png binary content)",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 404,
+                                    "body": "",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Get a thumbnail",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/games\/:game_id\/images\/:image_id\/thumbnail",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/games\/:game_id\/images\/:image_id\/thumbnail",
+                                    "variable": [
+                                        {
+                                            "id": "game_id",
+                                            "key": "game_id",
+                                            "value": 1,
+                                            "description": "The ID of the game."
+                                        },
+                                        {
+                                            "id": "image_id",
+                                            "key": "image_id",
+                                            "value": 16,
+                                            "description": "The ID of the image."
+                                        },
+                                        {
+                                            "id": "game",
+                                            "key": "game",
+                                            "value": 1,
+                                            "description": "The game ID."
+                                        },
+                                        {
+                                            "id": "image",
+                                            "key": "image",
+                                            "value": 1,
+                                            "description": "The image ID."
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Serve the 300x300 thumbnail of a game image.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "(image\/png binary content)",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 404,
+                                    "body": "",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Management",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Upload an image",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/games\/:game_id\/images",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/games\/:game_id\/images",
+                                    "variable": [
+                                        {
+                                            "id": "game_id",
+                                            "key": "game_id",
+                                            "value": 1,
+                                            "description": "The ID of the game."
+                                        },
+                                        {
+                                            "id": "game",
+                                            "key": "game",
+                                            "value": 1,
+                                            "description": "The game ID."
+                                        }
+                                    ]
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "multipart\/form-data"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "type",
+                                            "value": "screenshot",
+                                            "type": "text",
+                                            "description": "Image type label (e.g. \"screenshot\", \"cover\")."
+                                        },
+                                        {
+                                            "key": "alt",
+                                            "value": "Gameplay screenshot",
+                                            "type": "text",
+                                            "description": "Alt text for accessibility."
+                                        },
+                                        {
+                                            "key": "image",
+                                            "src": [],
+                                            "type": "file"
+                                        }
+                                    ]
+                                },
+                                "description": "Upload a new image for a game. Creates both a full-size and a 300x300 thumbnail. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 201,
+                                    "body": "{\n  \"id\": 1,\n  \"game_id\": 1,\n  \"path\": \"games\/1\/1234567890_abc123.jpg\",\n  \"thumb_path\": \"games\/1\/thumbnails\/thumb_1234567890_abc123.jpg\",\n  \"type\": \"screenshot\",\n  \"alt\": null,\n  \"mime\": \"image\/jpeg\",\n  \"size\": 2048576,\n  \"disk\": \"local\"\n}",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 422,
+                                    "body": "{\"message\": \"Uploaded file is not a valid image.\"}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Delete an image",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/games\/:game_id\/images\/:image_id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/games\/:game_id\/images\/:image_id",
+                                    "variable": [
+                                        {
+                                            "id": "game_id",
+                                            "key": "game_id",
+                                            "value": 1,
+                                            "description": "The ID of the game."
+                                        },
+                                        {
+                                            "id": "image_id",
+                                            "key": "image_id",
+                                            "value": 16,
+                                            "description": "The ID of the image."
+                                        },
+                                        {
+                                            "id": "game",
+                                            "key": "game",
+                                            "value": 1,
+                                            "description": "The game ID."
+                                        },
+                                        {
+                                            "id": "image",
+                                            "key": "image",
+                                            "value": 1,
+                                            "description": "The image ID."
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Delete a game image and its associated thumbnail. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": "",
+                                    "name": ""
+                                },
+                                {
+                                    "header": [],
+                                    "code": 404,
+                                    "body": "",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Games",
+            "description": "\nManage games.",
+            "item": [
+                {
+                    "name": "Public",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "List games",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/games",
+                                    "query": [
+                                        {
+                                            "key": "per_page",
+                                            "value": "15",
+                                            "description": "Results per page (1-100). Defaults to 15.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "search",
+                                            "value": "war",
+                                            "description": "Search by English or Arabic name.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "platform_id",
+                                            "value": "1",
+                                            "description": "Filter by platform ID.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "category_id",
+                                            "value": "2",
+                                            "description": "Filter by category ID.",
+                                            "disabled": false
+                                        }
+                                    ],
+                                    "raw": "{{baseUrl}}\/api\/games?per_page=15&search=war&platform_id=1&category_id=2"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get a paginated list of games, filterable by search, platform, and category.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [
+                                        {
+                                            "key": "cache-control",
+                                            "value": "no-cache, private"
+                                        },
+                                        {
+                                            "key": "content-type",
+                                            "value": "application\/json"
+                                        },
+                                        {
+                                            "key": "access-control-allow-origin",
+                                            "value": "*"
+                                        }
+                                    ],
+                                    "code": 200,
+                                    "body": "{\"current_page\":1,\"data\":[],\"first_page_url\":\"http:\\\/\\\/localhost\\\/api\\\/games?per_page=15&search=war&platform_id=1&category_id=2&page=1\",\"from\":null,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost\\\/api\\\/games?per_page=15&search=war&platform_id=1&category_id=2&page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost\\\/api\\\/games?per_page=15&search=war&platform_id=1&category_id=2&page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost\\\/api\\\/games\",\"per_page\":15,\"prev_page_url\":null,\"to\":null,\"total\":0}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Show a game",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/games\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/games\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The game ID."
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get details of a single game by ID with its category and platform.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name_en\": \"Call of Duty\", \"name_ar\": \"\u0643\u0648\u0644 \u0623\u0648\u0641 \u062f\u064a\u0648\u062a\u064a\", \"size_gb\": 72.5, \"category\": {...}, \"platform\": {...}}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Admin",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Create a game",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/games",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/games"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name_en\":\"Call of Duty\",\"name_ar\":\"\u0643\u0648\u0644 \u0623\u0648\u0641 \u062f\u064a\u0648\u062a\u064a\",\"description_en\":\"architecto\",\"description_ar\":\"architecto\",\"category_id\":1,\"platform_id\":1,\"tags\":[\"shooter\",\"multiplayer\"],\"size_gb\":\"72.5\",\"downloads\":15000,\"date_release\":\"2024-10-25\"}"
+                                },
+                                "description": "Add a new game entry. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 201,
+                                    "body": "{\"id\": 1, \"name_en\": \"Call of Duty\", \"name_ar\": \"\u0643\u0648\u0644 \u0623\u0648\u0641 \u062f\u064a\u0648\u062a\u064a\", \"size_gb\": 72.5, ...}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update a game",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/games\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/games\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The game ID."
+                                        }
+                                    ]
+                                },
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name_en\":\"architecto\",\"name_ar\":\"architecto\",\"description_en\":\"architecto\",\"description_ar\":\"architecto\",\"category_id\":16,\"platform_id\":16,\"tags\":[\"architecto\"],\"size_gb\":\"architecto\",\"downloads\":16,\"date_release\":\"architecto\"}"
+                                },
+                                "description": "Update an existing game entry. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name_en\": \"Call of Duty\", \"name_ar\": \"\u0643\u0648\u0644 \u0623\u0648\u0641 \u062f\u064a\u0648\u062a\u064a\", \"size_gb\": 72.5, ...}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Delete a game",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/games\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/games\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The game ID."
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Remove a game entry. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": "",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Packages",
+            "description": "\nManage game packages (bundles of games for USB sticks).",
+            "item": [
+                {
+                    "name": "Public",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "List packages",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/packages",
+                                    "query": [
+                                        {
+                                            "key": "search",
+                                            "value": "game bundle",
+                                            "description": "Search by name or description (English\/Arabic).",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "platform_id",
+                                            "value": "1",
+                                            "description": "Filter by platform ID.",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "15",
+                                            "description": "Results per page (1-100). Defaults to 15.",
+                                            "disabled": false
+                                        }
+                                    ],
+                                    "raw": "{{baseUrl}}\/api\/packages?search=game%20bundle&platform_id=1&per_page=15"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get a paginated list of game packages with their cover, platform, and games.\nSupports search and platform filtering.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [
+                                        {
+                                            "key": "cache-control",
+                                            "value": "no-cache, private"
+                                        },
+                                        {
+                                            "key": "content-type",
+                                            "value": "application\/json"
+                                        },
+                                        {
+                                            "key": "access-control-allow-origin",
+                                            "value": "*"
+                                        }
+                                    ],
+                                    "code": 200,
+                                    "body": "{\"current_page\":1,\"data\":[],\"first_page_url\":\"http:\\\/\\\/localhost\\\/api\\\/packages?page=1\",\"from\":null,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost\\\/api\\\/packages?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost\\\/api\\\/packages?page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost\\\/api\\\/packages\",\"per_page\":15,\"prev_page_url\":null,\"to\":null,\"total\":0}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Show a package",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/packages\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/packages\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The ID of the package."
+                                        },
+                                        {
+                                            "id": "package",
+                                            "key": "package",
+                                            "value": 1,
+                                            "description": "The package ID."
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get details of a single package with its cover, platform, and games.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"id\": 1,\n  \"name_en\": \"Ultimate Bundle\",\n  \"name_ar\": \"\u0627\u0644\u062d\u0632\u0645\u0629 \u0627\u0644\u0645\u062b\u0627\u0644\u064a\u0629\",\n  \"views\": 42,\n  \"order_count\": 5,\n  \"cover\": {...},\n  \"platform\": {...},\n  \"games\": [...]\n}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Admin",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Create a package",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/packages",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/packages"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name_en\":\"Ultimate Bundle\",\"name_ar\":\"\u0627\u0644\u062d\u0632\u0645\u0629 \u0627\u0644\u0645\u062b\u0627\u0644\u064a\u0629\",\"description_en\":\"architecto\",\"description_ar\":\"architecto\",\"cover_id\":16,\"platform_id\":1,\"game_ids\":[1,2,3]}"
+                                },
+                                "description": "Add a new game package. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 201,
+                                    "body": "{\n  \"id\": 1,\n  \"name_en\": \"Ultimate Bundle\",\n  \"name_ar\": \"\u0627\u0644\u062d\u0632\u0645\u0629 \u0627\u0644\u0645\u062b\u0627\u0644\u064a\u0629\",\n  \"platform_id\": 1,\n  \"views\": 0,\n  \"order_count\": 0,\n  \"cover\": null,\n  \"platform\": {...},\n  \"games\": [...]\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update a package",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/packages\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/packages\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The ID of the package."
+                                        },
+                                        {
+                                            "id": "package",
+                                            "key": "package",
+                                            "value": 1,
+                                            "description": "The package ID."
+                                        }
+                                    ]
+                                },
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name_en\":\"architecto\",\"name_ar\":\"architecto\",\"description_en\":\"architecto\",\"description_ar\":\"architecto\",\"cover_id\":16,\"platform_id\":16,\"game_ids\":[16],\"views\":16,\"order_count\":16}"
+                                },
+                                "description": "Update an existing game package. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\n  \"id\": 1,\n  \"name_en\": \"Ultimate Bundle\",\n  \"name_ar\": \"\u0627\u0644\u062d\u0632\u0645\u0629 \u0627\u0644\u0645\u062b\u0627\u0644\u064a\u0629\",\n  \"cover\": {...},\n  \"platform\": {...},\n  \"games\": [...]\n}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Delete a package",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/packages\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/packages\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The ID of the package."
+                                        },
+                                        {
+                                            "id": "package",
+                                            "key": "package",
+                                            "value": 1,
+                                            "description": "The package ID."
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Remove a game package. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": "",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Analytics",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Increment views",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/packages\/:package_id\/views",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/packages\/:package_id\/views",
+                                    "variable": [
+                                        {
+                                            "id": "package_id",
+                                            "key": "package_id",
+                                            "value": 1,
+                                            "description": "The ID of the package."
+                                        },
+                                        {
+                                            "id": "package",
+                                            "key": "package",
+                                            "value": 1,
+                                            "description": "The package ID."
+                                        }
+                                    ]
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Increment the view counter for a package. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"views\": 43}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Increment orders",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/packages\/:package_id\/orders",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/packages\/:package_id\/orders",
+                                    "variable": [
+                                        {
+                                            "id": "package_id",
+                                            "key": "package_id",
+                                            "value": 1,
+                                            "description": "The ID of the package."
+                                        },
+                                        {
+                                            "id": "package",
+                                            "key": "package",
+                                            "value": 1,
+                                            "description": "The package ID."
+                                        }
+                                    ]
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Increment the order counter for a package. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"order_count\": 6}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Platforms",
+            "description": "\nManage gaming platforms.",
+            "item": [
+                {
+                    "name": "Public",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "List platforms",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/platforms",
+                                    "query": [
+                                        {
+                                            "key": "per_page",
+                                            "value": "15",
+                                            "description": "Number of results per page (1-100). Defaults to 15.",
+                                            "disabled": false
+                                        }
+                                    ],
+                                    "raw": "{{baseUrl}}\/api\/platforms?per_page=15"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get a paginated list of supported gaming platforms.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [
+                                        {
+                                            "key": "cache-control",
+                                            "value": "no-cache, private"
+                                        },
+                                        {
+                                            "key": "content-type",
+                                            "value": "application\/json"
+                                        },
+                                        {
+                                            "key": "access-control-allow-origin",
+                                            "value": "*"
+                                        }
+                                    ],
+                                    "code": 200,
+                                    "body": "{\"current_page\":1,\"data\":[{\"id\":1,\"name_en\":\"PC\",\"name_ar\":\"\u0628\u064a \u0633\u064a\",\"description_en\":\"Personal computer platform.\",\"description_ar\":\"\u0645\u0646\u0635\u0629 \u0627\u0644\u062d\u0627\u0633\u0648\u0628 \u0627\u0644\u0634\u062e\u0635\u064a.\",\"created_at\":null,\"updated_at\":null},{\"id\":2,\"name_en\":\"PS1\",\"name_ar\":\"\u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 1\",\"description_en\":\"PlayStation 1 console.\",\"description_ar\":\"\u062c\u0647\u0627\u0632 \u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 1.\",\"created_at\":null,\"updated_at\":null},{\"id\":3,\"name_en\":\"PS2\",\"name_ar\":\"\u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 2\",\"description_en\":\"PlayStation 2 console.\",\"description_ar\":\"\u062c\u0647\u0627\u0632 \u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 2.\",\"created_at\":null,\"updated_at\":null},{\"id\":4,\"name_en\":\"PS3\",\"name_ar\":\"\u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 3\",\"description_en\":\"PlayStation 3 console.\",\"description_ar\":\"\u062c\u0647\u0627\u0632 \u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 3.\",\"created_at\":null,\"updated_at\":null},{\"id\":5,\"name_en\":\"PS4\",\"name_ar\":\"\u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 4\",\"description_en\":\"PlayStation 4 console.\",\"description_ar\":\"\u062c\u0647\u0627\u0632 \u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 4.\",\"created_at\":null,\"updated_at\":null},{\"id\":6,\"name_en\":\"PS5\",\"name_ar\":\"\u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 5\",\"description_en\":\"PlayStation 5 console.\",\"description_ar\":\"\u062c\u0647\u0627\u0632 \u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 5.\",\"created_at\":null,\"updated_at\":null},{\"id\":7,\"name_en\":\"PSP\",\"name_ar\":\"\u0628\u064a \u0625\u0633 \u0628\u064a\",\"description_en\":\"PlayStation Portable platform.\",\"description_ar\":\"\u0645\u0646\u0635\u0629 \u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 \u0627\u0644\u0645\u062d\u0645\u0648\u0644\u0629.\",\"created_at\":null,\"updated_at\":null},{\"id\":8,\"name_en\":\"Android\",\"name_ar\":\"\u0623\u0646\u062f\u0631\u0648\u064a\u062f\",\"description_en\":\"Android mobile platform.\",\"description_ar\":\"\u0645\u0646\u0635\u0629 \u0623\u0646\u062f\u0631\u0648\u064a\u062f \u0627\u0644\u0645\u062d\u0645\u0648\u0644\u0629.\",\"created_at\":null,\"updated_at\":null},{\"id\":9,\"name_en\":\"IOS\",\"name_ar\":\"\u0622\u064a \u0623\u0648 \u0625\u0633\",\"description_en\":\"iOS mobile platform.\",\"description_ar\":\"\u0645\u0646\u0635\u0629 \u0622\u064a \u0623\u0648 \u0625\u0633 \u0627\u0644\u0645\u062d\u0645\u0648\u0644\u0629.\",\"created_at\":null,\"updated_at\":null}],\"first_page_url\":\"http:\\\/\\\/localhost\\\/api\\\/platforms?per_page=15&page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http:\\\/\\\/localhost\\\/api\\\/platforms?per_page=15&page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"page\":null,\"active\":false},{\"url\":\"http:\\\/\\\/localhost\\\/api\\\/platforms?per_page=15&page=1\",\"label\":\"1\",\"page\":1,\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"page\":null,\"active\":false}],\"next_page_url\":null,\"path\":\"http:\\\/\\\/localhost\\\/api\\\/platforms\",\"per_page\":15,\"prev_page_url\":null,\"to\":9,\"total\":9}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Show a platform",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/platforms\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/platforms\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The platform ID."
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get details of a single platform by ID.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name_en\": \"PlayStation 5\", \"name_ar\": \"\u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 5\", \"description_en\": null, \"description_ar\": null}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Admin",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Create a platform",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/platforms",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/platforms"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name_en\":\"PlayStation 5\",\"name_ar\":\"\u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 5\",\"description_en\":\"Sony's latest console\",\"description_ar\":\"architecto\"}"
+                                },
+                                "description": "Add a new gaming platform. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 201,
+                                    "body": "{\"id\": 1, \"name_en\": \"PlayStation 5\", \"name_ar\": \"\u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 5\", \"description_en\": null, \"description_ar\": null}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update a platform",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/platforms\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/platforms\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The platform ID."
+                                        }
+                                    ]
+                                },
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name_en\":\"architecto\",\"name_ar\":\"architecto\",\"description_en\":\"architecto\",\"description_ar\":\"architecto\"}"
+                                },
+                                "description": "Update an existing gaming platform. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name_en\": \"PlayStation 5\", \"name_ar\": \"\u0628\u0644\u0627\u064a \u0633\u062a\u064a\u0634\u0646 5\", \"description_en\": \"Updated description\", \"description_ar\": null}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Delete a platform",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/platforms\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/platforms\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 1,
+                                            "description": "The platform ID."
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Remove a gaming platform. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": "",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "USB Sticks",
+            "description": "\nManage available USB stick models.",
+            "item": [
+                {
+                    "name": "Public",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "List USB sticks",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/usb-sticks",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/usb-sticks"
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get a list of available USB stick models.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [
+                                        {
+                                            "key": "cache-control",
+                                            "value": "no-cache, private"
+                                        },
+                                        {
+                                            "key": "content-type",
+                                            "value": "application\/json"
+                                        },
+                                        {
+                                            "key": "access-control-allow-origin",
+                                            "value": "*"
+                                        }
+                                    ],
+                                    "code": 200,
+                                    "body": "[{\"id\":11,\"name_en\":\"enim USB\",\"name_ar\":\"saepe USB\",\"description_en\":\"Facere harum et amet dolorem consequuntur accusantium.\",\"description_ar\":\"Quasi voluptatem sint illo sint non.\",\"size_gb\":8,\"interface\":\"3.2\",\"price_iqd\":\"40000.00\",\"created_at\":\"2026-06-25T16:48:59.000000Z\",\"updated_at\":\"2026-06-25T16:48:59.000000Z\"},{\"id\":12,\"name_en\":\"animi USB\",\"name_ar\":\"dolores USB\",\"description_en\":\"Voluptas distinctio voluptas cumque enim.\",\"description_ar\":\"Eaque sit consequatur adipisci possimus tempore.\",\"size_gb\":8,\"interface\":\"3.2\",\"price_iqd\":\"7500.00\",\"created_at\":\"2026-06-25T16:48:59.000000Z\",\"updated_at\":\"2026-06-25T16:48:59.000000Z\"},{\"id\":13,\"name_en\":\"ducimus USB\",\"name_ar\":\"molestias USB\",\"description_en\":\"Aliquam quis voluptate et possimus architecto aperiam.\",\"description_ar\":\"Quaerat vero magni velit.\",\"size_gb\":4,\"interface\":\"3.2\",\"price_iqd\":\"30000.00\",\"created_at\":\"2026-06-25T16:48:59.000000Z\",\"updated_at\":\"2026-06-25T16:48:59.000000Z\"},{\"id\":14,\"name_en\":\"unde USB\",\"name_ar\":\"laboriosam USB\",\"description_en\":\"Qui voluptatem voluptatem delectus odit aut facere.\",\"description_ar\":\"Impedit commodi eum ducimus occaecati.\",\"size_gb\":1,\"interface\":\"3.0\",\"price_iqd\":\"25000.00\",\"created_at\":\"2026-06-25T16:48:59.000000Z\",\"updated_at\":\"2026-06-25T16:48:59.000000Z\"},{\"id\":15,\"name_en\":\"sed USB\",\"name_ar\":\"quia USB\",\"description_en\":\"Qui autem reprehenderit repellendus mollitia corporis.\",\"description_ar\":\"Est corporis sit illo.\",\"size_gb\":2,\"interface\":\"3.1\",\"price_iqd\":\"50000.00\",\"created_at\":\"2026-06-25T16:48:59.000000Z\",\"updated_at\":\"2026-06-25T16:48:59.000000Z\"},{\"id\":16,\"name_en\":\"dignissimos USB\",\"name_ar\":\"tenetur USB\",\"description_en\":\"Quia amet sit incidunt rerum eos.\",\"description_ar\":\"Asperiores illum vitae quae fuga occaecati voluptatem voluptate.\",\"size_gb\":0.5,\"interface\":\"3.1\",\"price_iqd\":\"5000.00\",\"created_at\":\"2026-06-25T16:48:59.000000Z\",\"updated_at\":\"2026-06-25T16:48:59.000000Z\"},{\"id\":17,\"name_en\":\"expedita USB\",\"name_ar\":\"officiis USB\",\"description_en\":\"Cumque sed aperiam hic officiis necessitatibus natus.\",\"description_ar\":\"Possimus tempora et aliquid sint.\",\"size_gb\":4,\"interface\":\"3.1\",\"price_iqd\":\"10000.00\",\"created_at\":\"2026-06-25T16:48:59.000000Z\",\"updated_at\":\"2026-06-25T16:48:59.000000Z\"},{\"id\":18,\"name_en\":\"ipsam USB\",\"name_ar\":\"nihil USB\",\"description_en\":\"Et magni sit omnis temporibus.\",\"description_ar\":\"Aliquam molestias praesentium ut distinctio sed omnis officiis.\",\"size_gb\":8,\"interface\":\"3.2\",\"price_iqd\":\"30000.00\",\"created_at\":\"2026-06-25T16:48:59.000000Z\",\"updated_at\":\"2026-06-25T16:48:59.000000Z\"},{\"id\":19,\"name_en\":\"corporis USB\",\"name_ar\":\"aut USB\",\"description_en\":\"Vel et aut odit et tempora soluta.\",\"description_ar\":\"Voluptatem in nihil dicta voluptatem.\",\"size_gb\":8,\"interface\":\"3.1\",\"price_iqd\":\"35000.00\",\"created_at\":\"2026-06-25T16:48:59.000000Z\",\"updated_at\":\"2026-06-25T16:48:59.000000Z\"},{\"id\":20,\"name_en\":\"quidem USB\",\"name_ar\":\"omnis USB\",\"description_en\":\"Rerum dolores eligendi odit voluptas reprehenderit esse maxime.\",\"description_ar\":\"Natus neque et qui ex aut.\",\"size_gb\":8,\"interface\":\"3.2\",\"price_iqd\":\"30000.00\",\"created_at\":\"2026-06-25T16:48:59.000000Z\",\"updated_at\":\"2026-06-25T16:48:59.000000Z\"}]",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Show a USB stick",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/usb-sticks\/:id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/usb-sticks\/:id",
+                                    "variable": [
+                                        {
+                                            "id": "id",
+                                            "key": "id",
+                                            "value": 11,
+                                            "description": "The ID of the usb stick."
+                                        },
+                                        {
+                                            "id": "usb_stick",
+                                            "key": "usb_stick",
+                                            "value": 1,
+                                            "description": "The USB stick ID."
+                                        }
+                                    ]
+                                },
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Get details of a single USB stick model.",
+                                "auth": {
+                                    "type": "noauth"
+                                }
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name_en\": \"32GB USB 3.0\", \"name_ar\": \"32 \u062c\u064a\u062c\u0627 USB 3.0\", \"size_gb\": 32, \"interface\": \"USB 3.0\", \"price_iqd\": 15000}",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Admin",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "Create a USB stick",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/usb-sticks",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/usb-sticks"
+                                },
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name_en\":\"64GB USB 3.1\",\"name_ar\":\"64 \u062c\u064a\u062c\u0627 USB 3.1\",\"description_en\":\"architecto\",\"description_ar\":\"architecto\",\"size_gb\":\"64\",\"interface\":\"USB 3.1\",\"price_iqd\":\"25000\"}"
+                                },
+                                "description": "Add a new USB stick model. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 201,
+                                    "body": "{\"id\": 2, \"name_en\": \"64GB USB 3.1\", \"name_ar\": \"64 \u062c\u064a\u062c\u0627 USB 3.1\", \"size_gb\": 64, \"interface\": \"USB 3.1\", \"price_iqd\": 25000}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Update a USB stick",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/usb-sticks\/:usb_stick_id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/usb-sticks\/:usb_stick_id",
+                                    "variable": [
+                                        {
+                                            "id": "usb_stick_id",
+                                            "key": "usb_stick_id",
+                                            "value": 11,
+                                            "description": "The ID of the usb stick."
+                                        },
+                                        {
+                                            "id": "usb_stick",
+                                            "key": "usb_stick",
+                                            "value": 1,
+                                            "description": "The USB stick ID."
+                                        }
+                                    ]
+                                },
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\"name_en\":\"architecto\",\"name_ar\":\"architecto\",\"description_en\":\"architecto\",\"description_ar\":\"architecto\",\"size_gb\":\"architecto\",\"interface\":\"architecto\",\"price_iqd\":\"architecto\"}"
+                                },
+                                "description": "Update an existing USB stick model. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 200,
+                                    "body": "{\"id\": 1, \"name_en\": \"32GB USB 3.0\", \"name_ar\": \"32 \u062c\u064a\u062c\u0627 USB 3.0\", \"size_gb\": 32, \"interface\": \"USB 3.0\", \"price_iqd\": 15000}",
+                                    "name": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Delete a USB stick",
+                            "request": {
+                                "url": {
+                                    "host": "{{baseUrl}}",
+                                    "path": "api\/usb-sticks\/:usb_stick_id",
+                                    "query": [],
+                                    "raw": "{{baseUrl}}\/api\/usb-sticks\/:usb_stick_id",
+                                    "variable": [
+                                        {
+                                            "id": "usb_stick_id",
+                                            "key": "usb_stick_id",
+                                            "value": 11,
+                                            "description": "The ID of the usb stick."
+                                        },
+                                        {
+                                            "id": "usb_stick",
+                                            "key": "usb_stick",
+                                            "value": 1,
+                                            "description": "The USB stick ID."
+                                        }
+                                    ]
+                                },
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application\/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application\/json"
+                                    }
+                                ],
+                                "body": null,
+                                "description": "Remove a USB stick model. Admin only."
+                            },
+                            "response": [
+                                {
+                                    "header": [],
+                                    "code": 204,
+                                    "body": "",
+                                    "name": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "key",
+                "type": "string"
+            }
+        ]
+    }
+}

@@ -5,10 +5,33 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Game;
 
+/**
+ * @group Games
+ *
+ * Manage games.
+ */
 class GameController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List games
+     *
+     * Get a paginated list of games, filterable by search, platform, and category.
+     *
+     * @subgroup Public
+     * @unauthenticated
+     *
+     * @queryParam per_page int Results per page (1-100). Defaults to 15. Example: 15
+     * @queryParam search string Search by English or Arabic name. Example: war
+     * @queryParam platform_id int Filter by platform ID. Example: 1
+     * @queryParam category_id int Filter by category ID. Example: 2
+     *
+     * @responseField data[].id int Game ID.
+     * @responseField data[].name_en string English name.
+     * @responseField data[].name_ar string Arabic name.
+     * @responseField data[].size_gb float Size in GB.
+     * @responseField data[].category object The game category.
+     * @responseField data[].platform object The gaming platform.
+     * @responseField data[].images array List of images.
      */
     public function index(Request $request)
     {
@@ -25,7 +48,7 @@ class GameController extends Controller
         }
 
         if ($platformId = $request->query('platform_id')) {
-            $query->where('platform_id', $platformId);
+            $query->where('game_platform_id', $platformId);
         }
 
         if ($categoryId = $request->query('category_id')) {
@@ -38,7 +61,25 @@ class GameController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a game
+     *
+     * Add a new game entry. Admin only.
+     *
+     * @subgroup Admin
+     * @authenticated
+     *
+     * @bodyParam name_en string required English name. Example: Call of Duty
+     * @bodyParam name_ar string required Arabic name. Example: كول أوف ديوتي
+     * @bodyParam description_en string English description.
+     * @bodyParam description_ar string Arabic description.
+     * @bodyParam category_id int required Category ID. Example: 1
+     * @bodyParam platform_id int required Platform ID. Example: 1
+     * @bodyParam tags string[] Array of tags. Example: ["shooter", "multiplayer"]
+     * @bodyParam size_gb numeric required Game file size in GB. Example: 72.5
+     * @bodyParam downloads int Download count. Example: 15000
+     * @bodyParam date_release date Release date. Example: 2024-10-25
+     *
+     * @response status=201 {"id": 1, "name_en": "Call of Duty", "name_ar": "كول أوف ديوتي", "size_gb": 72.5, ...}
      */
     public function store(Request $request)
     {
@@ -48,7 +89,7 @@ class GameController extends Controller
             'description_en' => ['nullable', 'string'],
             'description_ar' => ['nullable', 'string'],
             'category_id' => ['required', 'exists:categories,id'],
-            'platform_id' => ['required', 'exists:platforms,id'],
+            'game_platform_id' => ['required', 'exists:game_platforms,id'],
             'tags' => ['nullable', 'array'],
             'tags.*' => ['string'],
             'size_gb' => ['required', 'numeric'],
@@ -60,7 +101,16 @@ class GameController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Show a game
+     *
+     * Get details of a single game by ID with its category and platform.
+     *
+     * @subgroup Public
+     * @unauthenticated
+     *
+     * @urlParam id int required The game ID. Example: 1
+     *
+     * @response {"id": 1, "name_en": "Call of Duty", "name_ar": "كول أوف ديوتي", "size_gb": 72.5, "category": {...}, "platform": {...}}
      */
     public function show(string $id)
     {
@@ -68,7 +118,27 @@ class GameController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update a game
+     *
+     * Update an existing game entry. Admin only.
+     *
+     * @subgroup Admin
+     * @authenticated
+     *
+     * @urlParam id int required The game ID. Example: 1
+     *
+     * @bodyParam name_en string English name.
+     * @bodyParam name_ar string Arabic name.
+     * @bodyParam description_en string English description.
+     * @bodyParam description_ar string Arabic description.
+     * @bodyParam category_id int Category ID.
+     * @bodyParam platform_id int Platform ID.
+     * @bodyParam tags string[] Array of tags.
+     * @bodyParam size_gb numeric Game file size in GB.
+     * @bodyParam downloads int Download count.
+     * @bodyParam date_release date Release date.
+     *
+     * @response {"id": 1, "name_en": "Call of Duty", "name_ar": "كول أوف ديوتي", "size_gb": 72.5, ...}
      */
     public function update(Request $request, string $id)
     {
@@ -80,7 +150,7 @@ class GameController extends Controller
             'description_en' => ['nullable', 'string'],
             'description_ar' => ['nullable', 'string'],
             'category_id' => ['sometimes', 'required', 'exists:categories,id'],
-            'platform_id' => ['sometimes', 'required', 'exists:platforms,id'],
+            'game_platform_id' => ['sometimes', 'required', 'exists:game_platforms,id'],
             'tags' => ['nullable', 'array'],
             'tags.*' => ['string'],
             'size_gb' => ['sometimes', 'required', 'numeric'],
@@ -94,7 +164,16 @@ class GameController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a game
+     *
+     * Remove a game entry. Admin only.
+     *
+     * @subgroup Admin
+     * @authenticated
+     *
+     * @urlParam id int required The game ID. Example: 1
+     *
+     * @response status=204
      */
     public function destroy(string $id)
     {

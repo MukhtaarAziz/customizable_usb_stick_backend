@@ -4,7 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { 
   faArrowRight, 
   faArrowLeft,
-  faExclamationTriangle
+  faExclamationTriangle,
+  faUserLock,
+  faArrowRightToBracket
 } from '@fortawesome/free-solid-svg-icons'
 import DesignStepper from '../components/DesignStepper/DesignStepper.jsx'
 import UsbSelectionGrid from '../components/UsbSelectionGrid/UsbSelectionGrid.jsx'
@@ -13,6 +15,7 @@ import CheckoutForm from '../components/CheckoutForm/CheckoutForm.jsx'
 import OrderReceipt from '../components/OrderReceipt/OrderReceipt.jsx'
 import SuccessScreen from '../components/SuccessScreen/SuccessScreen.jsx'
 import GameDetailsModal from '../components/GameDetailsModal/GameDetailsModal.jsx'
+import { CATALOG_TYPES } from '../config'
 import UsbStickPreview from '../components/UsbStickPreview/UsbStickPreview.jsx'
 import UsbDetailsModal from '../components/UsbDetailsModal/UsbDetailsModal.jsx'
 import './DesignUsbStick.css'
@@ -25,17 +28,17 @@ const stepsText = {
     step4: 'Done',
     selectUsbTitle: 'Step 1: Choose your USB Flash Drive',
     selectUsbDesc: 'Select the storage size and interface type that suits your needs.',
-    chooseGamesTitle: 'Step 2: Choose your Games & Fill USB',
-    chooseGamesDesc: 'Browse the catalog and add games to fill your selected capacity.',
+    chooseGamesTitle: 'Step 2: Choose Items & Fill USB',
+    chooseGamesDesc: 'Browse the catalog and add games or programs to fill your selected capacity.',
     checkoutTitle: 'Step 3: Complete your Order Info',
     checkoutDesc: 'Provide your shipping address and contact details to receive your customized USB.',
     successTitle: 'Order Placed Successfully!',
     successDesc: 'We have received your customization order. Our team will start preparing your USB stick shortly.',
     estTimeLabel: 'Estimated Copy Time',
     basePrice: 'USB Base Price',
-    totalSize: 'Total Games Size',
+    totalSize: 'Total Items Size',
     freeSpace: 'Available Free Space',
-    exceedWarn: 'Storage limit exceeded! Please remove some games.',
+    exceedWarn: 'Storage limit exceeded! Please remove some items.',
     customerName: 'Full Name',
     customerPhone: 'Phone Number (Iraqi Format)',
     customerEmail: 'Email Address (Optional)',
@@ -43,12 +46,12 @@ const stepsText = {
     customerAddress: 'Full Shipping Address',
     customerPoint: 'Nearest Famous Landmark / Service Point',
     confirmOrder: 'Confirm and Submit Order',
-    backToGames: 'Back to Games Selection',
+    backToGames: 'Back to Items Selection',
     backToUsb: 'Back to USB Selection',
-    nextSelectGames: 'Next: Select Games',
+    nextSelectGames: 'Next: Select Items',
     nextCheckout: 'Next: Shipping Info',
-    gamesList: 'Selected Games',
-    noGamesSelected: 'No games added yet.',
+    gamesList: 'Selected Items',
+    noGamesSelected: 'No items added yet.',
     emptyStick: 'Please select a USB stick from Step 1 to begin.',
     stickLabel: 'Selected USB Stick',
     govPlaceholder: '-- Select your Governorate --',
@@ -60,6 +63,9 @@ const stepsText = {
     pointPlaceholder: 'e.g. Al-Mansour Mall, or Korek main branch',
     receiptTitle: 'Order Invoice Summary',
     capacityUsed: 'Capacity Used',
+    loginRequired: 'Login Required',
+    loginPrompt: 'You need to log in or register to complete your order.',
+    loginToContinue: 'Login / Register',
   },
   ar: {
     step1: 'اختر الفلاش',
@@ -68,17 +74,17 @@ const stepsText = {
     step4: 'تم بنجاح',
     selectUsbTitle: 'الخطوة 1: اختر فلاش ميموري USB المناسب لك',
     selectUsbDesc: 'حدد سعة التخزين ونوع المنفذ الذي يناسب احتياجاتك.',
-    chooseGamesTitle: 'الخطوة 2: اختر الألعاب واملأ الفلاش',
-    chooseGamesDesc: 'تصفح قائمة الألعاب المتاحة وأضفها لملء المساحة المتاحة.',
+    chooseGamesTitle: 'الخطوة 2: اختر العناصر واملأ الفلاش',
+    chooseGamesDesc: 'تصفح قائمة الألعاب والبرامج المتاحة وأضفها لملء المساحة المتاحة.',
     checkoutTitle: 'الخطوة 3: استكمال معلومات التوصيل والطلب',
     checkoutDesc: 'أدخل تفاصيل العنوان ورقم الهاتف لاستلام طلبك المخصص.',
     successTitle: 'تم إرسال الطلب بنجاح!',
     successDesc: 'لقد استلمنا طلب تخصيص الفلاشة الخاص بك. سيبدأ فريق العمل بنسخ الألعاب وتجهيز الطلب قريباً.',
     estTimeLabel: 'وقت النسخ المقدر',
     basePrice: 'سعر الفلاش الأساسي',
-    totalSize: 'إجمالي حجم الألعاب',
+    totalSize: 'إجمالي حجم العناصر',
     freeSpace: 'المساحة المتبقية بالفلاش',
-    exceedWarn: 'لقد تجاوزت المساحة المتاحة بالفلاش! يرجى إزالة بعض الألعاب.',
+    exceedWarn: 'لقد تجاوزت المساحة المتاحة بالفلاش! يرجى إزالة بعض العناصر.',
     customerName: 'الاسم الكامل',
     customerPhone: 'رقم الهاتف (عراقي)',
     customerEmail: 'البريد الإلكتروني (اختياري)',
@@ -86,12 +92,12 @@ const stepsText = {
     customerAddress: 'العنوان بالتفصيل',
     customerPoint: 'أقرب نقطة دالة / نقطة خدمة',
     confirmOrder: 'تأكيد وإرسال الطلب',
-    backToGames: 'العودة لاختيار الألعاب',
+    backToGames: 'العودة لاختيار العناصر',
     backToUsb: 'العودة لاختيار الفلاش',
-    nextSelectGames: 'التالي: اختيار الألعاب',
+    nextSelectGames: 'التالي: اختيار العناصر',
     nextCheckout: 'التالي: معلومات الشحن',
-    gamesList: 'الألعاب المضافة',
-    noGamesSelected: 'لم يتم إضافة ألعاب بعد.',
+    gamesList: 'العناصر المضافة',
+    noGamesSelected: 'لم يتم إضافة عناصر بعد.',
     emptyStick: 'يرجى تحديد فلاش USB من الخطوة الأولى للبدء.',
     stickLabel: 'الفلاش المحدد',
     govPlaceholder: '-- اختر المحافظة --',
@@ -103,16 +109,20 @@ const stepsText = {
     pointPlaceholder: 'مثال: قرب مول المنصور أو مركز كورك الرئيسي',
     receiptTitle: 'ملخص فاتورة الطلب',
     capacityUsed: 'السعة المستخدمة',
+    loginRequired: 'تسجيل الدخول مطلوب',
+    loginPrompt: 'يجب تسجيل الدخول أو إنشاء حساب لإتمام الطلب.',
+    loginToContinue: 'تسجيل الدخول / التسجيل',
   }
 }
 
 function DesignUsbStick({
   locale,
   user,
+  onShowAuth,
   selectedUsbId,
   setSelectedUsbId,
-  selectedGames,
-  setSelectedGames,
+  selectedItems,
+  setSelectedItems,
   showUsbModal,
   setShowUsbModal,
   activeStep,
@@ -123,7 +133,7 @@ function DesignUsbStick({
   const [usbSticks, setUsbSticks] = useState([])
   const [platforms, setPlatforms] = useState([])
   const [categories, setCategories] = useState([])
-  const [games, setGames] = useState([])
+  const [items, setItems] = useState([])
   const [governorates, setGovernorates] = useState([])
   
   // Loading & Error States
@@ -132,14 +142,16 @@ function DesignUsbStick({
   
   // Selection States
   const [viewMode, setViewMode] = useState('grid')
+  const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
+  const [catalogType, setCatalogType] = useState('all')
   const [platformId, setPlatformId] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [perPage, setPerPage] = useState(12)
   const [page, setPage] = useState(1)
   const [meta, setMeta] = useState({ current_page: 1, last_page: 1 })
-  const [showGameDetails, setShowGameDetails] = useState(false)
-  const [currentGame, setCurrentGame] = useState(null)
+  const [showItemDetails, setShowItemDetails] = useState(false)
+  const [currentItem, setCurrentItem] = useState(null)
 
   // Checkout Form State
   const [checkoutForm, setCheckoutForm] = useState({
@@ -155,10 +167,9 @@ function DesignUsbStick({
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const selectedUsb = usbSticks.find((usb) => String(usb.id) === String(selectedUsbId))
-  const selectedGameIds = selectedGames.map((game) => game.id)
-  
-  const totalGamesSize = selectedGames.reduce((acc, game) => acc + (Number(game.size_gb) || 0), 0)
-  const isOverCapacity = selectedUsb && totalGamesSize > Number(selectedUsb.size_gb)
+
+  const totalItemsSize = selectedItems.reduce((acc, item) => acc + (Number(item.size_gb) || 0), 0)
+  const isOverCapacity = selectedUsb && totalItemsSize > Number(selectedUsb.size_gb)
   const langText = stepsText[locale]
 
   // Pre-fill checkout form if user is logged in
@@ -176,14 +187,15 @@ function DesignUsbStick({
     }
   }, [user])
 
-  // Load USBs, platforms, categories, governorates on mount
+  // Load USBs, platforms, categories, governorates, program filter options on mount
   useEffect(() => {
     async function loadMeta() {
       try {
-        const [usbRes, platRes, catRes, govRes] = await Promise.all([
+        const [usbRes, platRes, catRes, progPlatRes, govRes] = await Promise.all([
           fetch('/api/usb-sticks'),
-          fetch('/api/platforms'),
+          fetch('/api/game-platforms'),
           fetch('/api/categories'),
+          fetch('/api/program-platforms'),
           fetch('/api/governorates')
         ])
 
@@ -191,29 +203,47 @@ function DesignUsbStick({
           const data = await usbRes.json()
           setUsbSticks(data.data ?? data)
         }
+
+        const allPlatforms = []
+        const allCategories = []
+
         if (platRes.ok) {
           const data = await platRes.json()
-          setPlatforms(data.data ?? data)
+          const gamePlatforms = (data.data ?? data).map(p => ({ ...p, type: 'game' }))
+          allPlatforms.push(...gamePlatforms)
         }
+        if (progPlatRes.ok) {
+          const data = await progPlatRes.json()
+          const progPlatforms = (data.data ?? data).map(p => ({ ...p, type: 'program' }))
+          allPlatforms.push(...progPlatforms)
+        }
+        setPlatforms(allPlatforms)
+
         if (catRes.ok) {
           const data = await catRes.json()
-          setCategories(data.data ?? data)
+          const categories = (data.data ?? data).map(c => ({
+            ...c,
+            type: c.category_type_id === 1 ? 'game' : 'program'
+          }))
+          allCategories.push(...categories)
         }
+        setCategories(allCategories)
+
         if (govRes.ok) {
           const data = await govRes.json()
           setGovernorates(data.data ?? data)
         }
       } catch (err) {
-        console.error('Error fetching meta info:', err)
+        console.error('Error loading data:', err)
       }
     }
 
     loadMeta()
   }, [])
 
-  // Load games with search/filter parameters
+  // Load catalog items with search/filter parameters
   useEffect(() => {
-    async function loadGames() {
+    async function loadItems() {
       setLoading(true)
       setError(null)
 
@@ -222,44 +252,60 @@ function DesignUsbStick({
         query.set('per_page', perPage)
         query.set('page', page)
         if (search) query.set('search', search)
+        if (catalogType && catalogType !== 'all') query.set('type', catalogType)
         if (platformId) query.set('platform_id', platformId)
         if (categoryId) query.set('category_id', categoryId)
 
-        const response = await fetch(`/api/games?${query.toString()}`)
+        const response = await fetch(`/api/catalog?${query.toString()}`)
         if (!response.ok) {
-          throw new Error(locale === 'ar' ? 'تعذر تحميل الألعاب.' : 'Unable to load games.')
+          throw new Error(locale === 'ar' ? 'تعذر تحميل العناصر.' : 'Unable to load items.')
         }
 
         const data = await response.json()
-        setGames(data.data ?? data)
+        setItems(data.data ?? data)
         setMeta(data.meta ?? {
           current_page: data.current_page ?? 1,
           last_page: data.last_page ?? 1,
         })
       } catch (err) {
-        setError(err.message || (locale === 'ar' ? 'حدث خطأ أثناء تحميل الألعاب.' : 'Something went wrong while loading games.'))
+        setError(err.message || (locale === 'ar' ? 'حدث خطأ أثناء تحميل العناصر.' : 'Something went wrong while loading items.'))
       } finally {
         setLoading(false)
       }
     }
 
     if (selectedUsbId) {
-      loadGames()
+      loadItems()
     } else {
-      setGames([])
+      setItems([])
       setMeta({ current_page: 1, last_page: 1 })
       setLoading(false)
     }
-  }, [locale, search, platformId, categoryId, page, perPage, selectedUsbId])
+  }, [locale, search, catalogType, platformId, categoryId, page, perPage, selectedUsbId])
 
   const handleUsbChange = (usbId) => {
     setSelectedUsbId(usbId)
-    setSelectedGames([])
+    setSelectedItems([])
     setPage(1)
   }
 
   const handleSearchChange = (event) => {
-    setSearch(event.target.value)
+    setSearchInput(event.target.value)
+  }
+
+  const handleSearchSubmit = () => {
+    setSearch(searchInput)
+    setPage(1)
+  }
+
+  const handleSearchClear = () => {
+    setSearchInput('')
+    setSearch('')
+    setPage(1)
+  }
+
+  const handleTypeChange = (event) => {
+    setCatalogType(event.target.value)
     setPage(1)
   }
 
@@ -278,20 +324,20 @@ function DesignUsbStick({
     setPage(1)
   }
 
-  const handleAddGame = (game) => {
-    setSelectedGames((prev) => {
-      if (prev.some((item) => item.id === game.id)) return prev
-      return [...prev, game]
+  const handleAddItem = (item) => {
+    setSelectedItems((prev) => {
+      if (prev.some((i) => i.id === item.id && i.type === item.type)) return prev
+      return [...prev, item]
     })
   }
 
-  const handleRemoveGame = (gameId) => {
-    setSelectedGames((prev) => prev.filter((game) => game.id !== gameId))
+  const handleRemoveItem = (itemId, itemType) => {
+    setSelectedItems((prev) => prev.filter((i) => !(i.id === itemId && i.type === itemType)))
   }
 
-  const handleViewGameDetails = (game) => {
-    setCurrentGame(game)
-    setShowGameDetails(true)
+  const handleViewItemDetails = (item) => {
+    setCurrentItem(item)
+    setShowItemDetails(true)
   }
 
   const handleCheckoutFormChange = (e) => {
@@ -333,92 +379,37 @@ function DesignUsbStick({
       setValidationError(locale === 'ar' ? 'يرجى اختيار فلاش USB' : 'Please select a USB stick')
       return
     }
-    if (selectedGames.length === 0) {
-      setValidationError(locale === 'ar' ? 'يرجى اختيار لعبة واحدة على الأقل' : 'Please select at least one game')
+    if (selectedItems.length === 0) {
+      setValidationError(locale === 'ar' ? 'يرجى اختيار عنصر واحد على الأقل' : 'Please select at least one item')
       return
     }
 
     setIsSubmitting(true)
 
     try {
-      let authToken = null
-
-      // If customer is not logged in, try to login first, then register if needed
       if (!user || !user.token) {
-        // Try to login first (in case account already exists)
-        let loginResponse = await fetch('/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            email: checkoutForm.email || checkoutForm.phone,
-            password: checkoutForm.password
-          })
-        })
-
-        // If login succeeds, use the token
-        if (loginResponse.ok) {
-          const loginData = await loginResponse.json()
-          authToken = loginData.token
-        } else {
-          // Login failed, try to register new account
-          const registerResponse = await fetch('/api/customers', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify(checkoutForm)
-          })
-
-          if (!registerResponse.ok) {
-            const errorData = await registerResponse.json()
-            throw new Error(errorData.message || (locale === 'ar' ? 'فشل إنشاء الحساب.' : 'Failed to create account.'))
-          }
-
-          // Auto-login after successful registration
-          loginResponse = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              email: checkoutForm.email,
-              password: checkoutForm.password
-            })
-          })
-
-          if (!loginResponse.ok) {
-            throw new Error(locale === 'ar' ? 'فشل تسجيل الدخول التلقائي.' : 'Failed to auto-login.')
-          }
-
-          const loginData = await loginResponse.json()
-          authToken = loginData.token
-        }
-      } else {
-        // User is logged in, use existing token
-        authToken = user.token
+        throw new Error(locale === 'ar' ? 'يجب تسجيل الدخول أولاً.' : 'You must be logged in first.')
       }
 
       // Create custom USB order
+      const gameIds = selectedItems.filter(i => i.type === 'game').map(i => i.id)
+      const programIds = selectedItems.filter(i => i.type === 'program').map(i => i.id)
       const orderData = {
         usb_stick_id: parseInt(selectedUsbId),
-        game_ids: selectedGameIds,
+        game_ids: gameIds.length > 0 ? gameIds : undefined,
+        program_ids: programIds.length > 0 ? programIds : undefined,
         notes: checkoutForm.notes || null,
         custom_message: checkoutForm.custom_message || null,
         delivery_address: checkoutForm.address,
         phone: checkoutForm.phone
       }
 
-      const orderResponse = await fetch('/api/custom-usb-orders', {
+      const orderResponse = await fetch('/api/usb-stick-orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': `Bearer ${authToken}`
+          'Authorization': `Bearer ${user.token}`
         },
         body: JSON.stringify(orderData)
       })
@@ -427,7 +418,9 @@ function DesignUsbStick({
         throw new Error(locale === 'ar' ? 'فشل إرسال الطلب.' : 'Failed to submit order.')
       }
 
-      // Success - move to success screen
+      // Success - clear selections and show success screen
+      setSelectedItems([])
+      setSelectedUsbId('')
       setActiveStep(4)
     } catch (err) {
       setValidationError(err.message)
@@ -438,7 +431,7 @@ function DesignUsbStick({
 
   const handleResetWizard = () => {
     setSelectedUsbId('')
-    setSelectedGames([])
+    setSelectedItems([])
     setActiveStep(1)
     setValidationError('')
   }
@@ -488,7 +481,7 @@ function DesignUsbStick({
         </Card>
       )}
 
-      {/* ================= STEP 2: BROWSE AND SELECT GAMES ================= */}
+      {/* ================= STEP 2: BROWSE AND SELECT ITEMS ================= */}
       {activeStep === 2 && (
         <Row className="gy-4">
           <Col xs={12}>
@@ -498,10 +491,11 @@ function DesignUsbStick({
             </div>
 
             <GamesCatalog
-              games={games}
+              items={items}
               loading={loading}
               error={error}
-              search={search}
+              search={searchInput}
+              catalogType={catalogType}
               platformId={platformId}
               categoryId={categoryId}
               perPage={perPage}
@@ -510,15 +504,18 @@ function DesignUsbStick({
               platforms={platforms}
               categories={categories}
               viewMode={viewMode}
-              selectedGameIds={selectedGameIds}
+              selectedIds={selectedItems.map(i => `${i.type}-${i.id}`)}
               onSearchChange={handleSearchChange}
+              onSearchSubmit={handleSearchSubmit}
+              onSearchClear={handleSearchClear}
+              onTypeChange={handleTypeChange}
               onPlatformChange={handlePlatformChange}
               onCategoryChange={handleCategoryChange}
               onPerPageChange={handlePerPageChange}
               onPageChange={setPage}
               onViewModeChange={setViewMode}
-              onViewGameDetails={handleViewGameDetails}
-              onAddGame={handleAddGame}
+              onViewItemDetails={handleViewItemDetails}
+              onAddItem={handleAddItem}
               locale={locale}
             />
 
@@ -536,7 +533,7 @@ function DesignUsbStick({
               <Button 
                 variant="primary" 
                 className="wizard-btn-next text-end rtl-float"
-                disabled={selectedGames.length === 0 || isOverCapacity}
+                disabled={selectedItems.length === 0 || isOverCapacity}
                 onClick={() => setActiveStep(3)}
               >
                 <span className="wizard-btn-text">{langText.nextCheckout}</span>
@@ -547,7 +544,7 @@ function DesignUsbStick({
             {/* Floating Action Button for Desktop/Tablet - Now Positioned Absolutely */}
             <Button 
               variant="primary" 
-              className="design-usb__floating-action d-none d-md-flex align-items-center justify-content-center position-fixed bottom-0 end-0 m-4 shadow-lg rounded-3"
+              className="design-usb__floating-action d-none d-md-flex align-items-center justify-content-center rtl-float ms-n3 mb-4"
               onClick={() => setShowUsbModal(true)}
               aria-label={locale === 'ar' ? 'تفاصيل الفلاش' : 'USB Details'}
             >
@@ -558,9 +555,9 @@ function DesignUsbStick({
                 <line x1="9" y1="11" x2="15" y2="11" strokeWidth="1.5" opacity="0.6" />
               </svg>
               <span className={locale === 'ar' ? 'me-2' : 'ms-2'}>{locale === 'ar' ? 'التفاصيل والمتابعة' : 'Details & Next'}</span>
-              {selectedGames.length > 0 && (
+              {selectedItems.length > 0 && (
                 <Badge bg="light" text="primary" pill className={locale === 'ar' ? 'me-2 fs-6' : 'ms-2 fs-6'}>
-                  {selectedGames.length}
+                  {selectedItems.length}
                 </Badge>
               )}
             </Button>
@@ -571,35 +568,53 @@ function DesignUsbStick({
       {/* ================= STEP 3: CUSTOMER SHIPPING INFO & INVOICE RECEIPT ================= */}
       {activeStep === 3 && (
         <Row className="gy-4">
-          {/* Checkout Form */}
+          {/* Checkout Form or Login Prompt */}
           <Col xs={12} lg={7}>
-            <Card className="design-usb__card border-0 shadow-sm">
-              <div className="mb-4">
-                <h4 className="fw-bold mb-1">{langText.checkoutTitle}</h4>
-                <p className="text-muted small">{langText.checkoutDesc}</p>
-              </div>
+            {user ? (
+              <Card className="design-usb__card border-0 shadow-sm">
+                <div className="mb-4">
+                  <h4 className="fw-bold mb-1">{langText.checkoutTitle}</h4>
+                  <p className="text-muted small">{langText.checkoutDesc}</p>
+                </div>
 
-              <CheckoutForm
-                checkoutForm={checkoutForm}
-                validationError={validationError}
-                isSubmitting={isSubmitting}
-                governorates={governorates}
-                locale={locale}
-                langText={langText}
-                user={user}
-                onFormChange={handleCheckoutFormChange}
-                onSubmit={handleOrderSubmit}
-                onBack={() => setActiveStep(2)}
-              />
-            </Card>
+                <CheckoutForm
+                  checkoutForm={checkoutForm}
+                  validationError={validationError}
+                  isSubmitting={isSubmitting}
+                  governorates={governorates}
+                  locale={locale}
+                  langText={langText}
+                  user={user}
+                  onFormChange={handleCheckoutFormChange}
+                  onSubmit={handleOrderSubmit}
+                  onBack={() => setActiveStep(2)}
+                />
+              </Card>
+            ) : (
+              <Card className="design-usb__card border-0 shadow-sm text-center py-5">
+                <FontAwesomeIcon icon={faUserLock} className="text-muted mb-3" style={{ fontSize: '4rem' }} />
+                <h4 className="fw-bold mb-2">{langText.loginRequired}</h4>
+                <p className="text-muted mb-4">{langText.loginPrompt}</p>
+                <div className="d-flex justify-content-center gap-3">
+                  <Button variant="outline-secondary" onClick={() => setActiveStep(2)}>
+                    <FontAwesomeIcon icon={locale === 'ar' ? faArrowRight : faArrowLeft} className="me-2" />
+                    {langText.backToGames}
+                  </Button>
+                  <Button variant="primary" size="lg" onClick={onShowAuth}>
+                    <FontAwesomeIcon icon={faArrowRightToBracket} className="me-2" />
+                    {langText.loginToContinue}
+                  </Button>
+                </div>
+              </Card>
+            )}
           </Col>
 
-          {/* Order Receipt */}
+          {/* Order Receipt (always visible) */}
           <Col xs={12} lg={5}>
             <OrderReceipt
               selectedUsb={selectedUsb}
-              selectedGames={selectedGames}
-              totalGamesSize={totalGamesSize}
+              selectedItems={selectedItems}
+              totalItemsSize={totalItemsSize}
               locale={locale}
               langText={langText}
             />
@@ -620,14 +635,14 @@ function DesignUsbStick({
         </Card>
       )}
 
-      {/* Game Details Modal */}
+      {/* Item Details Modal */}
       <GameDetailsModal 
-        show={showGameDetails} 
+        show={showItemDetails} 
         onHide={() => {
-          setShowGameDetails(false)
-          setCurrentGame(null)
+          setShowItemDetails(false)
+          setCurrentItem(null)
         }} 
-        game={currentGame} 
+        item={currentItem} 
         locale={locale} 
       />
 
@@ -636,9 +651,9 @@ function DesignUsbStick({
         show={showUsbModal}
         onHide={() => setShowUsbModal(false)}
         usb={selectedUsb}
-        selectedGames={selectedGames}
+        selectedItems={selectedItems}
         locale={locale}
-        onRemoveGame={handleRemoveGame}
+        onRemoveItem={handleRemoveItem}
         onCheckout={() => setActiveStep(3)}
       />
       

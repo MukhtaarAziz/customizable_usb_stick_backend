@@ -1,22 +1,38 @@
-/* ============================================
-   DesignStepper — Professional Step Indicator
-   Inspired by top SaaS checkout flows
-   ============================================ */
+/* DesignStepper design tokens */
+:root {
+  --ds-primary: #ff6b35;
+  --ds-primary-dark: #e55a2b;
+  --ds-success: #22c55e;
+  --ds-success-dark: #16a34a;
+  --ds-text-muted: #94a3b8;
+  --ds-text-dark: #475569;
+  --ds-border: #e2e8f0;
+  --ds-bg: #ffffff;
+  --ds-bg-soft: #f8fafc;
+  --ds-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  --ds-radius: 20px;
+  --ds-circle-size: 36px;
+  --ds-circle-size-active: 40px;
+  --ds-track-height: 3px;
+  --ds-track-offset: 2.25rem;
+  --ds-gradient-track: linear-gradient(90deg, var(--ds-primary) 0%, #ff934b 50%, #ffb347 100%);
+  --ds-circle-active-shadow: 0 4px 16px rgba(255, 107, 53, 0.35);
+  --ds-circle-completed-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+  --ds-ring-color-1: rgba(255, 107, 53, 0.2);
+  --ds-ring-color-2: rgba(255, 107, 53, 0.1);
+}
 
 .ds-container {
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
   padding: 1.75rem 1.5rem 1rem;
-  background: linear-gradient(135deg, #fafbff 0%, #f8f9fe 100%);
-  border-radius: 20px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  background: var(--ds-bg-soft);
+  border-radius: var(--ds-radius);
+  border: 1px solid var(--ds-border);
+  box-shadow: var(--ds-shadow);
 }
 
-/* ============================================
-   Track (Progress Bar)
-   ============================================ */
 .ds-track {
   position: relative;
   display: flex;
@@ -28,41 +44,38 @@
 
 .ds-track__bg {
   position: absolute;
-  top: 18px;
-  left: 2.25rem;
-  right: 2.25rem;
-  height: 3px;
-  background: #e8ecf4;
+  top: calc(var(--ds-circle-size) / 2 - var(--ds-track-height) / 2);
+  left: var(--ds-track-offset);
+  right: var(--ds-track-offset);
+  height: var(--ds-track-height);
+  background: var(--border-color);
   border-radius: 4px;
   z-index: 1;
 }
 
 .ds-track__fill {
   position: absolute;
-  top: 18px;
-  left: 2.25rem;
-  height: 3px;
-  background: linear-gradient(90deg, #ff6b35 0%, #ff934b 50%, #ffb347 100%);
+  top: calc(var(--ds-circle-size) / 2 - var(--ds-track-height) / 2);
+  left: var(--ds-track-offset);
+  height: var(--ds-track-height);
+  background: var(--ds-gradient-track);
   border-radius: 4px;
   z-index: 2;
   transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  max-width: calc(100% - 4.5rem);
+  max-width: calc(100% - var(--ds-track-offset) * 2);
 }
 
 [dir="rtl"] .ds-track__fill {
   left: auto;
-  right: 2.25rem;
-  background: linear-gradient(270deg, #ff6b35 0%, #ff934b 50%, #ffb347 100%);
+  right: var(--ds-track-offset);
+  background: linear-gradient(270deg, var(--ds-primary) 0%, #ff934b 50%, #ffb347 100%);
 }
 
 [dir="rtl"] .ds-track__bg {
   left: auto;
-  right: 2.25rem;
+  right: var(--ds-track-offset);
 }
 
-/* ============================================
-   Node (Step)
-   ============================================ */
 .ds-node {
   position: relative;
   z-index: 3;
@@ -73,17 +86,16 @@
   cursor: default;
 }
 
-/* Circle */
 .ds-node__circle {
-  width: 36px;
-  height: 36px;
+  width: var(--ds-circle-size);
+  height: var(--ds-circle-size);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
-  border: 2.5px solid #dde1ea;
-  color: #a0a8b8;
+  background: var(--ds-bg);
+  border: 2.5px solid var(--border-color);
+  color: var(--ds-text-muted);
   font-weight: 700;
   font-size: 0.85rem;
   position: relative;
@@ -91,32 +103,27 @@
   flex-shrink: 0;
 }
 
-/* ── States ──────────────────────────── */
-
-/* Pending (default) */
 .ds-node--pending .ds-node__circle {
-  background: #ffffff;
-  border-color: #dde1ea;
-  color: #a0a8b8;
+  background: var(--ds-bg);
+  border-color: var(--border-color);
+  color: var(--ds-text-muted);
 }
 
-/* Active */
 .ds-node--active .ds-node__circle {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
-  border-color: #ff6b35;
-  color: #ffffff;
-  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.35);
+  width: var(--ds-circle-size-active);
+  height: var(--ds-circle-size-active);
+  background: linear-gradient(135deg, var(--ds-primary) 0%, #ff8c42 100%);
+  border-color: var(--ds-primary);
+  color: var(--ds-bg);
+  box-shadow: var(--ds-circle-active-shadow);
   transform: scale(1);
 }
 
-/* Completed */
 .ds-node--completed .ds-node__circle {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  border-color: #22c55e;
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+  background: linear-gradient(135deg, var(--ds-success) 0%, var(--ds-success-dark) 100%);
+  border-color: var(--ds-success);
+  color: var(--ds-bg);
+  box-shadow: var(--ds-circle-completed-shadow);
 }
 
 .ds-node__number {
@@ -129,7 +136,6 @@
   animation: ds-check-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ── Pulse Rings (active step) ───────── */
 .ds-node__ring {
   position: absolute;
   border-radius: 50%;
@@ -141,7 +147,7 @@
   left: -5px;
   right: -5px;
   bottom: -5px;
-  border: 2px solid rgba(255, 107, 53, 0.2);
+  border: 2px solid var(--ds-ring-color-1);
   animation: ds-ring-pulse 2.5s ease-out infinite;
 }
 
@@ -150,11 +156,10 @@
   left: -9px;
   right: -9px;
   bottom: -9px;
-  border: 2px solid rgba(255, 107, 53, 0.1);
+  border: 2px solid var(--ds-ring-color-2);
   animation: ds-ring-pulse 2.5s ease-out 0.4s infinite;
 }
 
-/* ── Label ───────────────────────────── */
 .ds-node__label-wrap {
   margin-top: 0.6rem;
   text-align: center;
@@ -166,59 +171,54 @@
 .ds-node__label {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #8892a8;
-  transition: all 0.3s ease;
+  color: var(--ds-text-muted);
+  transition: color 0.3s ease;
   line-height: 1.2;
   letter-spacing: 0.01em;
 }
 
 .ds-node--active .ds-node__label {
-  color: #ff6b35;
+  color: var(--ds-primary);
   font-weight: 700;
 }
 
 .ds-node--completed .ds-node__label {
-  color: #16a34a;
+  color: var(--ds-success-dark);
   font-weight: 600;
 }
 
-/* ── Connector (between circles) ─────── */
 .ds-connector {
   position: absolute;
-  top: 17px;
-  left: calc(50% + 20px);
-  width: calc(100% - 40px);
-  height: 3px;
+  top: calc(var(--ds-circle-size) / 2 - var(--ds-track-height) / 2);
+  left: calc(50% + var(--ds-circle-size) / 2 + 2px);
+  width: calc(100% - var(--ds-circle-size) - 4px);
+  height: var(--ds-track-height);
   background: transparent;
   z-index: 0;
   transition: background 0.5s ease;
 }
 
 .ds-connector--active {
-  background: #22c55e;
+  background: var(--ds-success);
 }
 
 .ds-connector--partial {
-  background: linear-gradient(90deg, #ff6b35 0%, #e8ecf4 100%);
+  background: linear-gradient(90deg, var(--ds-primary) 0%, var(--border-color) 100%);
 }
 
 [dir="rtl"] .ds-connector {
   left: auto;
-  right: calc(50% + 20px);
+  right: calc(50% + var(--ds-circle-size) / 2 + 2px);
 }
 
 [dir="rtl"] .ds-connector--partial {
-  background: linear-gradient(270deg, #ff6b35 0%, #e8ecf4 100%);
+  background: linear-gradient(270deg, var(--ds-primary) 0%, var(--border-color) 100%);
 }
 
-/* ── Animate on step change ──────────── */
 .ds-node--animate .ds-node__circle {
   animation: ds-step-bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ============================================
-   Status Bar
-   ============================================ */
 .ds-status {
   display: flex;
   align-items: center;
@@ -226,93 +226,53 @@
   gap: 0.5rem;
   margin-top: 1.25rem;
   padding-top: 0.85rem;
-  border-top: 1px solid rgba(226, 232, 240, 0.7);
+  border-top: 1px solid var(--ds-border);
 }
 
 .ds-status__dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #ff6b35;
+  background: var(--ds-primary);
   animation: ds-dot-pulse 2s ease-in-out infinite;
 }
 
 .ds-status__text {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--ds-text-dark);
   animation: ds-status-enter 0.4s ease;
   letter-spacing: 0.01em;
 }
 
-/* ============================================
-   Keyframes
-   ============================================ */
 @keyframes ds-check-pop {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.3);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.3); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes ds-ring-pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.4);
-    opacity: 0;
-  }
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
 }
 
 @keyframes ds-step-bounce {
-  0% {
-    transform: scale(1);
-  }
-  30% {
-    transform: scale(1.2);
-  }
-  60% {
-    transform: scale(0.95);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  30% { transform: scale(1.2); }
+  60% { transform: scale(0.95); }
+  100% { transform: scale(1); }
 }
 
 @keyframes ds-status-enter {
-  0% {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes ds-dot-pulse {
-  0%, 100% {
-    opacity: 0.5;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.3);
-  }
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
 }
 
-/* ============================================
-   Responsive
-   ============================================ */
 @media (max-width: 768px) {
   .ds-container {
     padding: 1.25rem 1rem 0.85rem;
@@ -324,34 +284,11 @@
     min-height: 60px;
   }
 
-  .ds-track__bg,
-  .ds-track__fill {
-    top: 15px;
-    left: 1.5rem;
-    right: 1.5rem;
-    height: 2.5px;
-  }
-
-  .ds-track__fill {
-    max-width: calc(100% - 3rem);
-  }
-
-  [dir="rtl"] .ds-track__bg,
-  [dir="rtl"] .ds-track__fill {
-    left: auto;
-    right: 1.5rem;
-  }
-
-  .ds-node__circle {
-    width: 30px;
-    height: 30px;
-    font-size: 0.75rem;
-    border-width: 2px;
-  }
-
-  .ds-node--active .ds-node__circle {
-    width: 34px;
-    height: 34px;
+  :root {
+    --ds-track-offset: 1.5rem;
+    --ds-circle-size: 30px;
+    --ds-circle-size-active: 34px;
+    --ds-track-height: 2.5px;
   }
 
   .ds-node__label {
@@ -361,18 +298,6 @@
   .ds-node__label-wrap {
     height: 1.4rem;
     margin-top: 0.4rem;
-  }
-
-  .ds-connector {
-    top: 14px;
-    left: calc(50% + 17px);
-    width: calc(100% - 34px);
-    height: 2.5px;
-  }
-
-  [dir="rtl"] .ds-connector {
-    left: auto;
-    right: calc(50% + 17px);
   }
 
   .ds-status {
@@ -391,66 +316,47 @@
     border-radius: 12px;
   }
 
-  .ds-node__circle {
-    width: 26px;
-    height: 26px;
-    font-size: 0.65rem;
-  }
-
-  .ds-node--active .ds-node__circle {
-    width: 30px;
-    height: 30px;
+  :root {
+    --ds-circle-size: 26px;
+    --ds-circle-size-active: 30px;
+    --ds-track-offset: 1.25rem;
   }
 
   .ds-node__label {
     font-size: 0.6rem;
   }
-
-  .ds-connector {
-    top: 12px;
-    left: calc(50% + 15px);
-    width: calc(100% - 30px);
-  }
-
-  [dir="rtl"] .ds-connector {
-    left: auto;
-    right: calc(50% + 15px);
-  }
 }
 
-/* ============================================
-   Dark Mode Support
-   ============================================ */
 body.theme-dark .ds-container {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  border-color: rgba(71, 85, 105, 0.4);
+  background: linear-gradient(135deg, var(--surface-page) 0%, var(--surface-card) 100%);
+  border-color: var(--border-color);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
 }
 
 body.theme-dark .ds-track__bg {
-  background: #1e293b;
+  background: var(--border-color);
 }
 
 body.theme-dark .ds-node__circle {
-  background: #0f172a;
-  border-color: #334155;
-  color: #64748b;
+  background: var(--surface-page);
+  border-color: var(--border-color);
+  color: var(--text-muted);
 }
 
 body.theme-dark .ds-node--pending .ds-node__circle {
-  background: #0f172a;
-  border-color: #334155;
-  color: #64748b;
+  background: var(--surface-page);
+  border-color: var(--border-color);
+  color: var(--text-muted);
 }
 
 body.theme-dark .ds-node__label {
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 body.theme-dark .ds-status {
-  border-top-color: rgba(71, 85, 105, 0.3);
+  border-top-color: var(--border-color);
 }
 
 body.theme-dark .ds-status__text {
-  color: #94a3b8;
+  color: var(--text-secondary);
 }

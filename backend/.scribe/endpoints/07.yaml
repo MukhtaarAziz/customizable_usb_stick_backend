@@ -1,0 +1,568 @@
+name: 'Custom USB Orders'
+description: |-
+
+  Place and manage custom USB stick orders.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/custom-usb-orders
+    metadata:
+      custom: []
+      groupName: 'Custom USB Orders'
+      groupDescription: |-
+
+        Place and manage custom USB stick orders.
+      subgroup: Orders
+      subgroupDescription: ''
+      title: 'List my orders'
+      description: 'Get all custom USB orders for the authenticated customer.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '[{"id": 1, "usb_stick": {...}, "games": [...], "total_price": 15000, "status": "pending", ...}]'
+        headers: []
+        description: ''
+    responseFields:
+      id:
+        custom: []
+        name: id
+        description: 'Order ID.'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      usb_stick:
+        custom: []
+        name: usb_stick
+        description: 'The selected USB stick model.'
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      games:
+        custom: []
+        name: games
+        description: 'List of selected games.'
+        required: false
+        example: null
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      total_price:
+        custom: []
+        name: total_price
+        description: 'Total price in Iraqi Dinar.'
+        required: false
+        example: null
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: 'Order status (pending, processing, shipped, delivered, cancelled).'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      delivery_address:
+        custom: []
+        name: delivery_address
+        description: 'Delivery address.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      phone:
+        custom: []
+        name: phone
+        description: 'Contact phone number.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/custom-usb-orders
+    metadata:
+      custom: []
+      groupName: 'Custom USB Orders'
+      groupDescription: |-
+
+        Place and manage custom USB stick orders.
+      subgroup: Orders
+      subgroupDescription: ''
+      title: 'Place an order'
+      description: 'Create a new custom USB stick order with selected games.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      usb_stick_id:
+        custom: []
+        name: usb_stick_id
+        description: 'The USB stick model ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      game_ids:
+        custom: []
+        name: game_ids
+        description: 'Array of game IDs to include (min 1).'
+        required: true
+        example:
+          - 1
+          - 2
+          - 3
+        type: 'integer[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      notes:
+        custom: []
+        name: notes
+        description: 'Additional order notes.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      custom_message:
+        custom: []
+        name: custom_message
+        description: 'Custom message to engrave on the USB stick.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      delivery_address:
+        custom: []
+        name: delivery_address
+        description: 'Delivery address.'
+        required: true
+        example: 'Baghdad, Al-Mansour, Street 14'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      phone:
+        custom: []
+        name: phone
+        description: 'Contact phone number.'
+        required: true
+        example: '07701234567'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      usb_stick_id: 1
+      game_ids:
+        - 1
+        - 2
+        - 3
+      notes: architecto
+      custom_message: architecto
+      delivery_address: 'Baghdad, Al-Mansour, Street 14'
+      phone: '07701234567'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "id": 1,
+            "usb_stick_id": 1,
+            "total_price": 15000,
+            "status": "pending",
+            "notes": null,
+            "custom_message": null,
+            "delivery_address": "Baghdad, Al-Mansour, Street 14",
+            "phone": "07701234567",
+            "usbStick": {...},
+            "games": [...]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/custom-usb-orders/{id}'
+    metadata:
+      custom: []
+      groupName: 'Custom USB Orders'
+      groupDescription: |-
+
+        Place and manage custom USB stick orders.
+      subgroup: Orders
+      subgroupDescription: ''
+      title: 'Show an order'
+      description: 'Get details of a single custom USB order.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the custom usb order.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      custom_usb_order:
+        custom: []
+        name: custom_usb_order
+        description: 'The order ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+      custom_usb_order: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "usb_stick_id": 1,
+            "total_price": 15000,
+            "status": "pending",
+            "delivery_address": "Baghdad, Al-Mansour, Street 14",
+            "phone": "07701234567",
+            "usbStick": {...},
+            "games": [...]
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{"message": "Unauthorized"}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/custom-usb-orders/{id}'
+    metadata:
+      custom: []
+      groupName: 'Custom USB Orders'
+      groupDescription: |-
+
+        Place and manage custom USB stick orders.
+      subgroup: Orders
+      subgroupDescription: ''
+      title: 'Update an order'
+      description: 'Update an existing custom USB order (notes, games, address, etc.).'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the custom usb order.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      custom_usb_order:
+        custom: []
+        name: custom_usb_order
+        description: 'The order ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+      custom_usb_order: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      notes:
+        custom: []
+        name: notes
+        description: 'Additional order notes.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      custom_message:
+        custom: []
+        name: custom_message
+        description: 'Custom message.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      delivery_address:
+        custom: []
+        name: delivery_address
+        description: 'Delivery address.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      phone:
+        custom: []
+        name: phone
+        description: 'Contact phone number.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: 'Order status (admin only).'
+        required: false
+        example: processing
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      game_ids:
+        custom: []
+        name: game_ids
+        description: 'Array of game IDs to replace current selection.'
+        required: false
+        example:
+          - 16
+        type: 'integer[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      notes: architecto
+      custom_message: architecto
+      delivery_address: architecto
+      phone: architecto
+      status: processing
+      game_ids:
+        - 16
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "status": "processing",
+            "usbStick": {...},
+            "games": [...]
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{"message": "Unauthorized"}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/custom-usb-orders/{id}'
+    metadata:
+      custom: []
+      groupName: 'Custom USB Orders'
+      groupDescription: |-
+
+        Place and manage custom USB stick orders.
+      subgroup: Orders
+      subgroupDescription: ''
+      title: 'Cancel an order'
+      description: 'Delete (cancel) a custom USB order.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the custom usb order.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      custom_usb_order:
+        custom: []
+        name: custom_usb_order
+        description: 'The order ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+      custom_usb_order: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 204
+        content: ''
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: '{"message": "Unauthorized"}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

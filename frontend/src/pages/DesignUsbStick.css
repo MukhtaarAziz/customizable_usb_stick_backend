@@ -1,45 +1,64 @@
-/* DesignUsbStick.css - Essential layout styles only */
+/* DesignUsbStick design tokens */
+.design-usb {
+  --du-fab-padding: 0.9rem 1.75rem;
+  --du-fab-border: 2px solid rgba(255, 255, 255, 0.2);
+  --du-fab-hover-shadow: 0 12px 40px rgba(99, 102, 241, 0.5);
+  --du-wizard-btn-min-width: 160px;
+}
 
 .design-usb {
   min-height: 100vh;
   padding-bottom: 5rem;
+  background: var(--surface-page);
 }
 
-/* Card styles */
 .design-usb__card {
   border: none;
-  border-radius: 16px;
-  background: white;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Wizard Navigation Buttons */
 .wizard-nav-buttons {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e0e0e0;
+  gap: 0.75rem;
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-color);
 }
 
-.wizard-btn-back {
-  min-width: 150px;
+.rtl-float {
+  text-align: right !important;
 }
 
+[dir="rtl"] .rtl-float {
+  text-align: left !important;
+}
+
+.ltr-float {
+  text-align: left !important;
+}
+
+[dir="rtl"] .ltr-float {
+  text-align: right !important;
+}
+
+.wizard-btn-back,
 .wizard-btn-next {
-  min-width: 180px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  color: white;
+  min-width: var(--du-wizard-btn-min-width);
+  transition: var(--transition-fast);
+}
+
+.wizard-btn-back:hover:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 .wizard-btn-next:hover:not(:disabled) {
-  background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: var(--shadow-primary);
 }
 
 .wizard-btn-next:disabled {
@@ -51,51 +70,21 @@
   margin: 0 0.5rem;
 }
 
-/* Floating Action Button */
 .design-usb__floating-action {
   position: fixed;
   bottom: 16px;
   z-index: 1050;
-  border-radius: 30px;
-  padding: 0.9rem 1.75rem;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.35);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-xl);
+  padding: var(--du-fab-padding);
+  box-shadow: var(--shadow-primary);
+  background: var(--gradient-primary);
+  border: var(--du-fab-border);
   color: white;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: var(--transition-base);
+  animation: floatFadeIn 0.5s ease-out;
 }
 
-.design-usb__floating-action:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.5);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-/* RTL Support */
-[dir="rtl"] .design-usb__floating-action {
-  right: auto;
-  left: 16px;
-}
-
-/* Responsive positioning */
-@media (max-width: 991.98px) {
-  .design-usb__floating-action {
-    bottom: 12px;
-    padding: 0.75rem 1.4rem;
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .design-usb__floating-action {
-    bottom: 10px;
-    padding: 0.65rem 1.2rem;
-    font-size: 0.85rem;
-  }
-}
-
-/* Animation on first load */
 @keyframes floatFadeIn {
   from {
     opacity: 0;
@@ -107,14 +96,15 @@
   }
 }
 
-.design-usb__floating-action {
-  animation: floatFadeIn 0.5s ease-out;
+.design-usb__floating-action:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--du-fab-hover-shadow);
+  background: var(--gradient-primary);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .design-usb__card {
-    padding: 1.5rem;
+    padding: var(--space-lg);
   }
 
   .wizard-nav-buttons {
@@ -127,14 +117,14 @@
   }
 
   .design-usb__floating-action {
-    bottom: 90px;
-    right: 10px;
-    padding: 0.6rem 1.2rem;
+    bottom: 20px;
+    left: 16px;
+    padding: 0.85rem 1.5rem;
     font-size: 0.9rem;
   }
 
   [dir="rtl"] .design-usb__floating-action {
-    right: auto;
-    left: 10px;
+    left: auto;
+    right: 16px;
   }
 }

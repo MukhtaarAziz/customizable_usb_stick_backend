@@ -15,7 +15,7 @@ function PackageDetails({ locale, t }) {
 
     async function loadPackage() {
       try {
-        const response = await fetch(`/api/packages/${id}`)
+        const response = await fetch(`/api/game-packages/${id}`)
         if (!response.ok) {
           throw new Error(locale === 'ar' ? 'لم نتمكن من العثور على هذه الحزمة.' : 'Unable to load this package.')
         }

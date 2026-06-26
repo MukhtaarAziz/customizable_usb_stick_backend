@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
+use App\Models\GameCategory;
 use App\Models\Game;
-use App\Models\Platform;
+use App\Models\GamePlatform;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,11 +16,11 @@ class CategoryPlatformGameSeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['name_en' => 'Action', 'name_ar' => 'أكشن', 'description_en' => 'Fast paced action games.', 'description_ar' => 'ألعاب أكشن سريعة التفاعل.'],
-            ['name_en' => 'Sport', 'name_ar' => 'رياضة', 'description_en' => 'Sports and athletic simulation games.', 'description_ar' => 'ألعاب رياضية ومحاكاة الأداء.'],
-            ['name_en' => 'Racing', 'name_ar' => 'سباق', 'description_en' => 'High speed racing games.', 'description_ar' => 'ألعاب سباق بسرعات عالية.'],
-            ['name_en' => 'RPG', 'name_ar' => 'RPG', 'description_en' => 'Role playing games with story and progression.', 'description_ar' => 'ألعاب تقمص الأدوار بقصة وتطور.'],
-            ['name_en' => 'Indie', 'name_ar' => 'مستقلة', 'description_en' => 'Independent games from small studios.', 'description_ar' => 'ألعاب مستقلة من استوديوهات صغيرة.'],
+            ['category_type_id' => 1, 'name_en' => 'Action', 'name_ar' => 'أكشن', 'description_en' => 'Fast paced action games.', 'description_ar' => 'ألعاب أكشن سريعة التفاعل.'],
+            ['category_type_id' => 1, 'name_en' => 'Sport', 'name_ar' => 'رياضة', 'description_en' => 'Sports and athletic simulation games.', 'description_ar' => 'ألعاب رياضية ومحاكاة الأداء.'],
+            ['category_type_id' => 1, 'name_en' => 'Racing', 'name_ar' => 'سباق', 'description_en' => 'High speed racing games.', 'description_ar' => 'ألعاب سباق بسرعات عالية.'],
+            ['category_type_id' => 1, 'name_en' => 'RPG', 'name_ar' => 'RPG', 'description_en' => 'Role playing games with story and progression.', 'description_ar' => 'ألعاب تقمص الأدوار بقصة وتطور.'],
+            ['category_type_id' => 1, 'name_en' => 'Indie', 'name_ar' => 'مستقلة', 'description_en' => 'Independent games from small studios.', 'description_ar' => 'ألعاب مستقلة من استوديوهات صغيرة.'],
         ];
 
         $platforms = [
@@ -35,15 +35,15 @@ class CategoryPlatformGameSeeder extends Seeder
             ['name_en' => 'IOS', 'name_ar' => 'آي أو إس', 'description_en' => 'iOS mobile platform.', 'description_ar' => 'منصة آي أو إس المحمولة.'],
         ];
 
-        Category::insert($categories);
-        Platform::insert($platforms);
+        GameCategory::insert($categories);
+        GamePlatform::insert($platforms);
 
-        $actionCategory = Category::where('name_en', 'Action')->first();
-        $racingCategory = Category::where('name_en', 'Racing')->first();
-        $pcPlatform = Platform::where('name_en', 'PC')->first();
-        $ps5Platform = Platform::where('name_en', 'PS5')->first();
-        $ps4Platform = Platform::where('name_en', 'PS4')->first();
-        $androidPlatform = Platform::where('name_en', 'Android')->first();
+        $actionCategory = GameCategory::where('name_en', 'Action')->first();
+        $racingCategory = GameCategory::where('name_en', 'Racing')->first();
+        $pcPlatform = GamePlatform::where('name_en', 'PC')->first();
+        $ps5Platform = GamePlatform::where('name_en', 'PS5')->first();
+        $ps4Platform = GamePlatform::where('name_en', 'PS4')->first();
+        $androidPlatform = GamePlatform::where('name_en', 'Android')->first();
 
         $games = [
             [
@@ -52,7 +52,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'نيد فور سبيد: تحت الأرض',
                 'description_ar' => 'عش تجربة سباق الشوارع تحت الأرض مع سيارات الشارع وأضواء النيون.',
                 'category_id' => $racingCategory->id,
-                'platform_id' => $ps5Platform->id,
+                'game_platform_id' => $ps5Platform->id,
                 'tags' => ['racing', 'street', 'arcade'],
                 'size_gb' => 3.2,
                 'downloads' => 120000,
@@ -64,7 +64,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'نيد فور سبيد: الأكثر مطلوبة',
                 'description_ar' => 'مطاردات شرطة عالية المخاطر وسيارات غريبة في مدينة مليئة بالمنافسين.',
                 'category_id' => $racingCategory->id,
-                'platform_id' => $ps5Platform->id,
+                'game_platform_id' => $ps5Platform->id,
                 'tags' => ['racing', 'police', 'open world'],
                 'size_gb' => 4.1,
                 'downloads' => 175000,
@@ -76,7 +76,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'نيد فور سبيد: هيت',
                 'description_ar' => 'سباقات مرخَّصة نهارًا وجولات شوارع غير قانونية ليلًا.',
                 'category_id' => $racingCategory->id,
-                'platform_id' => $ps5Platform->id,
+                'game_platform_id' => $ps5Platform->id,
                 'tags' => ['racing', 'street', 'night'],
                 'size_gb' => 5.5,
                 'downloads' => 210000,
@@ -88,7 +88,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'نيد فور سبيد: المطاردة الساخنة',
                 'description_ar' => 'سباق كلاسيكي بين الشرطة والمتسابقين على طرق خلابة.',
                 'category_id' => $racingCategory->id,
-                'platform_id' => $ps5Platform->id,
+                'game_platform_id' => $ps5Platform->id,
                 'tags' => ['racing', 'police', 'action'],
                 'size_gb' => 4.7,
                 'downloads' => 190000,
@@ -100,7 +100,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'نيد فور سبيد: أنليشد',
                 'description_ar' => 'تجوّل في المدن العالمية وتحدَّ سباقات في وضعي الشارع والتضاريس.',
                 'category_id' => $racingCategory->id,
-                'platform_id' => $ps5Platform->id,
+                'game_platform_id' => $ps5Platform->id,
                 'tags' => ['racing', 'street', 'off-road'],
                 'size_gb' => 5.0,
                 'downloads' => 160000,
@@ -112,7 +112,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'نيد فور سبيد: كاربون',
                 'description_ar' => 'تحكم في سباقات الشوارع الليلية وتنافس الأطقم في المنعطفات الجبلية.',
                 'category_id' => $racingCategory->id,
-                'platform_id' => $pcPlatform->id,
+                'game_platform_id' => $pcPlatform->id,
                 'tags' => ['racing', 'street', 'crew'],
                 'size_gb' => 4.9,
                 'downloads' => 150000,
@@ -124,7 +124,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'نيد فور سبيد: ريفالز',
                 'description_ar' => 'سباقات مع مطاردة الشرطة وباستخدام عالم مفتوح سلس.',
                 'category_id' => $racingCategory->id,
-                'platform_id' => $ps4Platform->id,
+                'game_platform_id' => $ps4Platform->id,
                 'tags' => ['racing', 'open world', 'police'],
                 'size_gb' => 6.2,
                 'downloads' => 140000,
@@ -136,7 +136,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'نيد فور سبيد: نو ليمتس',
                 'description_ar' => 'سباق شوارع على هاتفك مع سيارات سريعة وتخصيص واسع.',
                 'category_id' => $racingCategory->id,
-                'platform_id' => $androidPlatform->id,
+                'game_platform_id' => $androidPlatform->id,
                 'tags' => ['racing', 'mobile', 'street'],
                 'size_gb' => 1.0,
                 'downloads' => 300000,
@@ -148,7 +148,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'كول أوف ديوتي: مودرن وارفير',
                 'description_ar' => 'إطلاق نار عسكري حديث بمهمات سينمائية وأكشن متعدد اللاعبين.',
                 'category_id' => $actionCategory->id,
-                'platform_id' => $pcPlatform->id,
+                'game_platform_id' => $pcPlatform->id,
                 'tags' => ['shooter', 'multiplayer', 'military'],
                 'size_gb' => 10.5,
                 'downloads' => 250000,
@@ -160,7 +160,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'كول أوف ديوتي: بلاك أوبس كولد وور',
                 'description_ar' => 'معارك حقبة الحرب الباردة وحرب متعددة اللاعبين متفجرة.',
                 'category_id' => $actionCategory->id,
-                'platform_id' => $ps5Platform->id,
+                'game_platform_id' => $ps5Platform->id,
                 'tags' => ['shooter', 'multiplayer', 'historical'],
                 'size_gb' => 11.8,
                 'downloads' => 220000,
@@ -172,7 +172,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'كول أوف ديوتي: فانغارد',
                 'description_ar' => 'لعبة إطلاق نار من الحرب العالمية الثانية مع قتال فرقي ودورات ديناميكية.',
                 'category_id' => $actionCategory->id,
-                'platform_id' => $ps5Platform->id,
+                'game_platform_id' => $ps5Platform->id,
                 'tags' => ['shooter', 'historical', 'multiplayer'],
                 'size_gb' => 12.0,
                 'downloads' => 180000,
@@ -184,7 +184,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'كول أوف ديوتي: وورزون',
                 'description_ar' => 'باتل رويال مجانية مع قتالات واسعة النطاق ولعب فرق.',
                 'category_id' => $actionCategory->id,
-                'platform_id' => $ps5Platform->id,
+                'game_platform_id' => $ps5Platform->id,
                 'tags' => ['battle royale', 'shooter', 'team'],
                 'size_gb' => 14.2,
                 'downloads' => 500000,
@@ -196,7 +196,7 @@ class CategoryPlatformGameSeeder extends Seeder
                 'name_ar' => 'كول أوف ديوتي: موبايل',
                 'description_ar' => 'تجربة إطلاق نار على الهاتف تضم خرائط ووضعيات كلاسيكية وباتل رويال.',
                 'category_id' => $actionCategory->id,
-                'platform_id' => $androidPlatform->id,
+                'game_platform_id' => $androidPlatform->id,
                 'tags' => ['mobile', 'shooter', 'battle royale'],
                 'size_gb' => 0.8,
                 'downloads' => 1000000,

@@ -27,18 +27,10 @@ class Customer extends Authenticatable
     }
 
     /**
-     * Get the customized USB stick orders for this customer.
+     * Get the orders for this customer.
      */
     public function usbStickOrders(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(UsbStickOrder::class);
-    }
-
-    /**
-     * Get the custom USB orders for this customer.
-     */
-    public function customUsbOrders(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(CustomUsbOrder::class);
     }
 }

@@ -1,0 +1,2887 @@
+openapi: 3.0.3
+info:
+  title: 'Laravel API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  - url: 'http://localhost'
+tags:
+  - name: Authentication
+    description: "\nEndpoints for authenticating users and customers."
+  - name: Categories
+    description: "\nManage game categories."
+  - name: 'Custom USB Orders'
+    description: "\nPlace and manage custom USB stick orders."
+  - name: Customers
+    description: "\nManage customer accounts and governorates."
+  - name: 'Game Images'
+    description: "\nUpload, serve, and delete game images."
+  - name: Games
+    description: "\nManage games."
+  - name: Packages
+    description: "\nManage game packages (bundles of games for USB sticks)."
+  - name: Platforms
+    description: "\nManage gaming platforms."
+  - name: 'USB Sticks'
+    description: "\nManage available USB stick models."
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.'
+security:
+  -
+    default: []
+paths:
+  /api/login:
+    post:
+      summary: Login
+      operationId: login
+      description: "Authenticate using email or phone with a password. Returns a Sanctum token and user data.\nWorks for both admin users and customers."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  user:
+                    id: 1
+                    name: John
+                    email: user@example.com
+                    role: customer
+                  token: 1|abc123...
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: John
+                      email:
+                        type: string
+                        example: user@example.com
+                      role:
+                        type: string
+                        example: customer
+                    description: 'The authenticated user or customer object.'
+                  token:
+                    type: string
+                    example: 1|abc123...
+                    description: 'The Sanctum plain-text token.'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Invalid credentials.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid credentials.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Identifier (email or phone) is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Identifier (email or phone) is required.'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: 'The account password.'
+                  example: secret123
+                email:
+                  type: string
+                  description: 'The email address (required if phone is not provided).'
+                  example: user@example.com
+                phone:
+                  type: string
+                  description: 'The phone number (required if email is not provided).'
+                  example: '07701234567'
+              required:
+                - password
+      security: []
+  /api/logout:
+    post:
+      summary: Logout
+      operationId: logout
+      description: 'Revoke the current Sanctum access token.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Logged out successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Logged out successfully.'
+      tags:
+        - Authentication
+  /api/me:
+    get:
+      summary: 'Get current user'
+      operationId: getCurrentUser
+      description: "Return the authenticated user's information."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name: John
+                  email: user@example.com
+                  role: customer
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                    description: 'The user ID.'
+                  name:
+                    type: string
+                    example: John
+                    description: "The user's name."
+                  email:
+                    type: string
+                    example: user@example.com
+                    description: "The user's email."
+                  role:
+                    type: string
+                    example: customer
+      tags:
+        - Authentication
+  /api/categories:
+    get:
+      summary: 'List categories'
+      operationId: listCategories
+      description: 'Get a paginated list of game categories.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Number of results per page (1-100). Defaults to 15.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Number of results per page (1-100). Defaults to 15.'
+            example: 15
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  current_page: 1
+                  data:
+                    -
+                      id: 1
+                      name_en: Action
+                      name_ar: أكشن
+                      description_en: 'Fast paced action games.'
+                      description_ar: 'ألعاب أكشن سريعة التفاعل.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 2
+                      name_en: Sport
+                      name_ar: رياضة
+                      description_en: 'Sports and athletic simulation games.'
+                      description_ar: 'ألعاب رياضية ومحاكاة الأداء.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 3
+                      name_en: Racing
+                      name_ar: سباق
+                      description_en: 'High speed racing games.'
+                      description_ar: 'ألعاب سباق بسرعات عالية.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 4
+                      name_en: RPG
+                      name_ar: RPG
+                      description_en: 'Role playing games with story and progression.'
+                      description_ar: 'ألعاب تقمص الأدوار بقصة وتطور.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 5
+                      name_en: Indie
+                      name_ar: مستقلة
+                      description_en: 'Independent games from small studios.'
+                      description_ar: 'ألعاب مستقلة من استوديوهات صغيرة.'
+                      created_at: null
+                      updated_at: null
+                  first_page_url: 'http://localhost/api/categories?per_page=15&page=1'
+                  from: 1
+                  last_page: 1
+                  last_page_url: 'http://localhost/api/categories?per_page=15&page=1'
+                  links:
+                    -
+                      url: null
+                      label: '&laquo; Previous'
+                      page: null
+                      active: false
+                    -
+                      url: 'http://localhost/api/categories?per_page=15&page=1'
+                      label: '1'
+                      page: 1
+                      active: true
+                    -
+                      url: null
+                      label: 'Next &raquo;'
+                      page: null
+                      active: false
+                  next_page_url: null
+                  path: 'http://localhost/api/categories'
+                  per_page: 15
+                  prev_page_url: null
+                  to: 5
+                  total: 5
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                  data:
+                    type: array
+                    example:
+                      - id: 1
+                        name_en: Action
+                        name_ar: أكشن
+                        description_en: 'Fast paced action games.'
+                        description_ar: 'ألعاب أكشن سريعة التفاعل.'
+                        created_at: null
+                        updated_at: null
+                      - id: 2
+                        name_en: Sport
+                        name_ar: رياضة
+                        description_en: 'Sports and athletic simulation games.'
+                        description_ar: 'ألعاب رياضية ومحاكاة الأداء.'
+                        created_at: null
+                        updated_at: null
+                      - id: 3
+                        name_en: Racing
+                        name_ar: سباق
+                        description_en: 'High speed racing games.'
+                        description_ar: 'ألعاب سباق بسرعات عالية.'
+                        created_at: null
+                        updated_at: null
+                      - id: 4
+                        name_en: RPG
+                        name_ar: RPG
+                        description_en: 'Role playing games with story and progression.'
+                        description_ar: 'ألعاب تقمص الأدوار بقصة وتطور.'
+                        created_at: null
+                        updated_at: null
+                      - id: 5
+                        name_en: Indie
+                        name_ar: مستقلة
+                        description_en: 'Independent games from small studios.'
+                        description_ar: 'ألعاب مستقلة من استوديوهات صغيرة.'
+                        created_at: null
+                        updated_at: null
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name_en:
+                          type: string
+                          example: Action
+                        name_ar:
+                          type: string
+                          example: أكشن
+                        description_en:
+                          type: string
+                          example: 'Fast paced action games.'
+                        description_ar:
+                          type: string
+                          example: 'ألعاب أكشن سريعة التفاعل.'
+                        created_at:
+                          type: string
+                          example: null
+                          nullable: true
+                        updated_at:
+                          type: string
+                          example: null
+                          nullable: true
+                  first_page_url:
+                    type: string
+                    example: 'http://localhost/api/categories?per_page=15&page=1'
+                  from:
+                    type: integer
+                    example: 1
+                  last_page:
+                    type: integer
+                    example: 1
+                  last_page_url:
+                    type: string
+                    example: 'http://localhost/api/categories?per_page=15&page=1'
+                  links:
+                    type: array
+                    example:
+                      - url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      - url: 'http://localhost/api/categories?per_page=15&page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      - url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          example: null
+                          nullable: true
+                        label:
+                          type: string
+                          example: '&laquo; Previous'
+                        page:
+                          type: string
+                          example: null
+                          nullable: true
+                        active:
+                          type: boolean
+                          example: false
+                  next_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  path:
+                    type: string
+                    example: 'http://localhost/api/categories'
+                  per_page:
+                    type: integer
+                    example: 15
+                  prev_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  to:
+                    type: integer
+                    example: 5
+                  total:
+                    type: integer
+                    example: 5
+      tags:
+        - Categories
+      security: []
+    post:
+      summary: 'Create a category'
+      operationId: createACategory
+      description: 'Add a new game category. Admin only.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name_en: Action
+                  name_ar: أكشن
+                  description_en: null
+                  description_ar: null
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name_en:
+                    type: string
+                    example: Action
+                  name_ar:
+                    type: string
+                    example: أكشن
+                  description_en:
+                    type: string
+                    example: null
+                    nullable: true
+                  description_ar:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_en:
+                  type: string
+                  description: 'English name.'
+                  example: Action
+                name_ar:
+                  type: string
+                  description: 'Arabic name.'
+                  example: أكشن
+                description_en:
+                  type: string
+                  description: 'English description.'
+                  example: 'Action games'
+                  nullable: true
+                description_ar:
+                  type: string
+                  description: 'Arabic description.'
+                  example: 'ألعاب الأكشن'
+                  nullable: true
+              required:
+                - name_en
+                - name_ar
+  '/api/categories/{id}':
+    get:
+      summary: 'Show a category'
+      operationId: showACategory
+      description: 'Get details of a single category by ID.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name_en: Action
+                  name_ar: أكشن
+                  description_en: 'Action games'
+                  description_ar: null
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name_en:
+                    type: string
+                    example: Action
+                  name_ar:
+                    type: string
+                    example: أكشن
+                  description_en:
+                    type: string
+                    example: 'Action games'
+                  description_ar:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Categories
+      security: []
+    put:
+      summary: 'Update a category'
+      operationId: updateACategory
+      description: 'Update an existing game category. Admin only.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name_en: Racing
+                  name_ar: سباق
+                  description_en: 'Racing games'
+                  description_ar: null
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name_en:
+                    type: string
+                    example: Racing
+                  name_ar:
+                    type: string
+                    example: سباق
+                  description_en:
+                    type: string
+                    example: 'Racing games'
+                  description_ar:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Categories
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_en:
+                  type: string
+                  description: 'English name.'
+                  example: Racing
+                name_ar:
+                  type: string
+                  description: 'Arabic name.'
+                  example: سباق
+                description_en:
+                  type: string
+                  description: 'English description.'
+                  example: 'Racing games'
+                  nullable: true
+                description_ar:
+                  type: string
+                  description: 'Arabic description.'
+                  example: 'ألعاب السباق'
+                  nullable: true
+    delete:
+      summary: 'Delete a category'
+      operationId: deleteACategory
+      description: 'Remove a game category. Admin only.'
+      parameters: []
+      responses:
+        204:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - Categories
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The category ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/custom-usb-orders:
+    get:
+      summary: 'List my orders'
+      operationId: listMyOrders
+      description: 'Get all custom USB orders for the authenticated customer.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '[{"id": 1, "usb_stick": {...}, "games": [...], "total_price": 15000, "status": "pending", ...}]'
+      tags:
+        - 'Custom USB Orders'
+    post:
+      summary: 'Place an order'
+      operationId: placeAnOrder
+      description: 'Create a new custom USB stick order with selected games.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"id\": 1,\n  \"usb_stick_id\": 1,\n  \"total_price\": 15000,\n  \"status\": \"pending\",\n  \"notes\": null,\n  \"custom_message\": null,\n  \"delivery_address\": \"Baghdad, Al-Mansour, Street 14\",\n  \"phone\": \"07701234567\",\n  \"usbStick\": {...},\n  \"games\": [...]\n}"
+      tags:
+        - 'Custom USB Orders'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usb_stick_id:
+                  type: integer
+                  description: 'The USB stick model ID.'
+                  example: 1
+                game_ids:
+                  type: array
+                  description: 'Array of game IDs to include (min 1).'
+                  example:
+                    - 1
+                    - 2
+                    - 3
+                  items:
+                    type: integer
+                notes:
+                  type: string
+                  description: 'Additional order notes.'
+                  example: architecto
+                  nullable: true
+                custom_message:
+                  type: string
+                  description: 'Custom message to engrave on the USB stick.'
+                  example: architecto
+                  nullable: true
+                delivery_address:
+                  type: string
+                  description: 'Delivery address.'
+                  example: 'Baghdad, Al-Mansour, Street 14'
+                phone:
+                  type: string
+                  description: 'Contact phone number.'
+                  example: '07701234567'
+              required:
+                - usb_stick_id
+                - game_ids
+                - delivery_address
+                - phone
+  '/api/custom-usb-orders/{id}':
+    get:
+      summary: 'Show an order'
+      operationId: showAnOrder
+      description: 'Get details of a single custom USB order.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"id\": 1,\n  \"usb_stick_id\": 1,\n  \"total_price\": 15000,\n  \"status\": \"pending\",\n  \"delivery_address\": \"Baghdad, Al-Mansour, Street 14\",\n  \"phone\": \"07701234567\",\n  \"usbStick\": {...},\n  \"games\": [...]\n}"
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthorized
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+      tags:
+        - 'Custom USB Orders'
+    put:
+      summary: 'Update an order'
+      operationId: updateAnOrder
+      description: 'Update an existing custom USB order (notes, games, address, etc.).'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"id\": 1,\n  \"status\": \"processing\",\n  \"usbStick\": {...},\n  \"games\": [...]\n}"
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthorized
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+      tags:
+        - 'Custom USB Orders'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  description: 'Additional order notes.'
+                  example: architecto
+                  nullable: true
+                custom_message:
+                  type: string
+                  description: 'Custom message.'
+                  example: architecto
+                  nullable: true
+                delivery_address:
+                  type: string
+                  description: 'Delivery address.'
+                  example: architecto
+                phone:
+                  type: string
+                  description: 'Contact phone number.'
+                  example: architecto
+                status:
+                  type: string
+                  description: 'Order status (admin only).'
+                  example: processing
+                game_ids:
+                  type: array
+                  description: 'Array of game IDs to replace current selection.'
+                  example:
+                    - 16
+                  items:
+                    type: integer
+    delete:
+      summary: 'Cancel an order'
+      operationId: cancelAnOrder
+      description: 'Delete (cancel) a custom USB order.'
+      parameters: []
+      responses:
+        204:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthorized
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+      tags:
+        - 'Custom USB Orders'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the custom usb order.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: custom_usb_order
+        description: 'The order ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/customers:
+    post:
+      summary: 'Register a customer'
+      operationId: registerACustomer
+      description: 'Create a new customer account. Public endpoint.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{"id": 1, "name": "John Doe", "phone": "07701234567", "governorate": {...}}'
+      tags:
+        - Customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Full name.'
+                  example: 'John Doe'
+                phone:
+                  type: string
+                  description: 'Iraqi phone number (must be unique).'
+                  example: '07701234567'
+                email:
+                  type: string
+                  description: 'Email address (must be unique).'
+                  example: john@example.com
+                  nullable: true
+                password:
+                  type: string
+                  description: 'Minimum 8 characters, no spaces.'
+                  example: secret123
+                governorate_id:
+                  type: integer
+                  description: 'Governorate ID.'
+                  example: 1
+                address:
+                  type: string
+                  description: 'Address details.'
+                  example: architecto
+                  nullable: true
+                nearest_service_point:
+                  type: string
+                  description: 'Nearest service point.'
+                  example: architecto
+                  nullable: true
+              required:
+                - name
+                - phone
+                - password
+                - governorate_id
+      security: []
+    get:
+      summary: 'List customers'
+      operationId: listCustomers
+      description: 'Get all registered customers with their governorates. Admin only.'
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Customers
+  '/api/customers/{customer_id}':
+    get:
+      summary: 'Show a customer'
+      operationId: showACustomer
+      description: 'Get details of a single customer. Admin only.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{"id": 1, "name": "John Doe", "phone": "07701234567", "email": "john@example.com", "governorate": {...}}'
+      tags:
+        - Customers
+    put:
+      summary: 'Update a customer'
+      operationId: updateACustomer
+      description: "Update an existing customer's information. Admin only."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{"id": 1, "name": "John Doe", "phone": "07701234567", "governorate": {...}}'
+      tags:
+        - Customers
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Full name.'
+                  example: architecto
+                phone:
+                  type: string
+                  description: 'Iraqi phone number.'
+                  example: architecto
+                email:
+                  type: string
+                  description: 'Email address.'
+                  example: gbailey@example.net
+                governorate_id:
+                  type: integer
+                  description: 'Governorate ID.'
+                  example: 16
+                address:
+                  type: string
+                  description: 'Address details.'
+                  example: architecto
+                  nullable: true
+                nearest_service_point:
+                  type: string
+                  description: 'Nearest service point.'
+                  example: architecto
+                  nullable: true
+    delete:
+      summary: 'Delete a customer'
+      operationId: deleteACustomer
+      description: 'Remove a customer account. Admin only.'
+      parameters: []
+      responses:
+        204:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - Customers
+    parameters:
+      -
+        in: path
+        name: customer_id
+        description: 'The ID of the customer.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: customer
+        description: 'The customer ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/governorates:
+    get:
+      summary: 'List governorates'
+      operationId: listGovernorates
+      description: 'Get a list of all Iraqi governorates for address selection.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '[{"id": 1, "name_en": "Baghdad", "name_ar": "بغداد"}, ...]'
+      tags:
+        - Customers
+      security: []
+  '/api/games/{game_id}/images/{image_id}':
+    get:
+      summary: 'Get an image'
+      operationId: getAnImage
+      description: 'Serve the full-size image file directly.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '(image/png binary content)'
+        404:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - 'Game Images'
+      security: []
+    delete:
+      summary: 'Delete an image'
+      operationId: deleteAnImage
+      description: 'Delete a game image and its associated thumbnail. Admin only.'
+      parameters: []
+      responses:
+        204:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+        404:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - 'Game Images'
+    parameters:
+      -
+        in: path
+        name: game_id
+        description: 'The ID of the game.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: image_id
+        description: 'The ID of the image.'
+        example: 16
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: game
+        description: 'The game ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: image
+        description: 'The image ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/games/{game_id}/images/{image_id}/thumbnail':
+    get:
+      summary: 'Get a thumbnail'
+      operationId: getAThumbnail
+      description: 'Serve the 300x300 thumbnail of a game image.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '(image/png binary content)'
+        404:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - 'Game Images'
+      security: []
+    parameters:
+      -
+        in: path
+        name: game_id
+        description: 'The ID of the game.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: image_id
+        description: 'The ID of the image.'
+        example: 16
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: game
+        description: 'The game ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: image
+        description: 'The image ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/games/{game_id}/images':
+    post:
+      summary: 'Upload an image'
+      operationId: uploadAnImage
+      description: 'Upload a new image for a game. Creates both a full-size and a 300x300 thumbnail. Admin only.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  game_id: 1
+                  path: games/1/1234567890_abc123.jpg
+                  thumb_path: games/1/thumbnails/thumb_1234567890_abc123.jpg
+                  type: screenshot
+                  alt: null
+                  mime: image/jpeg
+                  size: 2048576
+                  disk: local
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  game_id:
+                    type: integer
+                    example: 1
+                  path:
+                    type: string
+                    example: games/1/1234567890_abc123.jpg
+                  thumb_path:
+                    type: string
+                    example: games/1/thumbnails/thumb_1234567890_abc123.jpg
+                  type:
+                    type: string
+                    example: screenshot
+                  alt:
+                    type: string
+                    example: null
+                    nullable: true
+                  mime:
+                    type: string
+                    example: image/jpeg
+                  size:
+                    type: integer
+                    example: 2048576
+                  disk:
+                    type: string
+                    example: local
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Uploaded file is not a valid image.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Uploaded file is not a valid image.'
+      tags:
+        - 'Game Images'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: 'The image file (jpg, jpeg, png, gif, webp, max 10MB).'
+                type:
+                  type: string
+                  description: 'Image type label (e.g. "screenshot", "cover").'
+                  example: screenshot
+                  nullable: true
+                alt:
+                  type: string
+                  description: 'Alt text for accessibility.'
+                  example: 'Gameplay screenshot'
+                  nullable: true
+              required:
+                - image
+    parameters:
+      -
+        in: path
+        name: game_id
+        description: 'The ID of the game.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: game
+        description: 'The game ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/games:
+    get:
+      summary: 'List games'
+      operationId: listGames
+      description: 'Get a paginated list of games, filterable by search, platform, and category.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Results per page (1-100). Defaults to 15.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Results per page (1-100). Defaults to 15.'
+            example: 15
+        -
+          in: query
+          name: search
+          description: 'Search by English or Arabic name.'
+          example: war
+          required: false
+          schema:
+            type: string
+            description: 'Search by English or Arabic name.'
+            example: war
+        -
+          in: query
+          name: platform_id
+          description: 'Filter by platform ID.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by platform ID.'
+            example: 1
+        -
+          in: query
+          name: category_id
+          description: 'Filter by category ID.'
+          example: 2
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by category ID.'
+            example: 2
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  current_page: 1
+                  data: []
+                  first_page_url: 'http://localhost/api/games?per_page=15&search=war&platform_id=1&category_id=2&page=1'
+                  from: null
+                  last_page: 1
+                  last_page_url: 'http://localhost/api/games?per_page=15&search=war&platform_id=1&category_id=2&page=1'
+                  links:
+                    -
+                      url: null
+                      label: '&laquo; Previous'
+                      page: null
+                      active: false
+                    -
+                      url: 'http://localhost/api/games?per_page=15&search=war&platform_id=1&category_id=2&page=1'
+                      label: '1'
+                      page: 1
+                      active: true
+                    -
+                      url: null
+                      label: 'Next &raquo;'
+                      page: null
+                      active: false
+                  next_page_url: null
+                  path: 'http://localhost/api/games'
+                  per_page: 15
+                  prev_page_url: null
+                  to: null
+                  total: 0
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                  data:
+                    type: array
+                    example: []
+                  first_page_url:
+                    type: string
+                    example: 'http://localhost/api/games?per_page=15&search=war&platform_id=1&category_id=2&page=1'
+                  from:
+                    type: string
+                    example: null
+                    nullable: true
+                  last_page:
+                    type: integer
+                    example: 1
+                  last_page_url:
+                    type: string
+                    example: 'http://localhost/api/games?per_page=15&search=war&platform_id=1&category_id=2&page=1'
+                  links:
+                    type: array
+                    example:
+                      - url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      - url: 'http://localhost/api/games?per_page=15&search=war&platform_id=1&category_id=2&page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      - url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          example: null
+                          nullable: true
+                        label:
+                          type: string
+                          example: '&laquo; Previous'
+                        page:
+                          type: string
+                          example: null
+                          nullable: true
+                        active:
+                          type: boolean
+                          example: false
+                  next_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  path:
+                    type: string
+                    example: 'http://localhost/api/games'
+                  per_page:
+                    type: integer
+                    example: 15
+                  prev_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  to:
+                    type: string
+                    example: null
+                    nullable: true
+                  total:
+                    type: integer
+                    example: 0
+      tags:
+        - Games
+      security: []
+    post:
+      summary: 'Create a game'
+      operationId: createAGame
+      description: 'Add a new game entry. Admin only.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{"id": 1, "name_en": "Call of Duty", "name_ar": "كول أوف ديوتي", "size_gb": 72.5, ...}'
+      tags:
+        - Games
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_en:
+                  type: string
+                  description: 'English name.'
+                  example: 'Call of Duty'
+                name_ar:
+                  type: string
+                  description: 'Arabic name.'
+                  example: 'كول أوف ديوتي'
+                description_en:
+                  type: string
+                  description: 'English description.'
+                  example: architecto
+                  nullable: true
+                description_ar:
+                  type: string
+                  description: 'Arabic description.'
+                  example: architecto
+                  nullable: true
+                category_id:
+                  type: integer
+                  description: 'Category ID.'
+                  example: 1
+                platform_id:
+                  type: integer
+                  description: 'Platform ID.'
+                  example: 1
+                tags:
+                  type: array
+                  description: 'Array of tags.'
+                  example:
+                    - shooter
+                    - multiplayer
+                  items:
+                    type: string
+                size_gb:
+                  type: numeric
+                  description: 'Game file size in GB.'
+                  example: '72.5'
+                downloads:
+                  type: integer
+                  description: 'Download count.'
+                  example: 15000
+                  nullable: true
+                date_release:
+                  type: date
+                  description: 'Release date.'
+                  example: '2024-10-25'
+                  nullable: true
+              required:
+                - name_en
+                - name_ar
+                - category_id
+                - platform_id
+                - size_gb
+  '/api/games/{id}':
+    get:
+      summary: 'Show a game'
+      operationId: showAGame
+      description: 'Get details of a single game by ID with its category and platform.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{"id": 1, "name_en": "Call of Duty", "name_ar": "كول أوف ديوتي", "size_gb": 72.5, "category": {...}, "platform": {...}}'
+      tags:
+        - Games
+      security: []
+    put:
+      summary: 'Update a game'
+      operationId: updateAGame
+      description: 'Update an existing game entry. Admin only.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '{"id": 1, "name_en": "Call of Duty", "name_ar": "كول أوف ديوتي", "size_gb": 72.5, ...}'
+      tags:
+        - Games
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_en:
+                  type: string
+                  description: 'English name.'
+                  example: architecto
+                name_ar:
+                  type: string
+                  description: 'Arabic name.'
+                  example: architecto
+                description_en:
+                  type: string
+                  description: 'English description.'
+                  example: architecto
+                  nullable: true
+                description_ar:
+                  type: string
+                  description: 'Arabic description.'
+                  example: architecto
+                  nullable: true
+                category_id:
+                  type: integer
+                  description: 'Category ID.'
+                  example: 16
+                platform_id:
+                  type: integer
+                  description: 'Platform ID.'
+                  example: 16
+                tags:
+                  type: array
+                  description: 'Array of tags.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+                size_gb:
+                  type: numeric
+                  description: 'Game file size in GB.'
+                  example: architecto
+                downloads:
+                  type: integer
+                  description: 'Download count.'
+                  example: 16
+                  nullable: true
+                date_release:
+                  type: date
+                  description: 'Release date.'
+                  example: architecto
+                  nullable: true
+    delete:
+      summary: 'Delete a game'
+      operationId: deleteAGame
+      description: 'Remove a game entry. Admin only.'
+      parameters: []
+      responses:
+        204:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - Games
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The game ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/packages:
+    get:
+      summary: 'List packages'
+      operationId: listPackages
+      description: "Get a paginated list of game packages with their cover, platform, and games.\nSupports search and platform filtering."
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'Search by name or description (English/Arabic).'
+          example: 'game bundle'
+          required: false
+          schema:
+            type: string
+            description: 'Search by name or description (English/Arabic).'
+            example: 'game bundle'
+        -
+          in: query
+          name: platform_id
+          description: 'Filter by platform ID.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by platform ID.'
+            example: 1
+        -
+          in: query
+          name: per_page
+          description: 'Results per page (1-100). Defaults to 15.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Results per page (1-100). Defaults to 15.'
+            example: 15
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  current_page: 1
+                  data: []
+                  first_page_url: 'http://localhost/api/packages?page=1'
+                  from: null
+                  last_page: 1
+                  last_page_url: 'http://localhost/api/packages?page=1'
+                  links:
+                    -
+                      url: null
+                      label: '&laquo; Previous'
+                      page: null
+                      active: false
+                    -
+                      url: 'http://localhost/api/packages?page=1'
+                      label: '1'
+                      page: 1
+                      active: true
+                    -
+                      url: null
+                      label: 'Next &raquo;'
+                      page: null
+                      active: false
+                  next_page_url: null
+                  path: 'http://localhost/api/packages'
+                  per_page: 15
+                  prev_page_url: null
+                  to: null
+                  total: 0
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                  data:
+                    type: array
+                    example: []
+                  first_page_url:
+                    type: string
+                    example: 'http://localhost/api/packages?page=1'
+                  from:
+                    type: string
+                    example: null
+                    nullable: true
+                  last_page:
+                    type: integer
+                    example: 1
+                  last_page_url:
+                    type: string
+                    example: 'http://localhost/api/packages?page=1'
+                  links:
+                    type: array
+                    example:
+                      - url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      - url: 'http://localhost/api/packages?page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      - url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          example: null
+                          nullable: true
+                        label:
+                          type: string
+                          example: '&laquo; Previous'
+                        page:
+                          type: string
+                          example: null
+                          nullable: true
+                        active:
+                          type: boolean
+                          example: false
+                  next_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  path:
+                    type: string
+                    example: 'http://localhost/api/packages'
+                  per_page:
+                    type: integer
+                    example: 15
+                  prev_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  to:
+                    type: string
+                    example: null
+                    nullable: true
+                  total:
+                    type: integer
+                    example: 0
+      tags:
+        - Packages
+      security: []
+    post:
+      summary: 'Create a package'
+      operationId: createAPackage
+      description: 'Add a new game package. Admin only.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"id\": 1,\n  \"name_en\": \"Ultimate Bundle\",\n  \"name_ar\": \"الحزمة المثالية\",\n  \"platform_id\": 1,\n  \"views\": 0,\n  \"order_count\": 0,\n  \"cover\": null,\n  \"platform\": {...},\n  \"games\": [...]\n}"
+      tags:
+        - Packages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_en:
+                  type: string
+                  description: 'English name.'
+                  example: 'Ultimate Bundle'
+                name_ar:
+                  type: string
+                  description: 'Arabic name.'
+                  example: 'الحزمة المثالية'
+                description_en:
+                  type: string
+                  description: 'English description.'
+                  example: architecto
+                  nullable: true
+                description_ar:
+                  type: string
+                  description: 'Arabic description.'
+                  example: architecto
+                  nullable: true
+                cover_id:
+                  type: integer
+                  description: 'Cover image ID.'
+                  example: 16
+                  nullable: true
+                platform_id:
+                  type: integer
+                  description: 'Platform ID.'
+                  example: 1
+                game_ids:
+                  type: array
+                  description: 'Array of game IDs to include.'
+                  example:
+                    - 1
+                    - 2
+                    - 3
+                  items:
+                    type: integer
+              required:
+                - name_en
+                - name_ar
+                - platform_id
+  '/api/packages/{id}':
+    get:
+      summary: 'Show a package'
+      operationId: showAPackage
+      description: 'Get details of a single package with its cover, platform, and games.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"id\": 1,\n  \"name_en\": \"Ultimate Bundle\",\n  \"name_ar\": \"الحزمة المثالية\",\n  \"views\": 42,\n  \"order_count\": 5,\n  \"cover\": {...},\n  \"platform\": {...},\n  \"games\": [...]\n}"
+      tags:
+        - Packages
+      security: []
+    put:
+      summary: 'Update a package'
+      operationId: updateAPackage
+      description: 'Update an existing game package. Admin only.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"id\": 1,\n  \"name_en\": \"Ultimate Bundle\",\n  \"name_ar\": \"الحزمة المثالية\",\n  \"cover\": {...},\n  \"platform\": {...},\n  \"games\": [...]\n}"
+      tags:
+        - Packages
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_en:
+                  type: string
+                  description: 'English name.'
+                  example: architecto
+                name_ar:
+                  type: string
+                  description: 'Arabic name.'
+                  example: architecto
+                description_en:
+                  type: string
+                  description: 'English description.'
+                  example: architecto
+                  nullable: true
+                description_ar:
+                  type: string
+                  description: 'Arabic description.'
+                  example: architecto
+                  nullable: true
+                cover_id:
+                  type: integer
+                  description: 'Cover image ID.'
+                  example: 16
+                  nullable: true
+                platform_id:
+                  type: integer
+                  description: 'Platform ID.'
+                  example: 16
+                game_ids:
+                  type: array
+                  description: 'Array of game IDs.'
+                  example:
+                    - 16
+                  items:
+                    type: integer
+                views:
+                  type: integer
+                  description: 'View count.'
+                  example: 16
+                  nullable: true
+                order_count:
+                  type: integer
+                  description: 'Order count.'
+                  example: 16
+                  nullable: true
+    delete:
+      summary: 'Delete a package'
+      operationId: deleteAPackage
+      description: 'Remove a game package. Admin only.'
+      parameters: []
+      responses:
+        204:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - Packages
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the package.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: package
+        description: 'The package ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/packages/{package_id}/views':
+    post:
+      summary: 'Increment views'
+      operationId: incrementViews
+      description: 'Increment the view counter for a package. Admin only.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  views: 43
+                properties:
+                  views:
+                    type: integer
+                    example: 43
+      tags:
+        - Packages
+    parameters:
+      -
+        in: path
+        name: package_id
+        description: 'The ID of the package.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: package
+        description: 'The package ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/packages/{package_id}/orders':
+    post:
+      summary: 'Increment orders'
+      operationId: incrementOrders
+      description: 'Increment the order counter for a package. Admin only.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  order_count: 6
+                properties:
+                  order_count:
+                    type: integer
+                    example: 6
+      tags:
+        - Packages
+    parameters:
+      -
+        in: path
+        name: package_id
+        description: 'The ID of the package.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: package
+        description: 'The package ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/platforms:
+    get:
+      summary: 'List platforms'
+      operationId: listPlatforms
+      description: 'Get a paginated list of supported gaming platforms.'
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'Number of results per page (1-100). Defaults to 15.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'Number of results per page (1-100). Defaults to 15.'
+            example: 15
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  current_page: 1
+                  data:
+                    -
+                      id: 1
+                      name_en: PC
+                      name_ar: 'بي سي'
+                      description_en: 'Personal computer platform.'
+                      description_ar: 'منصة الحاسوب الشخصي.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 2
+                      name_en: PS1
+                      name_ar: 'بلاي ستيشن 1'
+                      description_en: 'PlayStation 1 console.'
+                      description_ar: 'جهاز بلاي ستيشن 1.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 3
+                      name_en: PS2
+                      name_ar: 'بلاي ستيشن 2'
+                      description_en: 'PlayStation 2 console.'
+                      description_ar: 'جهاز بلاي ستيشن 2.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 4
+                      name_en: PS3
+                      name_ar: 'بلاي ستيشن 3'
+                      description_en: 'PlayStation 3 console.'
+                      description_ar: 'جهاز بلاي ستيشن 3.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 5
+                      name_en: PS4
+                      name_ar: 'بلاي ستيشن 4'
+                      description_en: 'PlayStation 4 console.'
+                      description_ar: 'جهاز بلاي ستيشن 4.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 6
+                      name_en: PS5
+                      name_ar: 'بلاي ستيشن 5'
+                      description_en: 'PlayStation 5 console.'
+                      description_ar: 'جهاز بلاي ستيشن 5.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 7
+                      name_en: PSP
+                      name_ar: 'بي إس بي'
+                      description_en: 'PlayStation Portable platform.'
+                      description_ar: 'منصة بلاي ستيشن المحمولة.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 8
+                      name_en: Android
+                      name_ar: أندرويد
+                      description_en: 'Android mobile platform.'
+                      description_ar: 'منصة أندرويد المحمولة.'
+                      created_at: null
+                      updated_at: null
+                    -
+                      id: 9
+                      name_en: IOS
+                      name_ar: 'آي أو إس'
+                      description_en: 'iOS mobile platform.'
+                      description_ar: 'منصة آي أو إس المحمولة.'
+                      created_at: null
+                      updated_at: null
+                  first_page_url: 'http://localhost/api/platforms?per_page=15&page=1'
+                  from: 1
+                  last_page: 1
+                  last_page_url: 'http://localhost/api/platforms?per_page=15&page=1'
+                  links:
+                    -
+                      url: null
+                      label: '&laquo; Previous'
+                      page: null
+                      active: false
+                    -
+                      url: 'http://localhost/api/platforms?per_page=15&page=1'
+                      label: '1'
+                      page: 1
+                      active: true
+                    -
+                      url: null
+                      label: 'Next &raquo;'
+                      page: null
+                      active: false
+                  next_page_url: null
+                  path: 'http://localhost/api/platforms'
+                  per_page: 15
+                  prev_page_url: null
+                  to: 9
+                  total: 9
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                  data:
+                    type: array
+                    example:
+                      - id: 1
+                        name_en: PC
+                        name_ar: 'بي سي'
+                        description_en: 'Personal computer platform.'
+                        description_ar: 'منصة الحاسوب الشخصي.'
+                        created_at: null
+                        updated_at: null
+                      - id: 2
+                        name_en: PS1
+                        name_ar: 'بلاي ستيشن 1'
+                        description_en: 'PlayStation 1 console.'
+                        description_ar: 'جهاز بلاي ستيشن 1.'
+                        created_at: null
+                        updated_at: null
+                      - id: 3
+                        name_en: PS2
+                        name_ar: 'بلاي ستيشن 2'
+                        description_en: 'PlayStation 2 console.'
+                        description_ar: 'جهاز بلاي ستيشن 2.'
+                        created_at: null
+                        updated_at: null
+                      - id: 4
+                        name_en: PS3
+                        name_ar: 'بلاي ستيشن 3'
+                        description_en: 'PlayStation 3 console.'
+                        description_ar: 'جهاز بلاي ستيشن 3.'
+                        created_at: null
+                        updated_at: null
+                      - id: 5
+                        name_en: PS4
+                        name_ar: 'بلاي ستيشن 4'
+                        description_en: 'PlayStation 4 console.'
+                        description_ar: 'جهاز بلاي ستيشن 4.'
+                        created_at: null
+                        updated_at: null
+                      - id: 6
+                        name_en: PS5
+                        name_ar: 'بلاي ستيشن 5'
+                        description_en: 'PlayStation 5 console.'
+                        description_ar: 'جهاز بلاي ستيشن 5.'
+                        created_at: null
+                        updated_at: null
+                      - id: 7
+                        name_en: PSP
+                        name_ar: 'بي إس بي'
+                        description_en: 'PlayStation Portable platform.'
+                        description_ar: 'منصة بلاي ستيشن المحمولة.'
+                        created_at: null
+                        updated_at: null
+                      - id: 8
+                        name_en: Android
+                        name_ar: أندرويد
+                        description_en: 'Android mobile platform.'
+                        description_ar: 'منصة أندرويد المحمولة.'
+                        created_at: null
+                        updated_at: null
+                      - id: 9
+                        name_en: IOS
+                        name_ar: 'آي أو إس'
+                        description_en: 'iOS mobile platform.'
+                        description_ar: 'منصة آي أو إس المحمولة.'
+                        created_at: null
+                        updated_at: null
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name_en:
+                          type: string
+                          example: PC
+                        name_ar:
+                          type: string
+                          example: 'بي سي'
+                        description_en:
+                          type: string
+                          example: 'Personal computer platform.'
+                        description_ar:
+                          type: string
+                          example: 'منصة الحاسوب الشخصي.'
+                        created_at:
+                          type: string
+                          example: null
+                          nullable: true
+                        updated_at:
+                          type: string
+                          example: null
+                          nullable: true
+                  first_page_url:
+                    type: string
+                    example: 'http://localhost/api/platforms?per_page=15&page=1'
+                  from:
+                    type: integer
+                    example: 1
+                  last_page:
+                    type: integer
+                    example: 1
+                  last_page_url:
+                    type: string
+                    example: 'http://localhost/api/platforms?per_page=15&page=1'
+                  links:
+                    type: array
+                    example:
+                      - url: null
+                        label: '&laquo; Previous'
+                        page: null
+                        active: false
+                      - url: 'http://localhost/api/platforms?per_page=15&page=1'
+                        label: '1'
+                        page: 1
+                        active: true
+                      - url: null
+                        label: 'Next &raquo;'
+                        page: null
+                        active: false
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          example: null
+                          nullable: true
+                        label:
+                          type: string
+                          example: '&laquo; Previous'
+                        page:
+                          type: string
+                          example: null
+                          nullable: true
+                        active:
+                          type: boolean
+                          example: false
+                  next_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  path:
+                    type: string
+                    example: 'http://localhost/api/platforms'
+                  per_page:
+                    type: integer
+                    example: 15
+                  prev_page_url:
+                    type: string
+                    example: null
+                    nullable: true
+                  to:
+                    type: integer
+                    example: 9
+                  total:
+                    type: integer
+                    example: 9
+      tags:
+        - Platforms
+      security: []
+    post:
+      summary: 'Create a platform'
+      operationId: createAPlatform
+      description: 'Add a new gaming platform. Admin only.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name_en: 'PlayStation 5'
+                  name_ar: 'بلاي ستيشن 5'
+                  description_en: null
+                  description_ar: null
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name_en:
+                    type: string
+                    example: 'PlayStation 5'
+                  name_ar:
+                    type: string
+                    example: 'بلاي ستيشن 5'
+                  description_en:
+                    type: string
+                    example: null
+                    nullable: true
+                  description_ar:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Platforms
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_en:
+                  type: string
+                  description: 'English name.'
+                  example: 'PlayStation 5'
+                name_ar:
+                  type: string
+                  description: 'Arabic name.'
+                  example: 'بلاي ستيشن 5'
+                description_en:
+                  type: string
+                  description: 'English description.'
+                  example: "Sony's latest console"
+                  nullable: true
+                description_ar:
+                  type: string
+                  description: 'Arabic description.'
+                  example: architecto
+                  nullable: true
+              required:
+                - name_en
+                - name_ar
+  '/api/platforms/{id}':
+    get:
+      summary: 'Show a platform'
+      operationId: showAPlatform
+      description: 'Get details of a single platform by ID.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name_en: 'PlayStation 5'
+                  name_ar: 'بلاي ستيشن 5'
+                  description_en: null
+                  description_ar: null
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name_en:
+                    type: string
+                    example: 'PlayStation 5'
+                  name_ar:
+                    type: string
+                    example: 'بلاي ستيشن 5'
+                  description_en:
+                    type: string
+                    example: null
+                    nullable: true
+                  description_ar:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Platforms
+      security: []
+    put:
+      summary: 'Update a platform'
+      operationId: updateAPlatform
+      description: 'Update an existing gaming platform. Admin only.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name_en: 'PlayStation 5'
+                  name_ar: 'بلاي ستيشن 5'
+                  description_en: 'Updated description'
+                  description_ar: null
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name_en:
+                    type: string
+                    example: 'PlayStation 5'
+                  name_ar:
+                    type: string
+                    example: 'بلاي ستيشن 5'
+                  description_en:
+                    type: string
+                    example: 'Updated description'
+                  description_ar:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Platforms
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_en:
+                  type: string
+                  description: 'English name.'
+                  example: architecto
+                name_ar:
+                  type: string
+                  description: 'Arabic name.'
+                  example: architecto
+                description_en:
+                  type: string
+                  description: 'English description.'
+                  example: architecto
+                  nullable: true
+                description_ar:
+                  type: string
+                  description: 'Arabic description.'
+                  example: architecto
+                  nullable: true
+    delete:
+      summary: 'Delete a platform'
+      operationId: deleteAPlatform
+      description: 'Remove a gaming platform. Admin only.'
+      parameters: []
+      responses:
+        204:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - Platforms
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The platform ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/usb-sticks:
+    get:
+      summary: 'List USB sticks'
+      operationId: listUSBSticks
+      description: 'Get a list of available USB stick models.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 11
+                      description: 'USB stick ID.'
+                    name_en:
+                      type: string
+                      example: 'enim USB'
+                      description: 'English name.'
+                    name_ar:
+                      type: string
+                      example: 'saepe USB'
+                      description: 'Arabic name.'
+                    description_en:
+                      type: string
+                      example: 'Facere harum et amet dolorem consequuntur accusantium.'
+                    description_ar:
+                      type: string
+                      example: 'Quasi voluptatem sint illo sint non.'
+                    size_gb:
+                      type: integer
+                      example: 8
+                      description: 'Storage capacity in GB.'
+                    interface:
+                      type: string
+                      example: '3.2'
+                      description: 'Connection interface (e.g. USB 3.0).'
+                    price_iqd:
+                      type: string
+                      example: '40000.00'
+                      description: 'Price in Iraqi Dinar.'
+                    created_at:
+                      type: string
+                      example: '2026-06-25T16:48:59.000000Z'
+                    updated_at:
+                      type: string
+                      example: '2026-06-25T16:48:59.000000Z'
+                example:
+                  -
+                    id: 11
+                    name_en: 'enim USB'
+                    name_ar: 'saepe USB'
+                    description_en: 'Facere harum et amet dolorem consequuntur accusantium.'
+                    description_ar: 'Quasi voluptatem sint illo sint non.'
+                    size_gb: 8
+                    interface: '3.2'
+                    price_iqd: '40000.00'
+                    created_at: '2026-06-25T16:48:59.000000Z'
+                    updated_at: '2026-06-25T16:48:59.000000Z'
+                  -
+                    id: 12
+                    name_en: 'animi USB'
+                    name_ar: 'dolores USB'
+                    description_en: 'Voluptas distinctio voluptas cumque enim.'
+                    description_ar: 'Eaque sit consequatur adipisci possimus tempore.'
+                    size_gb: 8
+                    interface: '3.2'
+                    price_iqd: '7500.00'
+                    created_at: '2026-06-25T16:48:59.000000Z'
+                    updated_at: '2026-06-25T16:48:59.000000Z'
+                  -
+                    id: 13
+                    name_en: 'ducimus USB'
+                    name_ar: 'molestias USB'
+                    description_en: 'Aliquam quis voluptate et possimus architecto aperiam.'
+                    description_ar: 'Quaerat vero magni velit.'
+                    size_gb: 4
+                    interface: '3.2'
+                    price_iqd: '30000.00'
+                    created_at: '2026-06-25T16:48:59.000000Z'
+                    updated_at: '2026-06-25T16:48:59.000000Z'
+                  -
+                    id: 14
+                    name_en: 'unde USB'
+                    name_ar: 'laboriosam USB'
+                    description_en: 'Qui voluptatem voluptatem delectus odit aut facere.'
+                    description_ar: 'Impedit commodi eum ducimus occaecati.'
+                    size_gb: 1
+                    interface: '3.0'
+                    price_iqd: '25000.00'
+                    created_at: '2026-06-25T16:48:59.000000Z'
+                    updated_at: '2026-06-25T16:48:59.000000Z'
+                  -
+                    id: 15
+                    name_en: 'sed USB'
+                    name_ar: 'quia USB'
+                    description_en: 'Qui autem reprehenderit repellendus mollitia corporis.'
+                    description_ar: 'Est corporis sit illo.'
+                    size_gb: 2
+                    interface: '3.1'
+                    price_iqd: '50000.00'
+                    created_at: '2026-06-25T16:48:59.000000Z'
+                    updated_at: '2026-06-25T16:48:59.000000Z'
+                  -
+                    id: 16
+                    name_en: 'dignissimos USB'
+                    name_ar: 'tenetur USB'
+                    description_en: 'Quia amet sit incidunt rerum eos.'
+                    description_ar: 'Asperiores illum vitae quae fuga occaecati voluptatem voluptate.'
+                    size_gb: 0.5
+                    interface: '3.1'
+                    price_iqd: '5000.00'
+                    created_at: '2026-06-25T16:48:59.000000Z'
+                    updated_at: '2026-06-25T16:48:59.000000Z'
+                  -
+                    id: 17
+                    name_en: 'expedita USB'
+                    name_ar: 'officiis USB'
+                    description_en: 'Cumque sed aperiam hic officiis necessitatibus natus.'
+                    description_ar: 'Possimus tempora et aliquid sint.'
+                    size_gb: 4
+                    interface: '3.1'
+                    price_iqd: '10000.00'
+                    created_at: '2026-06-25T16:48:59.000000Z'
+                    updated_at: '2026-06-25T16:48:59.000000Z'
+                  -
+                    id: 18
+                    name_en: 'ipsam USB'
+                    name_ar: 'nihil USB'
+                    description_en: 'Et magni sit omnis temporibus.'
+                    description_ar: 'Aliquam molestias praesentium ut distinctio sed omnis officiis.'
+                    size_gb: 8
+                    interface: '3.2'
+                    price_iqd: '30000.00'
+                    created_at: '2026-06-25T16:48:59.000000Z'
+                    updated_at: '2026-06-25T16:48:59.000000Z'
+                  -
+                    id: 19
+                    name_en: 'corporis USB'
+                    name_ar: 'aut USB'
+                    description_en: 'Vel et aut odit et tempora soluta.'
+                    description_ar: 'Voluptatem in nihil dicta voluptatem.'
+                    size_gb: 8
+                    interface: '3.1'
+                    price_iqd: '35000.00'
+                    created_at: '2026-06-25T16:48:59.000000Z'
+                    updated_at: '2026-06-25T16:48:59.000000Z'
+                  -
+                    id: 20
+                    name_en: 'quidem USB'
+                    name_ar: 'omnis USB'
+                    description_en: 'Rerum dolores eligendi odit voluptas reprehenderit esse maxime.'
+                    description_ar: 'Natus neque et qui ex aut.'
+                    size_gb: 8
+                    interface: '3.2'
+                    price_iqd: '30000.00'
+                    created_at: '2026-06-25T16:48:59.000000Z'
+                    updated_at: '2026-06-25T16:48:59.000000Z'
+      tags:
+        - 'USB Sticks'
+      security: []
+    post:
+      summary: 'Create a USB stick'
+      operationId: createAUSBStick
+      description: 'Add a new USB stick model. Admin only.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 2
+                  name_en: '64GB USB 3.1'
+                  name_ar: '64 جيجا USB 3.1'
+                  size_gb: 64
+                  interface: 'USB 3.1'
+                  price_iqd: 25000
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  name_en:
+                    type: string
+                    example: '64GB USB 3.1'
+                  name_ar:
+                    type: string
+                    example: '64 جيجا USB 3.1'
+                  size_gb:
+                    type: integer
+                    example: 64
+                  interface:
+                    type: string
+                    example: 'USB 3.1'
+                  price_iqd:
+                    type: integer
+                    example: 25000
+      tags:
+        - 'USB Sticks'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_en:
+                  type: string
+                  description: 'English name.'
+                  example: '64GB USB 3.1'
+                name_ar:
+                  type: string
+                  description: 'Arabic name.'
+                  example: '64 جيجا USB 3.1'
+                description_en:
+                  type: string
+                  description: 'English description.'
+                  example: architecto
+                  nullable: true
+                description_ar:
+                  type: string
+                  description: 'Arabic description.'
+                  example: architecto
+                  nullable: true
+                size_gb:
+                  type: numeric
+                  description: 'Storage capacity in GB.'
+                  example: '64'
+                interface:
+                  type: string
+                  description: 'Connection interface.'
+                  example: 'USB 3.1'
+                price_iqd:
+                  type: numeric
+                  description: 'Price in Iraqi Dinar.'
+                  example: '25000'
+                  nullable: true
+              required:
+                - name_en
+                - name_ar
+                - size_gb
+                - interface
+  '/api/usb-sticks/{id}':
+    get:
+      summary: 'Show a USB stick'
+      operationId: showAUSBStick
+      description: 'Get details of a single USB stick model.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name_en: '32GB USB 3.0'
+                  name_ar: '32 جيجا USB 3.0'
+                  size_gb: 32
+                  interface: 'USB 3.0'
+                  price_iqd: 15000
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name_en:
+                    type: string
+                    example: '32GB USB 3.0'
+                  name_ar:
+                    type: string
+                    example: '32 جيجا USB 3.0'
+                  size_gb:
+                    type: integer
+                    example: 32
+                  interface:
+                    type: string
+                    example: 'USB 3.0'
+                  price_iqd:
+                    type: integer
+                    example: 15000
+      tags:
+        - 'USB Sticks'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the usb stick.'
+        example: 11
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: usb_stick
+        description: 'The USB stick ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/usb-sticks/{usb_stick_id}':
+    put:
+      summary: 'Update a USB stick'
+      operationId: updateAUSBStick
+      description: 'Update an existing USB stick model. Admin only.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name_en: '32GB USB 3.0'
+                  name_ar: '32 جيجا USB 3.0'
+                  size_gb: 32
+                  interface: 'USB 3.0'
+                  price_iqd: 15000
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name_en:
+                    type: string
+                    example: '32GB USB 3.0'
+                  name_ar:
+                    type: string
+                    example: '32 جيجا USB 3.0'
+                  size_gb:
+                    type: integer
+                    example: 32
+                  interface:
+                    type: string
+                    example: 'USB 3.0'
+                  price_iqd:
+                    type: integer
+                    example: 15000
+      tags:
+        - 'USB Sticks'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name_en:
+                  type: string
+                  description: 'English name.'
+                  example: architecto
+                name_ar:
+                  type: string
+                  description: 'Arabic name.'
+                  example: architecto
+                description_en:
+                  type: string
+                  description: 'English description.'
+                  example: architecto
+                  nullable: true
+                description_ar:
+                  type: string
+                  description: 'Arabic description.'
+                  example: architecto
+                  nullable: true
+                size_gb:
+                  type: numeric
+                  description: 'Storage capacity in GB.'
+                  example: architecto
+                interface:
+                  type: string
+                  description: 'Connection interface.'
+                  example: architecto
+                price_iqd:
+                  type: numeric
+                  description: 'Price in Iraqi Dinar.'
+                  example: architecto
+                  nullable: true
+    delete:
+      summary: 'Delete a USB stick'
+      operationId: deleteAUSBStick
+      description: 'Remove a USB stick model. Admin only.'
+      parameters: []
+      responses:
+        204:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - 'USB Sticks'
+    parameters:
+      -
+        in: path
+        name: usb_stick_id
+        description: 'The ID of the usb stick.'
+        example: 11
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: usb_stick
+        description: 'The USB stick ID.'
+        example: 1
+        required: true
+        schema:
+          type: integer

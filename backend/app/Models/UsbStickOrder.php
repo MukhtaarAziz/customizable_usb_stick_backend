@@ -5,11 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UsbStickOrder extends Model
 {
     use HasFactory;
+
+    const STATUS_PENDING = 'pending';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_SHIPPED = 'shipped';
+    const STATUS_DELIVERED = 'delivered';
+    const STATUS_CANCELLED = 'cancelled';
+
+    const STATUSES = [
+        self::STATUS_PENDING => 'قيد الانتظار',
+        self::STATUS_PROCESSING => 'قيد المعالجة',
+        self::STATUS_SHIPPED => 'تم الإرسال',
+        self::STATUS_DELIVERED => 'تم الاستلام',
+        self::STATUS_CANCELLED => 'ملغى',
+    ];
 
     protected $fillable = [
         'customer_id',
@@ -17,33 +31,50 @@ class UsbStickOrder extends Model
         'total_price',
         'status',
         'notes',
+        'custom_message',
+        'delivery_address',
+        'phone',
     ];
 
     protected $casts = [
-        'total_price' => 'double',
+        'total_price' => 'decimal:2',
     ];
 
-    /**
-     * Get the customer that placed this order.
-     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
-    /**
-     * Get the USB stick chosen for this order.
-     */
     public function usbStick(): BelongsTo
     {
         return $this->belongsTo(UsbStick::class);
     }
 
-    /**
-     * Get the games included in this custom USB stick order.
-     */
-    public function games(): BelongsToMany
+    public function items(): HasMany
     {
-        return $this->belongsToMany(Game::class, 'game_usb_stick_order');
+        return $this->hasMany(UsbStickOrderItem::class);
+    }
+
+    public function toArray()
+    {
+        $data = parent::toArray();
+
+        $data['games'] = $this->items
+            ->where('itemable_type', Game::class)
+            ->map(fn ($item) => $item->itemable)
+            ->filter()
+            ->values()
+            ->toArray();
+
+        $data['programs'] = $this->items
+            ->where('itemable_type', Program::class)
+            ->map(fn ($item) => $item->itemable)
+            ->filter()
+            ->values()
+            ->toArray();
+
+        unset($data['items']);
+
+        return $data;
     }
 }

@@ -17,7 +17,7 @@ class Game extends Model
         'name_ar',
         'description_ar',
         'category_id',
-        'platform_id',
+        'game_platform_id',
         'tags',
         'size_gb',
         'downloads',
@@ -32,24 +32,17 @@ class Game extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function platform(): BelongsTo
     {
-        return $this->belongsTo(Platform::class);
+        return $this->belongsTo(GamePlatform::class, 'game_platform_id');
     }
 
     public function images(): HasMany
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(GameImage::class);
     }
 
-    /**
-     * Get the customized USB stick orders containing this game.
-     */
-    public function usbStickOrders(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(UsbStickOrder::class, 'game_usb_stick_order');
-    }
 }

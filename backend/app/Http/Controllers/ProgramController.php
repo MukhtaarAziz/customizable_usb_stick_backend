@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Program;
+use Illuminate\Http\Request;
+
+class ProgramController extends Controller
+{
+    public function index(Request $request)
+    {
+        $perPage = (int) $request->query('per_page', 15);
+        $perPage = max(1, min($perPage, 100));
+
+        $query = Program::with(['category', 'platform', 'images']);
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($builder) use ($search) {
+                $builder->where('name_en', 'like', "%{$search}%")
+                    ->orWhere('name_ar', 'like', "%{$search}%");
+            });
+        }
+
+        if ($platformId = $request->query('platform_id')) {
+            $query->where('program_platform_id', $platformId);
+        }
+
+        if ($categoryId = $request->query('category_id')) {
+            $query->where('category_id', $categoryId);
+        }
+
+        return $query
+            ->paginate($perPage)
+            ->appends($request->query());
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name_en' => ['required', 'string', 'max:255'],
+            'name_ar' => ['required', 'string', 'max:255'],
+            'description_en' => ['nullable', 'string'],
+            'description_ar' => ['nullable', 'string'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'program_platform_id' => ['required', 'exists:program_platforms,id'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['string'],
+            'size_gb' => ['required', 'numeric'],
+            'downloads' => ['nullable', 'integer', 'min:0'],
+            'date_release' => ['nullable', 'date'],
+        ]);
+
+        return Program::create($data);
+    }
+
+    public function show(string $id)
+    {
+        return Program::with(['category', 'platform'])->findOrFail($id);
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $program = Program::findOrFail($id);
+
+        $data = $request->validate([
+            'name_en' => ['sometimes', 'required', 'string', 'max:255'],
+            'name_ar' => ['sometimes', 'required', 'string', 'max:255'],
+            'description_en' => ['nullable', 'string'],
+            'description_ar' => ['nullable', 'string'],
+            'category_id' => ['sometimes', 'required', 'exists:categories,id'],
+            'program_platform_id' => ['sometimes', 'required', 'exists:program_platforms,id'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['string'],
+            'size_gb' => ['sometimes', 'required', 'numeric'],
+            'downloads' => ['nullable', 'integer', 'min:0'],
+            'date_release' => ['nullable', 'date'],
+        ]);
+
+        $program->update($data);
+
+        return $program;
+    }
+
+    public function destroy(string $id)
+    {
+        $program = Program::findOrFail($id);
+        $program->delete();
+
+        return response()->json(null, 204);
+    }
+}

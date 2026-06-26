@@ -1,0 +1,415 @@
+name: Platforms
+description: |-
+
+  Manage gaming platforms.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/platforms
+    metadata:
+      custom: []
+      groupName: Platforms
+      groupDescription: |-
+
+        Manage gaming platforms.
+      subgroup: Public
+      subgroupDescription: ''
+      title: 'List platforms'
+      description: 'Get a paginated list of supported gaming platforms.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Number of results per page (1-100). Defaults to 15.'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      per_page: 15
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"current_page":1,"data":[{"id":1,"name_en":"PC","name_ar":"بي سي","description_en":"Personal computer platform.","description_ar":"منصة الحاسوب الشخصي.","created_at":null,"updated_at":null},{"id":2,"name_en":"PS1","name_ar":"بلاي ستيشن 1","description_en":"PlayStation 1 console.","description_ar":"جهاز بلاي ستيشن 1.","created_at":null,"updated_at":null},{"id":3,"name_en":"PS2","name_ar":"بلاي ستيشن 2","description_en":"PlayStation 2 console.","description_ar":"جهاز بلاي ستيشن 2.","created_at":null,"updated_at":null},{"id":4,"name_en":"PS3","name_ar":"بلاي ستيشن 3","description_en":"PlayStation 3 console.","description_ar":"جهاز بلاي ستيشن 3.","created_at":null,"updated_at":null},{"id":5,"name_en":"PS4","name_ar":"بلاي ستيشن 4","description_en":"PlayStation 4 console.","description_ar":"جهاز بلاي ستيشن 4.","created_at":null,"updated_at":null},{"id":6,"name_en":"PS5","name_ar":"بلاي ستيشن 5","description_en":"PlayStation 5 console.","description_ar":"جهاز بلاي ستيشن 5.","created_at":null,"updated_at":null},{"id":7,"name_en":"PSP","name_ar":"بي إس بي","description_en":"PlayStation Portable platform.","description_ar":"منصة بلاي ستيشن المحمولة.","created_at":null,"updated_at":null},{"id":8,"name_en":"Android","name_ar":"أندرويد","description_en":"Android mobile platform.","description_ar":"منصة أندرويد المحمولة.","created_at":null,"updated_at":null},{"id":9,"name_en":"IOS","name_ar":"آي أو إس","description_en":"iOS mobile platform.","description_ar":"منصة آي أو إس المحمولة.","created_at":null,"updated_at":null}],"first_page_url":"http:\/\/localhost\/api\/platforms?per_page=15&page=1","from":1,"last_page":1,"last_page_url":"http:\/\/localhost\/api\/platforms?per_page=15&page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/platforms?per_page=15&page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost\/api\/platforms","per_page":15,"prev_page_url":null,"to":9,"total":9}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields:
+      'data[].id':
+        custom: []
+        name: 'data[].id'
+        description: 'Platform ID.'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].name_en':
+        custom: []
+        name: 'data[].name_en'
+        description: 'English name.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].name_ar':
+        custom: []
+        name: 'data[].name_ar'
+        description: 'Arabic name.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].description_en':
+        custom: []
+        name: 'data[].description_en'
+        description: 'English description.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].description_ar':
+        custom: []
+        name: 'data[].description_ar'
+        description: 'Arabic description.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/platforms/{id}'
+    metadata:
+      custom: []
+      groupName: Platforms
+      groupDescription: |-
+
+        Manage gaming platforms.
+      subgroup: Public
+      subgroupDescription: ''
+      title: 'Show a platform'
+      description: 'Get details of a single platform by ID.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The platform ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"id": 1, "name_en": "PlayStation 5", "name_ar": "بلاي ستيشن 5", "description_en": null, "description_ar": null}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/platforms
+    metadata:
+      custom: []
+      groupName: Platforms
+      groupDescription: |-
+
+        Manage gaming platforms.
+      subgroup: Admin
+      subgroupDescription: ''
+      title: 'Create a platform'
+      description: 'Add a new gaming platform. Admin only.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
+        custom: []
+        name: name_en
+        description: 'English name.'
+        required: true
+        example: 'PlayStation 5'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Arabic name.'
+        required: true
+        example: 'بلاي ستيشن 5'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: 'English description.'
+        required: false
+        example: "Sony's latest console"
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: 'Arabic description.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name_en: 'PlayStation 5'
+      name_ar: 'بلاي ستيشن 5'
+      description_en: "Sony's latest console"
+      description_ar: architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: '{"id": 1, "name_en": "PlayStation 5", "name_ar": "بلاي ستيشن 5", "description_en": null, "description_ar": null}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/platforms/{id}'
+    metadata:
+      custom: []
+      groupName: Platforms
+      groupDescription: |-
+
+        Manage gaming platforms.
+      subgroup: Admin
+      subgroupDescription: ''
+      title: 'Update a platform'
+      description: 'Update an existing gaming platform. Admin only.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The platform ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
+        custom: []
+        name: name_en
+        description: 'English name.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Arabic name.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: 'English description.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: 'Arabic description.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name_en: architecto
+      name_ar: architecto
+      description_en: architecto
+      description_ar: architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"id": 1, "name_en": "PlayStation 5", "name_ar": "بلاي ستيشن 5", "description_en": "Updated description", "description_ar": null}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/platforms/{id}'
+    metadata:
+      custom: []
+      groupName: Platforms
+      groupDescription: |-
+
+        Manage gaming platforms.
+      subgroup: Admin
+      subgroupDescription: ''
+      title: 'Delete a platform'
+      description: 'Remove a gaming platform. Admin only.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The platform ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 204
+        content: ''
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

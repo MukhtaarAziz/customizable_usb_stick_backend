@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $perPage = (int) $request->query('per_page', 15);
         $perPage = max(1, min($perPage, 100));
 
-        return Category::paginate($perPage)->appends($request->query());
+        $query = Category::with('categoryType');
+
+        if ($typeId = $request->query('category_type_id')) {
+            $query->where('category_type_id', $typeId);
+        }
+
+        return $query->paginate($perPage)->appends($request->query());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $data = $request->validate([
+            'category_type_id' => ['required', 'exists:category_types,id'],
             'name_en' => ['required', 'string', 'max:255'],
             'name_ar' => ['required', 'string', 'max:255'],
             'description_en' => ['nullable', 'string'],
@@ -33,22 +34,17 @@ class CategoryController extends Controller
         return Category::create($data);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        return Category::findOrFail($id);
+        return Category::with('categoryType')->findOrFail($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $category = Category::findOrFail($id);
 
         $data = $request->validate([
+            'category_type_id' => ['sometimes', 'required', 'exists:category_types,id'],
             'name_en' => ['sometimes', 'required', 'string', 'max:255'],
             'name_ar' => ['sometimes', 'required', 'string', 'max:255'],
             'description_en' => ['nullable', 'string'],
@@ -60,9 +56,6 @@ class CategoryController extends Controller
         return $category;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $category = Category::findOrFail($id);

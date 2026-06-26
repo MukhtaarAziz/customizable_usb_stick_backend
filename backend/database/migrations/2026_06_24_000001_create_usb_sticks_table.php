@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('description_ar')->nullable();
             $table->double('size_gb', 8, 2)->default(2.00);
             $table->string('interface')->default('2.0');
+            $table->decimal('price_iqd', 10, 2)->nullable();
             $table->timestamps();
         });
     }
