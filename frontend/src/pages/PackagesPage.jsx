@@ -36,20 +36,9 @@ function PackagesPage({ locale, t, user, onShowAuth }) {
 
   useEffect(() => {
     localStorage.setItem('package_cart', JSON.stringify(cart))
+    // Notify other UI parts (e.g., mobile nav) after cart state is committed.
+    window.dispatchEvent(new CustomEvent('cart-updated'))
   }, [cart])
-
-  useEffect(() => {
-    const handleCartUpdate = () => {
-      try {
-        const saved = localStorage.getItem('package_cart')
-        setCart(saved ? JSON.parse(saved) : [])
-      } catch {
-        setCart([])
-      }
-    }
-    window.addEventListener('cart-updated', handleCartUpdate)
-    return () => window.removeEventListener('cart-updated', handleCartUpdate)
-  }, [])
 
   useEffect(() => {
     async function loadFilters() {
@@ -74,18 +63,6 @@ function PackagesPage({ locale, t, user, onShowAuth }) {
     }
 
     loadFilters()
-  }, [])
-
-  useEffect(() => {
-    async function loadGovernorates() {
-      try {
-        const res = await fetch('/api/governorates')
-        if (res.ok) setGovernorates(await res.json())
-      } catch (err) {
-        console.error('Error loading governorates:', err)
-      }
-    }
-    loadGovernorates()
   }, [])
 
   useEffect(() => {
@@ -170,41 +147,30 @@ function PackagesPage({ locale, t, user, onShowAuth }) {
   const handleAddToCart = (pkg) => {
     setCart(prev => {
       const existing = prev.find(item => item.id === pkg.id)
-      let next
       if (existing) {
-        next = prev.map(item =>
+        return prev.map(item =>
           item.id === pkg.id
             ? { ...item, quantity: Math.min((item.quantity || 1) + 1, 10) }
             : item
         )
-      } else {
-        next = [...prev, { ...pkg, quantity: 1 }]
       }
-      localStorage.setItem('package_cart', JSON.stringify(next))
-      window.dispatchEvent(new CustomEvent('cart-updated'))
-      return next
+      return [...prev, { ...pkg, quantity: 1 }]
     })
   }
 
   const handleRemoveFromCart = (pkgId) => {
     setCart(prev => {
-      const next = prev.filter(item => item.id !== pkgId)
-      localStorage.setItem('package_cart', JSON.stringify(next))
-      window.dispatchEvent(new CustomEvent('cart-updated'))
-      return next
+      return prev.filter(item => item.id !== pkgId)
     })
   }
 
   const handleUpdateQuantity = (pkgId, delta) => {
     setCart(prev => {
-      const next = prev.map(item =>
+      return prev.map(item =>
         item.id === pkgId
           ? { ...item, quantity: Math.max(1, Math.min(10, (item.quantity || 1) + delta)) }
           : item
       )
-      localStorage.setItem('package_cart', JSON.stringify(next))
-      window.dispatchEvent(new CustomEvent('cart-updated'))
-      return next
     })
   }
 

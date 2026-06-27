@@ -11,6 +11,7 @@ function AuthModal({ show, onClose, onAuth, locale }) {
   const [registerData, setRegisterData] = useState({ name: '', identifier: '', password: '', confirmPassword: '', governorate_id: '' })
   const [governorates, setGovernorates] = useState([])
   const [error, setError] = useState('')
+  const [notice, setNotice] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const translations = {
@@ -39,6 +40,7 @@ function AuthModal({ show, onClose, onAuth, locale }) {
       loginNow: 'Login now',
     },
     ar: {
+      phone: 'رقم الهاتف',
       login: 'تسجيل الدخول',
       register: 'تسجيل',
       emailOrPhone: 'البريد الإلكتروني أو رقم الهاتف',
@@ -66,6 +68,14 @@ function AuthModal({ show, onClose, onAuth, locale }) {
 
   const labels = (translations && translations[locale]) ? translations[locale] : (translations.en || {})
 
+  useEffect(() => {
+    if (!show) return
+    fetch(`${API_BASE}/governorates`)
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setGovernorates(data.data ?? data ?? []))
+      .catch(() => setGovernorates([]))
+  }, [show])
+
   const validatePassword = (password) => {
     if (password.length < (AUTH_CONFIG?.minPasswordLength ?? 8)) {
       setError(labels.passwordMinLength)
@@ -81,6 +91,7 @@ function AuthModal({ show, onClose, onAuth, locale }) {
   const handleLoginSubmit = (e) => {
     e.preventDefault()
     setError('')
+    setNotice('')
 
     if (!loginData.identifier || !loginData.password) {
       setError(labels.fillAllFields)
@@ -144,9 +155,17 @@ function AuthModal({ show, onClose, onAuth, locale }) {
   const handleRegisterSubmit = (e) => {
     e.preventDefault()
     setError('')
+    setNotice('')
 
-    if (!registerData.name || !registerData.identifier || !registerData.password || !registerData.confirmPassword) {
+    if (!registerData.name || !registerData.identifier || !registerData.password || !registerData.confirmPassword || !registerData.governorate_id) {
       setError(labels.fillAllFields)
+      return
+    }
+
+    const cleanPhone = registerData.identifier.replace(/[\s-]/g, '')
+    const iraqiPhonePattern = /^(\+964|0)(770|771|772|773|790|791|792|793|794|780|781|782|783|784)\d{7}$/
+    if (!iraqiPhonePattern.test(cleanPhone)) {
+      setError(locale === 'ar' ? 'يرجى إدخال رقم هاتف عراقي صحيح.' : 'Please enter a valid Iraqi phone number.')
       return
     }
 
@@ -160,24 +179,53 @@ function AuthModal({ show, onClose, onAuth, locale }) {
     }
 
     setIsLoading(true)
-    const payload = {
-      id: Math.random(),
-      name: registerData.name,
-      email: registerData.identifier.includes('@') ? registerData.identifier : undefined,
-      phone: !registerData.identifier.includes('@') ? registerData.identifier : undefined,
-    }
 
-    setTimeout(() => {
-      if (typeof onAuth === 'function') onAuth(payload)
-      setRegisterData({ name: '', identifier: '', password: '', confirmPassword: '' })
-      setIsLoading(false)
-    }, 500)
+    ;(async () => {
+      try {
+        // 1) Register customer account
+        const registerPayload = {
+          name: registerData.name,
+          phone: cleanPhone,
+          password: registerData.password,
+          governorate_id: Number(registerData.governorate_id),
+        }
+
+        const registerRes = await fetch(`${API_BASE}/customers`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(registerPayload),
+        })
+
+        const registerDataRes = await registerRes.json().catch(() => ({}))
+        if (!registerRes.ok) {
+          if (registerDataRes && registerDataRes.errors) {
+            const firstKey = Object.keys(registerDataRes.errors)[0]
+            setError(registerDataRes.errors[firstKey][0])
+          } else {
+            setError(registerDataRes.message || (locale === 'ar' ? 'فشل إنشاء الحساب.' : 'Registration failed.'))
+          }
+          return
+        }
+
+        // Registration success: require explicit login before continuing.
+        setActiveTab('login')
+        setLoginData({ identifier: cleanPhone, password: '' })
+        setNotice(locale === 'ar' ? 'تم إنشاء الحساب بنجاح. يرجى تسجيل الدخول للمتابعة.' : 'Account created successfully. Please log in to continue.')
+        setRegisterData({ name: '', identifier: '', password: '', confirmPassword: '', governorate_id: '' })
+      } catch (err) {
+        console.error(err)
+        setError(locale === 'ar' ? 'حدث خطأ أثناء التسجيل.' : 'An error occurred during registration.')
+      } finally {
+        setIsLoading(false)
+      }
+    })()
   }
 
   const handleClose = () => {
     setError('')
+    setNotice('')
     setLoginData({ identifier: '', password: '' })
-    setRegisterData({ name: '', identifier: '', password: '', confirmPassword: '' })
+    setRegisterData({ name: '', identifier: '', password: '', confirmPassword: '', governorate_id: '' })
     if (typeof onClose === 'function') onClose()
   }
 
@@ -207,6 +255,7 @@ function AuthModal({ show, onClose, onAuth, locale }) {
 
         {/* Error Message */}
         {error && <div className="alert alert-danger mb-3">{error}</div>}
+        {notice && <div className="alert alert-success mb-3">{notice}</div>}
 
         {/* Login Form */}
         {activeTab === 'login' && (
@@ -263,14 +312,29 @@ function AuthModal({ show, onClose, onAuth, locale }) {
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>{labels.emailOrPhone}</Form.Label>
+              <Form.Label>{labels.phone || labels.emailOrPhone}</Form.Label>
               <Form.Control
                 type="text"
                 value={registerData.identifier}
                 onChange={(e) => setRegisterData({ ...registerData, identifier: e.target.value })}
-                placeholder={labels.enterEmail}
+                placeholder={locale === 'ar' ? 'ادخل رقم الهاتف العراقي' : 'Enter Iraqi phone number'}
                 required
               />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>{locale === 'ar' ? 'المحافظة' : 'Governorate'}</Form.Label>
+              <Form.Select
+                value={registerData.governorate_id}
+                onChange={(e) => setRegisterData({ ...registerData, governorate_id: e.target.value })}
+                required
+              >
+                <option value="">{locale === 'ar' ? '-- اختر المحافظة --' : '-- Select governorate --'}</option>
+                {governorates.map((gov) => (
+                  <option key={gov.id} value={gov.id}>
+                    {locale === 'ar' ? gov.name_ar || gov.name_en : gov.name_en || gov.name_ar}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>{labels.password}</Form.Label>

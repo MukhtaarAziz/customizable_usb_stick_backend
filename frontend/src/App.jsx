@@ -24,6 +24,7 @@ import AdminCategories from './pages/admins/Categories.jsx'
 import AdminContentCategories from './pages/admins/ContentCategories.jsx'
 import AdminCategoryTypes from './pages/admins/CategoryTypes.jsx'
 import AdminOrders from './pages/admins/Orders.jsx'
+import AdminSubOrders from './pages/admins/SubOrders.jsx'
 import AdminUsers from './pages/admins/Users.jsx'
 import AdminCustomers from './pages/admins/Customers.jsx'
 import AdminSettings from './pages/admins/Settings.jsx'
@@ -396,6 +397,7 @@ function App() {
         <Route path="content-categories" element={<AdminContentCategories />} />
         <Route path="package-categories" element={<AdminCategories />} />
         <Route path="orders" element={<AdminOrders />} />
+        <Route path="sub-orders" element={<AdminSubOrders />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="customers" element={<AdminCustomers />} />
         <Route path="settings" element={<AdminSettings />} />

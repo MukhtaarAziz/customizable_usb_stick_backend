@@ -3,6 +3,7 @@ import { Table, Button, Spinner, Alert, Modal, Form, Badge } from 'react-bootstr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faPen, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons'
 import Pagination from '../../components/admins/Pagination'
+import PackageItemsModal from '../../components/admins/PackageItemsModal.jsx'
 
 const API_BASE = '/api/packages'
 const PLATFORMS_API = '/api/game-platforms?per_page=100'
@@ -25,6 +26,8 @@ function AdminPackages() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [showModal, setShowModal] = useState(false)
+  const [showItemsModal, setShowItemsModal] = useState(false)
+  const [managingItems, setManagingItems] = useState(null)
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
@@ -117,8 +120,26 @@ function AdminPackages() {
     } catch (e) { setError(e.message) }
   }
 
+  const handleToggleActive = async (item) => {
+    try {
+      const res = await fetch(`${API_BASE}/${item.id}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ active: !item.active }),
+      })
+      if (!res.ok) throw new Error('Toggle active failed')
+      load(meta.currentPage, meta.perPage)
+    } catch (e) {
+      setError(e.message)
+    }
+  }
+
   const handlePageChange = (page) => load(page, meta.perPage)
   const handlePerPageChange = (perPage) => load(1, perPage)
+  const openManageItems = (item) => {
+    setManagingItems(item)
+    setShowItemsModal(true)
+  }
 
   const getPlatformName = (item) => item.platform?.name_en ?? item.platform_id
   const getCategoryTypeName = (item) => item.package_category_type?.name_en ?? item.package_category_type_id
@@ -152,7 +173,7 @@ function AdminPackages() {
               <th>Active</th>
               <th>Views</th>
               <th>Orders</th>
-              <th style={{ width: 120 }}>Actions</th>
+              <th style={{ width: 300 }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -173,6 +194,15 @@ function AdminPackages() {
                 <td>{item.views ?? 0}</td>
                 <td>{item.order_count ?? 0}</td>
                 <td>
+                  <Button variant="outline-dark" size="sm" className="me-1" onClick={() => openManageItems(item)}>Items</Button>
+                  <Button
+                    variant={item.active ? 'outline-warning' : 'outline-success'}
+                    size="sm"
+                    className="me-1"
+                    onClick={() => handleToggleActive(item)}
+                  >
+                    {item.active ? 'Deactivate' : 'Activate'}
+                  </Button>
                   <Button variant="outline-primary" size="sm" className="me-1" onClick={() => openEdit(item)}><FontAwesomeIcon icon={faPen} /></Button>
                   <Button variant="outline-danger" size="sm" onClick={() => handleDelete(item.id)}><FontAwesomeIcon icon={faTrashCan} /></Button>
                 </td>
@@ -275,6 +305,13 @@ function AdminPackages() {
           <Button size="sm" onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
         </Modal.Footer>
       </Modal>
+
+      <PackageItemsModal
+        show={showItemsModal}
+        onHide={() => setShowItemsModal(false)}
+        pkg={managingItems}
+        onChanged={() => load(meta.currentPage, meta.perPage)}
+      />
     </>
   )
 }

@@ -9,9 +9,20 @@ use Illuminate\Support\Facades\Auth;
 
 class PackageOrderController extends Controller
 {
+    private function resolveCustomer(Request $request)
+    {
+        return $request->user('sanctum')
+            ?? Auth::guard('sanctum')->user()
+            ?? Auth::user();
+    }
+
     public function index()
     {
-        $customer = Auth::user();
+        $customer = $this->resolveCustomer(request());
+        if (! $customer) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
+
         $orders = $customer->packageOrders()->with(['items.package'])->get();
 
         return response()->json($orders);
@@ -19,7 +30,7 @@ class PackageOrderController extends Controller
 
     public function store(Request $request)
     {
-        $customer = Auth::user();
+        $customer = $this->resolveCustomer($request);
 
         if (!$customer) {
             return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
@@ -79,7 +90,11 @@ class PackageOrderController extends Controller
 
     public function show(PackageOrder $packageOrder)
     {
-        $customer = Auth::user();
+        $customer = $this->resolveCustomer(request());
+
+        if (! $customer) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
 
         if ($packageOrder->customer_id !== $customer->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -92,7 +107,11 @@ class PackageOrderController extends Controller
 
     public function update(Request $request, PackageOrder $packageOrder)
     {
-        $customer = Auth::user();
+        $customer = $this->resolveCustomer($request);
+
+        if (! $customer) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
 
         if ($packageOrder->customer_id !== $customer->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -118,7 +137,11 @@ class PackageOrderController extends Controller
 
     public function destroy(PackageOrder $packageOrder)
     {
-        $customer = Auth::user();
+        $customer = $this->resolveCustomer(request());
+
+        if (! $customer) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
 
         if ($packageOrder->customer_id !== $customer->id) {
             return response()->json(['message' => 'Unauthorized'], 403);

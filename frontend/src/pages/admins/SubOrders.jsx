@@ -13,7 +13,7 @@ const CURRENCY = 'IQD'
 
 const ALL_STATUSES = ['all', 'pending', 'processing', 'shipped', 'delivered', 'cancelled']
 
-function AdminOrders() {
+function AdminSubOrders() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -80,7 +80,7 @@ function AdminOrders() {
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="fw-bold mb-0">Package Orders</h4>
+        <h4 className="fw-bold mb-0">Sub Orders</h4>
         <Button size="sm" variant="outline-secondary" onClick={load}><FontAwesomeIcon icon={faRotate} className="me-1" /> Refresh</Button>
       </div>
 
@@ -157,4 +157,4 @@ function AdminOrders() {
   )
 }
 
-export default AdminOrders
+export default AdminSubOrders

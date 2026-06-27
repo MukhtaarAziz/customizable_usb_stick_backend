@@ -11,9 +11,20 @@ use Illuminate\Support\Facades\Auth;
 
 class UsbStickOrderController extends Controller
 {
+    private function resolveCustomer(Request $request)
+    {
+        return $request->user('sanctum')
+            ?? Auth::guard('sanctum')->user()
+            ?? Auth::user();
+    }
+
     public function index()
     {
-        $customer = Auth::user();
+        $customer = $this->resolveCustomer(request());
+        if (! $customer) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
+
         $orders = $customer->usbStickOrders()->with(['usbStick', 'items.itemable'])->get();
 
         return response()->json($orders);
@@ -22,7 +33,7 @@ class UsbStickOrderController extends Controller
     public function store(Request $request)
     {
         try {
-            $customer = Auth::user();
+            $customer = $this->resolveCustomer($request);
 
             if (!$customer) {
                 return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
@@ -85,7 +96,11 @@ class UsbStickOrderController extends Controller
 
     public function show(UsbStickOrder $usbStickOrder)
     {
-        $customer = Auth::user();
+        $customer = $this->resolveCustomer(request());
+
+        if (! $customer) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
 
         if ($usbStickOrder->customer_id !== $customer->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -98,7 +113,11 @@ class UsbStickOrderController extends Controller
 
     public function update(Request $request, UsbStickOrder $usbStickOrder)
     {
-        $customer = Auth::user();
+        $customer = $this->resolveCustomer($request);
+
+        if (! $customer) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
 
         if ($usbStickOrder->customer_id !== $customer->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -149,7 +168,11 @@ class UsbStickOrderController extends Controller
 
     public function destroy(UsbStickOrder $usbStickOrder)
     {
-        $customer = Auth::user();
+        $customer = $this->resolveCustomer(request());
+
+        if (! $customer) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
 
         if ($usbStickOrder->customer_id !== $customer->id) {
             return response()->json(['message' => 'Unauthorized'], 403);

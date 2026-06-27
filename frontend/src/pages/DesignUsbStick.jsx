@@ -375,7 +375,8 @@ function DesignUsbStick({
     setIsSubmitting(true)
 
     try {
-      if (!user || !user.token) {
+      const authToken = user?.token || localStorage.getItem('authToken')
+      if (!authToken) {
         throw new Error(locale === 'ar' ? 'يجب تسجيل الدخول أولاً.' : 'You must be logged in first.')
       }
 
@@ -397,7 +398,7 @@ function DesignUsbStick({
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${authToken}`
         },
         body: JSON.stringify(orderData)
       })

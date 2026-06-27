@@ -16,9 +16,7 @@ function PackageCard({ pkg, locale, t, onView, onAddToCart, isInCart }) {
   const description = locale === 'ar'
     ? pkg.description_ar || pkg.description_en || 'No description available.'
     : pkg.description_en || pkg.description_ar || 'No description available.'
-  const imageUrl = pkg.cover?.path
-    ? `https://via.placeholder.com/600x350?text=${encodeURIComponent(name || t.general)}`
-    : `https://via.placeholder.com/600x350?text=${encodeURIComponent(t.general)}`
+  const imageUrl = pkg.cover?.path || '/images/no-image.svg'
   const hasDiscount = pkg.discount > 0
   const discountPercent = Math.round(pkg.discount * 100)
 
@@ -46,7 +44,15 @@ function PackageCard({ pkg, locale, t, onView, onAddToCart, isInCart }) {
             <FontAwesomeIcon icon={faTag} className="me-1" />-{discountPercent}%
           </Badge>
         )}
-        <img src={imageUrl} className="card-img-top object-fit-cover" alt={name || t.general} />
+        <img
+          src={imageUrl}
+          className="card-img-top object-fit-cover"
+          alt={name || t.general}
+          onError={(e) => {
+            e.currentTarget.onerror = null
+            e.currentTarget.src = '/images/no-image.svg'
+          }}
+        />
       </div>
       <Card.Body className="d-flex flex-column">
         <div className="mb-2">

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGauge, faBox, faGamepad, faCode, faMicrochip, faTag, faLayerGroup, faList, faShoppingCart, faUsers, faUserGroup, faGear, faArrowRightFromBracket, faBars, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faGauge, faBox, faGamepad, faCode, faMicrochip, faTag, faLayerGroup, faList, faShoppingCart, faUsers, faUserGroup, faGear, faArrowRightFromBracket, faBars, faXmark, faBoxesStacked } from '@fortawesome/free-solid-svg-icons'
 import './AdminLayout.css'
 
 const sidebarLinks = [
@@ -14,6 +14,7 @@ const sidebarLinks = [
   { path: '/admin/content-categories', icon: faTag, label: 'Content Categories' },
   { path: '/admin/package-categories', icon: faLayerGroup, label: 'Package Categories' },
   { path: '/admin/orders', icon: faShoppingCart, label: 'Orders' },
+  { path: '/admin/sub-orders', icon: faBoxesStacked, label: 'Sub Orders' },
   { path: '/admin/users', icon: faUsers, label: 'Users' },
   { path: '/admin/customers', icon: faUserGroup, label: 'Customers' },
   { path: '/admin/settings', icon: faGear, label: 'Settings' },
