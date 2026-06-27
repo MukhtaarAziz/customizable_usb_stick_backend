@@ -21,22 +21,33 @@ class UsbStickOrderController extends Controller
 
     public function store(Request $request)
     {
-        $customer = Auth::user();
+        try {
+            $customer = Auth::user();
 
-        $data = $request->validate([
-            'usb_stick_id' => 'required|exists:usb_sticks,id',
-            'game_ids' => 'nullable|array',
-            'game_ids.*' => 'exists:games,id',
-            'program_ids' => 'nullable|array',
-            'program_ids.*' => 'exists:programs,id',
-            'notes' => 'nullable|string',
-            'custom_message' => 'nullable|string',
-            'delivery_address' => 'required|string',
-            'phone' => 'required|string',
-        ]);
+            if (!$customer) {
+                return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+            }
 
-        if (empty($data['game_ids'] ?? []) && empty($data['program_ids'] ?? [])) {
-            return response()->json(['message' => 'At least one game or program is required.'], 422);
+            $data = $request->validate([
+                'usb_stick_id' => 'required|exists:usb_sticks,id',
+                'game_ids' => 'nullable|array',
+                'game_ids.*' => 'exists:games,id',
+                'program_ids' => 'nullable|array',
+                'program_ids.*' => 'exists:programs,id',
+                'notes' => 'nullable|string',
+                'custom_message' => 'nullable|string',
+                'delivery_address' => 'required|string',
+                'phone' => 'required|string',
+            ]);
+
+            if (empty($data['game_ids'] ?? []) && empty($data['program_ids'] ?? [])) {
+                return response()->json(['message' => 'At least one game or program is required.'], 422);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'error' => $e->getMessage()
+            ], 422);
         }
 
         $usbStick = UsbStick::findOrFail($data['usb_stick_id']);

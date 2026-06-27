@@ -109,3 +109,31 @@ body.theme-dark .receipt-price {
 .receipt-games-list::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+.receipt-programs-list {
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+[dir="rtl"] .receipt-programs-list {
+  padding-right: 0;
+  padding-left: 0.5rem;
+}
+
+.receipt-programs-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.receipt-programs-list::-webkit-scrollbar-track {
+  background: var(--surface-page);
+  border-radius: var(--radius-sm);
+}
+
+.receipt-programs-list::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: var(--radius-sm);
+}
+
+.receipt-programs-list::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

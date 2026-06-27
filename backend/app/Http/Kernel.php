@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'ensure.admin' => \App\Http\Middleware\EnsureAdmin::class,
         'ensure.auth' => \App\Http\Middleware\EnsureAuthenticated::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,

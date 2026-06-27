@@ -1,80 +1,80 @@
-name: 'Game Images'
+name: Packages
 description: |-
 
-  Upload, serve, and delete game images.
+  Manage packages that bundle games and programs.
 endpoints:
   -
     custom: []
     httpMethods:
       - GET
-    uri: 'api/games/{game_id}/images/{image_id}'
+    uri: api/packages
     metadata:
       custom: []
-      groupName: 'Game Images'
+      groupName: Packages
       groupDescription: |-
 
-        Upload, serve, and delete game images.
-      subgroup: Viewing
+        Manage packages that bundle games and programs.
+      subgroup: Public
       subgroupDescription: ''
-      title: 'Get an image'
-      description: 'Serve the full-size image file directly.'
+      title: 'List packages'
+      description: 'Get a paginated list of packages, filterable by search, platform, and category type.'
       authenticated: false
       deprecated: false
     headers:
       Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      game_id:
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      per_page:
         custom: []
-        name: game_id
-        description: 'The ID of the game.'
-        required: true
-        example: 1
+        name: per_page
+        description: 'Results per page (1-100). Defaults to 15.'
+        required: false
+        example: 15
         type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
-      image_id:
+      search:
         custom: []
-        name: image_id
-        description: 'The ID of the image.'
-        required: true
-        example: 16
-        type: integer
+        name: search
+        description: 'Search by English or Arabic name.'
+        required: false
+        example: gaming
+        type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
-      game:
+      platform_id:
         custom: []
-        name: game
-        description: 'The game ID.'
-        required: true
+        name: platform_id
+        description: 'Filter by platform ID.'
+        required: false
         example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
-      image:
+      package_category_type_id:
         custom: []
-        name: image
-        description: 'The image ID.'
-        required: true
+        name: package_category_type_id
+        description: 'Filter by package category type ID.'
+        required: false
         example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         deprecated: false
-    cleanUrlParameters:
-      game_id: 1
-      image_id: 16
-      game: 1
-      image: 1
-    queryParameters: []
-    cleanQueryParameters: []
+    cleanQueryParameters:
+      per_page: 15
+      search: gaming
+      platform_id: 1
+      package_category_type_id: 1
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -82,16 +82,68 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '(image/png binary content)'
-        headers: []
-        description: ''
-      -
+        content: '{"current_page":1,"data":[],"first_page_url":"http:\/\/localhost\/api\/packages?per_page=15&search=gaming&platform_id=1&package_category_type_id=1&page=1","from":null,"last_page":1,"last_page_url":"http:\/\/localhost\/api\/packages?per_page=15&search=gaming&platform_id=1&package_category_type_id=1&page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/packages?per_page=15&search=gaming&platform_id=1&package_category_type_id=1&page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost\/api\/packages","per_page":15,"prev_page_url":null,"to":null,"total":0}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields:
+      'data[].id':
         custom: []
-        status: 404
-        content: ''
-        headers: []
-        description: ''
-    responseFields: []
+        name: 'data[].id'
+        description: 'Package ID.'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].name_en':
+        custom: []
+        name: 'data[].name_en'
+        description: 'English name.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].name_ar':
+        custom: []
+        name: 'data[].name_ar'
+        description: 'Arabic name.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].platform':
+        custom: []
+        name: 'data[].platform'
+        description: 'The platform.'
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].package_category_type':
+        custom: []
+        name: 'data[].package_category_type'
+        description: 'The category type.'
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
     auth: []
     controller: null
     method: null
@@ -100,60 +152,27 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: 'api/games/{game_id}/images/{image_id}/thumbnail'
+    uri: 'api/packages/{id}'
     metadata:
       custom: []
-      groupName: 'Game Images'
+      groupName: Packages
       groupDescription: |-
 
-        Upload, serve, and delete game images.
-      subgroup: Viewing
+        Manage packages that bundle games and programs.
+      subgroup: Public
       subgroupDescription: ''
-      title: 'Get a thumbnail'
-      description: 'Serve the 300x300 thumbnail of a game image.'
+      title: 'Show a package'
+      description: 'Get details of a single package by ID with its platform, category type, and items.'
       authenticated: false
       deprecated: false
     headers:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      game_id:
+      id:
         custom: []
-        name: game_id
-        description: 'The ID of the game.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      image_id:
-        custom: []
-        name: image_id
-        description: 'The ID of the image.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      game:
-        custom: []
-        name: game
-        description: 'The game ID.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      image:
-        custom: []
-        name: image
-        description: 'The image ID.'
+        name: id
+        description: 'The package ID.'
         required: true
         example: 1
         type: integer
@@ -162,10 +181,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      game_id: 1
-      image_id: 16
-      game: 1
-      image: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -175,13 +191,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '(image/png binary content)'
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 404
-        content: ''
+        content: '{"id": 1, "name_en": "Gaming Pack 1", "name_ar": "حزمة ألعاب ١", "platform": {...}, "package_category_type": {...}, "items": [...]}'
         headers: []
         description: ''
     responseFields: []
@@ -193,39 +203,144 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: 'api/games/{game_id}/images'
+    uri: api/packages
     metadata:
       custom: []
-      groupName: 'Game Images'
+      groupName: Packages
       groupDescription: |-
 
-        Upload, serve, and delete game images.
-      subgroup: Management
+        Manage packages that bundle games and programs.
+      subgroup: Admin
       subgroupDescription: ''
-      title: 'Upload an image'
-      description: 'Upload a new image for a game. Creates both a full-size and a 300x300 thumbnail. Admin only.'
+      title: 'Create a package'
+      description: 'Add a new package. Admin only.'
       authenticated: true
       deprecated: false
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: multipart/form-data
+      Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      game_id:
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
         custom: []
-        name: game_id
-        description: 'The ID of the game.'
+        name: name_en
+        description: 'English name.'
+        required: true
+        example: 'Gaming Pack 1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Arabic name.'
+        required: true
+        example: 'حزمة ألعاب ١'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: 'English description.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: 'Arabic description.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      platform_id:
+        custom: []
+        name: platform_id
+        description: 'Platform ID.'
         required: true
         example: 1
         type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
-      game:
+      package_category_type_id:
         custom: []
-        name: game
-        description: 'The game ID.'
+        name: package_category_type_id
+        description: 'Package category type ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name_en: 'Gaming Pack 1'
+      name_ar: 'حزمة ألعاب ١'
+      description_en: architecto
+      description_ar: architecto
+      platform_id: 1
+      package_category_type_id: 1
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: '{"id": 1, "name_en": "Gaming Pack 1", "name_ar": "حزمة ألعاب ١", ...}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/packages/{id}'
+    metadata:
+      custom: []
+      groupName: Packages
+      groupDescription: |-
+
+        Manage packages that bundle games and programs.
+      subgroup: Admin
+      subgroupDescription: ''
+      title: 'Update a package'
+      description: 'Update an existing package. Admin only.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The package ID.'
         required: true
         example: 1
         type: integer
@@ -234,71 +349,89 @@ endpoints:
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      game_id: 1
-      game: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      image:
+      name_en:
         custom: []
-        name: image
-        description: 'The image file (jpg, jpeg, png, gif, webp, max 10MB).'
-        required: true
-        example: null
-        type: file
+        name: name_en
+        description: 'English name.'
+        required: false
+        example: architecto
+        type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      type:
+      name_ar:
         custom: []
-        name: type
-        description: 'Image type label (e.g. "screenshot", "cover").'
+        name: name_ar
+        description: 'Arabic name.'
         required: false
-        example: screenshot
+        example: architecto
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: 'English description.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
         nullable: true
         deprecated: false
-      alt:
+      description_ar:
         custom: []
-        name: alt
-        description: 'Alt text for accessibility.'
+        name: description_ar
+        description: 'Arabic description.'
         required: false
-        example: 'Gameplay screenshot'
+        example: architecto
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: true
+        deprecated: false
+      platform_id:
+        custom: []
+        name: platform_id
+        description: 'Platform ID.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      package_category_type_id:
+        custom: []
+        name: package_category_type_id
+        description: 'Package category type ID.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
         deprecated: false
     cleanBodyParameters:
-      type: screenshot
-      alt: 'Gameplay screenshot'
-    fileParameters:
-      image: null
+      name_en: architecto
+      name_ar: architecto
+      description_en: architecto
+      description_ar: architecto
+      platform_id: 16
+      package_category_type_id: 16
+    fileParameters: []
     responses:
       -
         custom: []
-        status: 201
-        content: |-
-          {
-            "id": 1,
-            "game_id": 1,
-            "path": "games/1/1234567890_abc123.jpg",
-            "thumb_path": "games/1/thumbnails/thumb_1234567890_abc123.jpg",
-            "type": "screenshot",
-            "alt": null,
-            "mime": "image/jpeg",
-            "size": 2048576,
-            "disk": "local"
-          }
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 422
-        content: '{"message": "Uploaded file is not a valid image."}'
+        status: 200
+        content: '{"id": 1, "name_en": "Gaming Pack 1", "name_ar": "حزمة ألعاب ١", ...}'
         headers: []
         description: ''
     responseFields: []
@@ -313,17 +446,17 @@ endpoints:
     custom: []
     httpMethods:
       - DELETE
-    uri: 'api/games/{game_id}/images/{image_id}'
+    uri: 'api/packages/{id}'
     metadata:
       custom: []
-      groupName: 'Game Images'
+      groupName: Packages
       groupDescription: |-
 
-        Upload, serve, and delete game images.
-      subgroup: Management
+        Manage packages that bundle games and programs.
+      subgroup: Admin
       subgroupDescription: ''
-      title: 'Delete an image'
-      description: 'Delete a game image and its associated thumbnail. Admin only.'
+      title: 'Delete a package'
+      description: 'Remove a package. Admin only.'
       authenticated: true
       deprecated: false
     headers:
@@ -331,43 +464,10 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      game_id:
+      id:
         custom: []
-        name: game_id
-        description: 'The ID of the game.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      image_id:
-        custom: []
-        name: image_id
-        description: 'The ID of the image.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      game:
-        custom: []
-        name: game
-        description: 'The game ID.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      image:
-        custom: []
-        name: image
-        description: 'The image ID.'
+        name: id
+        description: 'The package ID.'
         required: true
         example: 1
         type: integer
@@ -376,10 +476,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      game_id: 1
-      image_id: 16
-      game: 1
-      image: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -389,12 +486,6 @@ endpoints:
       -
         custom: []
         status: 204
-        content: ''
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 404
         content: ''
         headers: []
         description: ''

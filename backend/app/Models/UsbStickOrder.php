@@ -7,6 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * App\Models\UsbStickOrder
+ *
+ * @property int $id
+ * @property int $customer_id
+ * @property int $usb_stick_id
+ * @property string $total_price
+ * @property string $status
+ * @property string|null $notes
+ * @property string|null $custom_message
+ * @property string|null $delivery_address
+ * @property string|null $phone
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class UsbStickOrder extends Model
 {
     use HasFactory;

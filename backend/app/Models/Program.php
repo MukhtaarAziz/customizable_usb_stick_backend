@@ -7,6 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * App\Models\Program
+ *
+ * @property int $id
+ * @property string $name_en
+ * @property string|null $description_en
+ * @property string $name_ar
+ * @property string|null $description_ar
+ * @property int $category_id
+ * @property int $platform_id
+ * @property array|null $tags
+ * @property float $size_gb
+ * @property int $downloads
+ * @property \Illuminate\Support\Carbon|null $date_release
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class Program extends Model
 {
     use HasFactory;
@@ -17,7 +34,7 @@ class Program extends Model
         'name_ar',
         'description_ar',
         'category_id',
-        'program_platform_id',
+        'platform_id',
         'tags',
         'size_gb',
         'downloads',
@@ -37,7 +54,7 @@ class Program extends Model
 
     public function platform(): BelongsTo
     {
-        return $this->belongsTo(ProgramPlatform::class, 'program_platform_id');
+        return $this->belongsTo(Platform::class, 'platform_id');
     }
 
     public function images(): HasMany

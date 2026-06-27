@@ -1,37 +1,91 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { Container, Row, Col, Form, InputGroup, Button, Spinner, Alert, Pagination } from 'react-bootstrap'
-import PackageList from '../components/PackageList/PackageList.jsx'
+import { useNavigate } from 'react-router-dom'
+import { Container, Row, Col, Card, Button, Spinner, Alert, Form, InputGroup, Modal } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch, faArrowRight, faArrowLeft, faShoppingCart, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import PackageCard from '../components/PackageCard/PackageCard.jsx'
 import PackageDetailsModal from '../components/PackageDetailsModal/PackageDetailsModal.jsx'
+import Cart from '../components/Cart/Cart.jsx'
+import './PackagesPage.css'
 
-function PackagesPage({ locale, t }) {
+function PackagesPage({ locale, t, user, onShowAuth }) {
+  const navigate = useNavigate()
   const [packages, setPackages] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [platforms, setPlatforms] = useState([])
-  const [meta, setMeta] = useState({})
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [packageTypes, setPackageTypes] = useState([])
+  const [meta, setMeta] = useState({ current_page: 1, last_page: 1 })
+  const [searchInput, setSearchInput] = useState('')
+  const [search, setSearch] = useState('')
+  const [platformId, setPlatformId] = useState('')
+  const [packageTypeId, setPackageTypeId] = useState('')
+  const [page, setPage] = useState(1)
+  const [perPage, setPerPage] = useState(12)
   const [selectedPackage, setSelectedPackage] = useState(null)
   const [showDetailsModal, setShowDetailsModal] = useState(false)
-
-  const search = searchParams.get('search') || ''
-  const platformId = searchParams.get('platform_id') || ''
-  const page = parseInt(searchParams.get('page') || '1', 10)
-  const perPage = 2
+  const [showCartModal, setShowCartModal] = useState(false)
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem('package_cart')
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
+  })
 
   useEffect(() => {
-    async function loadPlatforms() {
+    localStorage.setItem('package_cart', JSON.stringify(cart))
+  }, [cart])
+
+  useEffect(() => {
+    const handleCartUpdate = () => {
       try {
-        const response = await fetch('/api/game-platforms')
-        if (!response.ok) throw new Error('Failed to load platforms.')
-        const data = await response.json()
-        setPlatforms(data.data ?? data)
+        const saved = localStorage.getItem('package_cart')
+        setCart(saved ? JSON.parse(saved) : [])
+      } catch {
+        setCart([])
+      }
+    }
+    window.addEventListener('cart-updated', handleCartUpdate)
+    return () => window.removeEventListener('cart-updated', handleCartUpdate)
+  }, [])
+
+  useEffect(() => {
+    async function loadFilters() {
+      try {
+        const [platRes, typeRes] = await Promise.all([
+          fetch('/api/platforms'),
+          fetch('/api/package-category-types'),
+        ])
+
+        if (platRes.ok) {
+          const data = await platRes.json()
+          setPlatforms(data.data ?? data)
+        }
+
+        if (typeRes.ok) {
+          const data = await typeRes.json()
+          setPackageTypes(data.data ?? data)
+        }
       } catch (err) {
-        console.warn(err)
+        console.error('Error loading filters:', err)
       }
     }
 
-    loadPlatforms()
+    loadFilters()
+  }, [])
+
+  useEffect(() => {
+    async function loadGovernorates() {
+      try {
+        const res = await fetch('/api/governorates')
+        if (res.ok) setGovernorates(await res.json())
+      } catch (err) {
+        console.error('Error loading governorates:', err)
+      }
+    }
+    loadGovernorates()
   }, [])
 
   useEffect(() => {
@@ -45,8 +99,9 @@ function PackagesPage({ locale, t }) {
         query.set('page', page)
         if (search) query.set('search', search)
         if (platformId) query.set('platform_id', platformId)
+        if (packageTypeId) query.set('package_category_type_id', packageTypeId)
 
-        const response = await fetch(`/api/game-packages?${query.toString()}`)
+        const response = await fetch(`/api/packages?${query.toString()}`)
         if (!response.ok) {
           throw new Error(locale === 'ar' ? 'تعذر تحميل الحزم.' : 'Unable to load packages.')
         }
@@ -67,36 +122,39 @@ function PackagesPage({ locale, t }) {
     }
 
     loadPackages()
-  }, [locale, search, platformId, page])
+  }, [locale, search, platformId, packageTypeId, page, perPage])
 
   const handleSearchChange = (event) => {
-    const newSearch = event.target.value
-    const params = Object.fromEntries(searchParams.entries())
-    if (newSearch) {
-      params.search = newSearch
-    } else {
-      delete params.search
-    }
-    params.page = '1'
-    setSearchParams(params)
+    setSearchInput(event.target.value)
+  }
+
+  const handleSearchSubmit = () => {
+    setSearch(searchInput)
+    setPage(1)
+  }
+
+  const handleSearchClear = () => {
+    setSearchInput('')
+    setSearch('')
+    setPage(1)
+  }
+
+  const handleClearAll = () => {
+    setSearchInput('')
+    setSearch('')
+    setPlatformId('')
+    setPackageTypeId('')
+    setPage(1)
   }
 
   const handlePlatformChange = (event) => {
-    const newPlatformId = event.target.value
-    const params = Object.fromEntries(searchParams.entries())
-    if (newPlatformId) {
-      params.platform_id = newPlatformId
-    } else {
-      delete params.platform_id
-    }
-    params.page = '1'
-    setSearchParams(params)
+    setPlatformId(event.target.value)
+    setPage(1)
   }
 
-  const handlePageChange = (newPage) => {
-    const params = Object.fromEntries(searchParams.entries())
-    params.page = newPage.toString()
-    setSearchParams(params)
+  const handlePackageTypeChange = (event) => {
+    setPackageTypeId(event.target.value)
+    setPage(1)
   }
 
   const handleViewPackage = (pkg) => {
@@ -109,192 +167,233 @@ function PackagesPage({ locale, t }) {
     setSelectedPackage(null)
   }
 
-  const handleOrderPackage = (pkg) => {
-    console.log('Order package', pkg)
-    setShowDetailsModal(false)
-    setSelectedPackage(null)
+  const handleAddToCart = (pkg) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.id === pkg.id)
+      let next
+      if (existing) {
+        next = prev.map(item =>
+          item.id === pkg.id
+            ? { ...item, quantity: Math.min((item.quantity || 1) + 1, 10) }
+            : item
+        )
+      } else {
+        next = [...prev, { ...pkg, quantity: 1 }]
+      }
+      localStorage.setItem('package_cart', JSON.stringify(next))
+      window.dispatchEvent(new CustomEvent('cart-updated'))
+      return next
+    })
   }
 
-  const renderPagination = () => {
-    if (!meta.last_page || meta.last_page <= 1) return null
-
-    const items = []
-    const maxVisiblePages = 5
-    const lastPage = meta.last_page
-
-    // أول صفحة
-    items.push(
-      <Pagination.First
-        key="first"
-        disabled={page === 1}
-        onClick={() => handlePageChange(1)}
-        title={locale === 'ar' ? 'أول صفحة' : 'First page'}
-      />,
-    )
-
-    // الصفحة السابقة
-    items.push(
-      <Pagination.Prev
-        key="prev"
-        disabled={page === 1}
-        onClick={() => handlePageChange(Math.max(1, page - 1))}
-        title={locale === 'ar' ? 'السابقة' : 'Previous'}
-      />,
-    )
-
-    // حساب نطاق الصفحات
-    let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2))
-    let endPage = Math.min(lastPage, startPage + maxVisiblePages - 1)
-
-    if (endPage - startPage < maxVisiblePages - 1) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1)
-    }
-
-    // إضافة صفحات قبل النطاق بـ ...
-    if (startPage > 1) {
-      items.push(
-        <Pagination.Item
-          key={1}
-          onClick={() => handlePageChange(1)}
-          active={page === 1}
-        >
-          1
-        </Pagination.Item>,
-      )
-
-      if (startPage > 2) {
-        items.push(
-          <Pagination.Ellipsis key="ellipsis-start" disabled />,
-        )
-      }
-    }
-
-    // إضافة الصفحات في النطاق
-    for (let pageIndex = startPage; pageIndex <= endPage; pageIndex += 1) {
-      items.push(
-        <Pagination.Item
-          key={pageIndex}
-          active={pageIndex === page}
-          onClick={() => handlePageChange(pageIndex)}
-        >
-          {pageIndex}
-        </Pagination.Item>,
-      )
-    }
-
-    // إضافة صفحات بعد النطاق بـ ...
-    if (endPage < lastPage) {
-      if (endPage < lastPage - 1) {
-        items.push(
-          <Pagination.Ellipsis key="ellipsis-end" disabled />,
-        )
-      }
-
-      items.push(
-        <Pagination.Item
-          key={lastPage}
-          onClick={() => handlePageChange(lastPage)}
-          active={page === lastPage}
-        >
-          {lastPage}
-        </Pagination.Item>,
-      )
-    }
-
-    // الصفحة التالية
-    items.push(
-      <Pagination.Next
-        key="next"
-        disabled={page === lastPage}
-        onClick={() => handlePageChange(Math.min(lastPage, page + 1))}
-        title={locale === 'ar' ? 'التالية' : 'Next'}
-      />,
-    )
-
-    // آخر صفحة
-    items.push(
-      <Pagination.Last
-        key="last"
-        disabled={page === lastPage}
-        onClick={() => handlePageChange(lastPage)}
-        title={locale === 'ar' ? 'آخر صفحة' : 'Last page'}
-      />,
-    )
-
-    return <Pagination>{items}</Pagination>
+  const handleRemoveFromCart = (pkgId) => {
+    setCart(prev => {
+      const next = prev.filter(item => item.id !== pkgId)
+      localStorage.setItem('package_cart', JSON.stringify(next))
+      window.dispatchEvent(new CustomEvent('cart-updated'))
+      return next
+    })
   }
 
+  const handleUpdateQuantity = (pkgId, delta) => {
+    setCart(prev => {
+      const next = prev.map(item =>
+        item.id === pkgId
+          ? { ...item, quantity: Math.max(1, Math.min(10, (item.quantity || 1) + delta)) }
+          : item
+      )
+      localStorage.setItem('package_cart', JSON.stringify(next))
+      window.dispatchEvent(new CustomEvent('cart-updated'))
+      return next
+    })
+  }
+
+  const handleCheckout = () => {
+    if (!user) {
+      onShowAuth()
+      return
+    }
+    navigate('/packages/checkout')
+  }
 
   return (
-    <Container className="py-5">
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-        <div>
-          <h1>{locale === 'ar' ? 'الباقات' : 'Packages'}</h1>
-          <p className="text-muted mb-0">
-            {locale === 'ar'
-              ? 'ابحث عن الحزم، صنفها حسب المنصة، وانتقل بين الصفحات.'
-              : 'Search packages, filter by platform, and browse paginated results.'}
-          </p>
-        </div>
+    <Container className="packages-page py-5">
+      <div className="text-center mb-5">
+        <h1 className="fw-bold">
+          {locale === 'ar' ? 'اطلب الحزم الجاهزة' : 'Order Ready-Made Packages'}
+        </h1>
+        <p className="text-muted mx-auto" style={{ maxWidth: '600px' }}>
+          {locale === 'ar'
+            ? 'تصفح الحزم الجاهزة من الألعاب والبرامج واطلبها مباشرة.'
+            : 'Browse ready-made game and program packages and order them directly.'}
+        </p>
       </div>
 
-      <Row className="g-3 mb-4">
-        <Col md={6}>
-          <Form.Group controlId="package-search">
-            <Form.Label>{locale === 'ar' ? 'البحث' : 'Search'}</Form.Label>
-            <InputGroup>
-              <Form.Control
-                type="search"
-                placeholder={locale === 'ar' ? 'ابحث باسم الحزمة أو الوصف' : 'Search by package name or description'}
-                value={search}
-                onChange={handleSearchChange}
-              />
-              <Button variant="outline-secondary" onClick={() => handleSearchChange({ target: { value: '' } })}>
+      <Row className="g-4">
+        <Col xs={12} lg={8}>
+          <Card className="shadow-sm border-0 mb-4">
+            <Card.Header className="d-flex justify-content-between align-items-center bg-transparent border-bottom">
+              <span className="fw-semibold">{locale === 'ar' ? 'تصفية' : 'Filters'}</span>
+              <Button variant="outline-danger" size="sm" onClick={handleClearAll}>
+                <FontAwesomeIcon icon={faTrashCan} className="me-1" />
                 {locale === 'ar' ? 'مسح' : 'Clear'}
               </Button>
-            </InputGroup>
-          </Form.Group>
+            </Card.Header>
+            <Card.Body>
+              <Row className="g-3">
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>{locale === 'ar' ? 'البحث' : 'Search'}</Form.Label>
+                    <InputGroup>
+                      <Form.Control
+                        type="text"
+                        placeholder={locale === 'ar' ? 'ابحث باسم الحزمة...' : 'Search by package name...'}
+                        value={searchInput}
+                        onChange={handleSearchChange}
+                        onKeyPress={(e) => e.key === 'Enter' && handleSearchSubmit()}
+                      />
+                      <Button variant="outline-secondary" onClick={handleSearchSubmit}>
+                        <FontAwesomeIcon icon={faSearch} />
+                      </Button>
+                      {search && (
+                        <Button variant="outline-danger" onClick={handleSearchClear}>
+                          {locale === 'ar' ? 'مسح' : 'Clear'}
+                        </Button>
+                      )}
+                    </InputGroup>
+                  </Form.Group>
+                </Col>
+
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>{locale === 'ar' ? 'نوع الحزمة' : 'Package Type'}</Form.Label>
+                    <Form.Select value={packageTypeId} onChange={handlePackageTypeChange}>
+                      <option value="">{locale === 'ar' ? 'الكل' : 'All'}</option>
+                      {packageTypes.map((type) => (
+                        <option key={type.id} value={type.id}>
+                          {locale === 'ar' ? type.name_ar || type.name_en : type.name_en || type.name_ar}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>{locale === 'ar' ? 'المنصة' : 'Platform'}</Form.Label>
+                    <Form.Select value={platformId} onChange={handlePlatformChange}>
+                      <option value="">{locale === 'ar' ? 'كل المنصات' : 'All platforms'}</option>
+                      {platforms.map((platform) => (
+                        <option key={platform.id} value={platform.id}>
+                          {locale === 'ar' ? platform.name_ar || platform.name_en : platform.name_en || platform.name_ar}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+
+          {loading && (
+            <div className="text-center py-5">
+              <Spinner animation="border" role="status" className="me-2" />
+              <span>{locale === 'ar' ? 'جارٍ تحميل الحزم...' : 'Loading packages...'}</span>
+            </div>
+          )}
+
+          {error && <Alert variant="danger">{error}</Alert>}
+
+          {!loading && !error && (
+            <>
+              {packages.length === 0 ? (
+                <Alert variant="info">
+                  {locale === 'ar' ? 'لا توجد حزم متاحة حالياً.' : 'No packages available at the moment.'}
+                </Alert>
+              ) : (
+                <Row xs={1} md={2} lg={2} xl={3} className="g-4">
+                  {packages.map((pkg) => (
+                    <Col key={pkg.id}>
+                      <PackageCard 
+                        pkg={pkg} 
+                        locale={locale} 
+                        t={t} 
+                        onView={handleViewPackage}
+                        onAddToCart={handleAddToCart}
+                        isInCart={cart.some(item => item.id === pkg.id)}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              )}
+
+              {meta.last_page > 1 && (
+                <div className="d-flex justify-content-center mt-4">
+                  <Button
+                    variant="outline-secondary"
+                    disabled={page === 1}
+                    onClick={() => setPage(page - 1)}
+                    className="me-2"
+                  >
+                    <FontAwesomeIcon icon={faArrowLeft} className="me-1" />
+                    {locale === 'ar' ? 'السابق' : 'Previous'}
+                  </Button>
+                  <span className="align-self-center mx-3">
+                    {locale === 'ar' ? 'صفحة' : 'Page'} {page} {locale === 'ar' ? 'من' : 'of'} {meta.last_page}
+                  </span>
+                  <Button
+                    variant="outline-secondary"
+                    disabled={page === meta.last_page}
+                    onClick={() => setPage(page + 1)}
+                  >
+                    {locale === 'ar' ? 'التالي' : 'Next'}
+                    <FontAwesomeIcon icon={faArrowRight} className="ms-1" />
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </Col>
 
-        <Col md={4}>
-          <Form.Group controlId="platform-filter">
-            <Form.Label>{locale === 'ar' ? 'المنصة' : 'Platform'}</Form.Label>
-            <Form.Select value={platformId} onChange={handlePlatformChange}>
-              <option value="">{locale === 'ar' ? 'كل المنصات' : 'All platforms'}</option>
-              {platforms.map((platform) => (
-                <option key={platform.id} value={platform.id}>
-                  {locale === 'ar' ? platform.name_ar || platform.name_en : platform.name_en || platform.name_ar}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
+        <Col xs={12} lg={4}>
+          <div className="position-sticky d-none d-lg-block" style={{ top: '1rem' }}>
+            <Cart
+              items={cart}
+              locale={locale}
+              onCheckout={handleCheckout}
+              onRemove={handleRemoveFromCart}
+              onUpdateQuantity={handleUpdateQuantity}
+            />
+          </div>
         </Col>
       </Row>
-
-      {loading && (
-        <div className="text-center py-5">
-          <Spinner animation="border" role="status" className="me-2" />
-          <span>{locale === 'ar' ? 'جارٍ تحميل الحزم...' : 'Loading packages...'}</span>
-        </div>
-      )}
-
-      {error && <Alert variant="danger">{error}</Alert>}
-
-      {!loading && !error && (
-        <>
-          <PackageList packages={packages} loading={loading} error={error} locale={locale} t={t} onViewPackage={handleViewPackage} />
-          <div className="d-flex justify-content-center mt-4">{renderPagination()}</div>
-        </>
-      )}
 
       <PackageDetailsModal
         pkg={selectedPackage}
         show={showDetailsModal}
         onClose={handleCloseModal}
-        onOrder={handleOrderPackage}
+        onOrder={handleAddToCart}
         locale={locale}
         t={t}
       />
+
+      <Modal show={showCartModal} onHide={() => setShowCartModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <FontAwesomeIcon icon={faShoppingCart} className="me-2" />
+            {locale === 'ar' ? 'السلة' : 'Cart'}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <Cart
+            items={cart}
+            locale={locale}
+            onCheckout={() => { setShowCartModal(false); handleCheckout() }}
+            onRemove={handleRemoveFromCart}
+            onUpdateQuantity={handleUpdateQuantity}
+          />
+        </Modal.Body>
+      </Modal>
     </Container>
   )
 }

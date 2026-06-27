@@ -7,6 +7,7 @@ import {
   faCheckCircle, 
   faExclamationTriangle,
   faGamepad,
+  faCode,
   faHdd,
   faMapMarkerAlt
 } from '@fortawesome/free-solid-svg-icons'
@@ -156,6 +157,23 @@ function OrderList({ orders, locale, loading, error }) {
                         </small>
                         <p className="fw-semibold mb-0">
                           {(order.games && Array.isArray(order.games)) ? order.games.length : 0} {locale === 'ar' ? 'لعبة' : 'games'}
+                        </p>
+                      </div>
+                    </div>
+                  </Col>
+
+                  {/* Programs Count */}
+                  <Col xs={12} md={6}>
+                    <div className="order-detail-item">
+                      <div className="order-detail-item__icon">
+                        <FontAwesomeIcon icon={faCode} />
+                      </div>
+                      <div className="order-detail-item__content">
+                        <small className="text-muted d-block">
+                          {locale === 'ar' ? 'عدد البرامج' : 'Programs Count'}
+                        </small>
+                        <p className="fw-semibold mb-0">
+                          {(order.programs && Array.isArray(order.programs)) ? order.programs.length : 0} {locale === 'ar' ? 'برنامج' : 'programs'}
                         </p>
                       </div>
                     </div>

@@ -1,0 +1,281 @@
+.packages-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.packages-page .card {
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.packages-page .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.packages-page .form-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #475569;
+  margin-bottom: 0.5rem;
+}
+
+.packages-page .btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.packages-page .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.packages-page .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.packages-page .input-group {
+  border-radius: 8px;
+}
+
+.packages-page .form-control,
+.packages-page .form-select {
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.packages-page .form-control:focus,
+.packages-page .form-select:focus {
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.packages-page .badge {
+  font-weight: 600;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+}
+
+.packages-page .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.packages-page .alert {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Cart Summary Card */
+.packages-page .bg-light {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border-radius: 12px;
+}
+
+/* Checkout Card */
+.packages-page .shadow-sm {
+  border-radius: 12px;
+}
+
+/* Package Card Overrides */
+.packages-page .package-card {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.packages-page .package-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12) !important;
+  border-color: #ff6b35;
+}
+
+.packages-page .package-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.packages-page .package-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.packages-page .package-card .card-body {
+  padding: 1.25rem;
+}
+
+.packages-page .package-card .card-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+}
+
+.packages-page .package-card .card-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* Add to Cart Button */
+.packages-page .btn-add-cart {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.packages-page .btn-add-cart:hover {
+  background: linear-gradient(135deg, #e55a2b 0%, #ff6b35 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.packages-page .btn-add-cart:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.packages-page .btn-add-cart.in-cart {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.packages-page .btn-add-cart.in-cart:hover {
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+/* Pagination */
+.packages-page .pagination-container {
+  padding: 1.5rem 0;
+}
+
+.packages-page .pagination-container .btn {
+  min-width: 120px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .packages-page {
+    padding: 1rem;
+  }
+
+  .packages-page h1 {
+    font-size: 1.75rem;
+  }
+
+  .packages-page .card-img-top {
+    height: 180px;
+  }
+
+  .packages-page .package-card .card-title {
+    font-size: 1rem;
+  }
+
+  .packages-page .package-card .card-text {
+    font-size: 0.85rem;
+  }
+
+  .packages-page .btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .packages-page .pagination-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .packages-page .pagination-container .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .packages-page h1 {
+    font-size: 1.5rem;
+  }
+
+  .packages-page .card-img-top {
+    height: 160px;
+  }
+
+  .packages-page .package-card .card-body {
+    padding: 1rem;
+  }
+
+  .packages-page .form-label {
+    font-size: 0.85rem;
+  }
+}
+
+/* Dark Mode Support */
+body.theme-dark .packages-page .card {
+  background: linear-gradient(135deg, var(--surface-page) 0%, var(--surface-card) 100%);
+  border-color: var(--border-color);
+}
+
+body.theme-dark .packages-page .package-card {
+  background: var(--surface-card);
+  border-color: var(--border-color);
+}
+
+body.theme-dark .packages-page .package-card .card-title {
+  color: var(--text-primary);
+}
+
+body.theme-dark .packages-page .form-control,
+body.theme-dark .packages-page .form-select {
+  background: var(--surface-page);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.theme-dark .packages-page .form-label {
+  color: var(--text-secondary);
+}
+
+body.theme-dark .packages-page .bg-light {
+  background: linear-gradient(135deg, var(--surface-card) 0%, var(--surface-page) 100%) !important;
+}
+
+body.theme-dark .packages-page .text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.packages-page .package-card {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.packages-page .package-card:nth-child(1) { animation-delay: 0.05s; }
+.packages-page .package-card:nth-child(2) { animation-delay: 0.1s; }
+.packages-page .package-card:nth-child(3) { animation-delay: 0.15s; }
+.packages-page .package-card:nth-child(4) { animation-delay: 0.2s; }
+.packages-page .package-card:nth-child(5) { animation-delay: 0.25s; }
+.packages-page .package-card:nth-child(6) { animation-delay: 0.3s; }
+.packages-page .package-card:nth-child(7) { animation-delay: 0.35s; }
+.packages-page .package-card:nth-child(8) { animation-delay: 0.4s; }

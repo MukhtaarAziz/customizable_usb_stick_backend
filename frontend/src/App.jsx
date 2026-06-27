@@ -7,16 +7,26 @@ import HeroSection from './components/HeroSection/HeroSection.jsx'
 import PackageList from './components/PackageList/PackageList.jsx'
 import LatestPackagesCarousel from './components/LatestPackagesCarousel/LatestPackagesCarousel.jsx'
 import PackageDetailsModal from './components/PackageDetailsModal/PackageDetailsModal.jsx'
-import MobileBottomNav from './components/MobileBottomNav/MobileBottomNav.jsx'
-import DesignMobileNav from './components/DesignMobileNav/DesignMobileNav.jsx'
-import MobileTopBar from './components/MobileTopBar/MobileTopBar.jsx'
-import TopNavbar from './components/TopNavbar/TopNavbar.jsx'
-import PackageDetails from './pages/PackageDetails.jsx'
+import ClientLayout from './components/ClientLayout/ClientLayout.jsx'
 import PackagesPage from './pages/PackagesPage.jsx'
+import PackagesCheckout from './pages/PackagesCheckout/PackagesCheckout.jsx'
 import DesignUsbStick from './pages/DesignUsbStick.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
 import SupportPage from './pages/SupportPage.jsx'
-import AuthModal from './components/AuthModals/AuthModal.jsx'
+import NotFoundPage from './pages/NotFoundPage.jsx'
+import AdminLayout from './components/admins/AdminLayout/AdminLayout.jsx'
+import AdminDashboard from './pages/admins/Dashboard.jsx'
+import AdminPackages from './pages/admins/Packages.jsx'
+import AdminGames from './pages/admins/Games.jsx'
+import AdminPrograms from './pages/admins/Programs.jsx'
+import AdminPlatforms from './pages/admins/Platforms.jsx'
+import AdminCategories from './pages/admins/Categories.jsx'
+import AdminContentCategories from './pages/admins/ContentCategories.jsx'
+import AdminCategoryTypes from './pages/admins/CategoryTypes.jsx'
+import AdminOrders from './pages/admins/Orders.jsx'
+import AdminUsers from './pages/admins/Users.jsx'
+import AdminCustomers from './pages/admins/Customers.jsx'
+import AdminSettings from './pages/admins/Settings.jsx'
 
 const translations = {
   en: {
@@ -177,6 +187,10 @@ function App() {
   const navigate = useNavigate()
   const location = useLocation()
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
+
   const confirmLeaveDesign = (path) => {
     if (path === '/design') {
       navigate(path)
@@ -298,14 +312,17 @@ function App() {
     }
 
     setShowAuth(false)
+
+    if (u.user?.role === 'admin') {
+      navigate('/admin')
+    }
   }
 
   const handleLogout = () => {
     setUser(null)
     localStorage.removeItem('authToken')
     localStorage.removeItem('user')
-    // keep site settings or remove depending on desired behavior
-    // localStorage.removeItem('siteSettings')
+    localStorage.removeItem('package_cart')
   }
 
   const handleProfileClick = () => {
@@ -317,31 +334,35 @@ function App() {
     }
   }
 
+  const handleCloseAuth = () => setShowAuth(false)
+
   return (
-    <>
-      <TopNavbar
-        t={t}
-        theme={theme}
-        locale={locale}
-        user={user}
-        onToggleTheme={toggleTheme}
-        onToggleLocale={toggleLocale}
-        onShowAuth={() => setShowAuth(true)}
-        onLogout={handleLogout}
-        onNavigate={confirmLeaveDesign}
-      />
-
-      <MobileTopBar
-        theme={theme}
-        locale={locale}
-        onToggleTheme={toggleTheme}
-        onToggleLocale={toggleLocale}
-      />
-
-      <Routes>
+    <Routes>
+      <Route
+        element={
+          <ClientLayout
+            t={t}
+            theme={theme}
+            locale={locale}
+            user={user}
+            onToggleTheme={toggleTheme}
+            onToggleLocale={toggleLocale}
+            onLogout={handleLogout}
+            onNavigate={confirmLeaveDesign}
+            showAuth={showAuth}
+            onShowAuth={() => setShowAuth(true)}
+            onCloseAuth={handleCloseAuth}
+            onAuth={handleAuth}
+            activeStep={activeStep}
+            selectedUsbId={selectedUsbId}
+            setShowUsbModal={setShowUsbModal}
+            handleProfileClick={handleProfileClick}
+          />
+        }
+      >
         <Route path="/" element={<HomePage />} />
-        <Route path="/packages" element={<PackagesPage locale={locale} t={t} />} />
-        <Route path="/packages/:id" element={<PackageDetails locale={locale} t={t} />} />
+        <Route path="/packages" element={<PackagesPage locale={locale} t={t} user={user} onShowAuth={() => setShowAuth(true)} />} />
+        <Route path="/packages/checkout" element={<PackagesCheckout locale={locale} user={user} onShowAuth={() => setShowAuth(true)} />} />
         <Route
           path="/design"
           element={
@@ -363,25 +384,23 @@ function App() {
         />
         <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} locale={locale} t={t} />} key={user?.token || 'no-token'} />
         <Route path="/support" element={<SupportPage locale={locale} t={t} />} />
-      </Routes>
-
-      {/* On /design route: show DesignMobileNav; otherwise show regular MobileBottomNav */}
-      {location.pathname === '/design' && !showAuth ? (
-        <DesignMobileNav
-          locale={locale}
-          activeStep={activeStep}
-          selectedUsb={selectedUsbId ? { id: selectedUsbId } : null}
-          onShowUsbModal={() => setShowUsbModal(true)}
-          onExit={() => confirmLeaveDesign('/')}
-        />
-      ) : !showAuth ? (
-        <MobileBottomNav
-          locale={locale}
-          onProfileClick={handleProfileClick}
-        />
-      ) : null}
-      <AuthModal show={showAuth} onClose={() => setShowAuth(false)} onAuth={handleAuth} locale={locale} />
-    </>
+        <Route path="*" element={<NotFoundPage locale={locale} t={t} onNavigate={confirmLeaveDesign} />} />
+      </Route>
+      <Route path="/admin" element={<AdminLayout onLogout={handleLogout} />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="packages" element={<AdminPackages />} />
+        <Route path="games" element={<AdminGames />} />
+        <Route path="programs" element={<AdminPrograms />} />
+        <Route path="platforms" element={<AdminPlatforms />} />
+        <Route path="category-types" element={<AdminCategoryTypes />} />
+        <Route path="content-categories" element={<AdminContentCategories />} />
+        <Route path="package-categories" element={<AdminCategories />} />
+        <Route path="orders" element={<AdminOrders />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="customers" element={<AdminCustomers />} />
+        <Route path="settings" element={<AdminSettings />} />
+      </Route>
+    </Routes>
   )
 }
 

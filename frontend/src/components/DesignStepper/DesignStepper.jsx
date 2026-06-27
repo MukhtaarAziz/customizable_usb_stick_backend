@@ -8,9 +8,24 @@ function DesignStepper({ activeStep, locale, langText }) {
   const [prevStep, setPrevStep] = useState(activeStep)
 
   const steps = [
-    { num: 1, label: langText?.step1 || (locale === 'ar' ? 'اختيار USB' : 'Choose USB') },
-    { num: 2, label: langText?.step2 || (locale === 'ar' ? 'اختيار الألعاب' : 'Choose Games') },
-    { num: 3, label: langText?.step3 || (locale === 'ar' ? 'المراجعة والدفع' : 'Review & Pay') },
+    { 
+      num: 1, 
+      label: langText?.step1 || (locale === 'ar' ? 'اختيار USB' : 'Choose USB'),
+      title: langText?.selectUsbTitle || (locale === 'ar' ? 'اختر فلاش ميموري USB' : 'Choose your USB Flash Drive'),
+      description: langText?.selectUsbDesc || (locale === 'ar' ? 'حدد سعة التخزين ونوع المنفذ' : 'Select storage size and interface type')
+    },
+    { 
+      num: 2, 
+      label: langText?.step2 || (locale === 'ar' ? 'اختيار الألعاب' : 'Choose Games'),
+      title: langText?.chooseGamesTitle || (locale === 'ar' ? 'اختر العناصر واملأ الفلاش' : 'Choose Items & Fill USB'),
+      description: langText?.chooseGamesDesc || (locale === 'ar' ? 'تصفح وأضف ألعاباً وبرامج' : 'Browse and add games and programs')
+    },
+    { 
+      num: 3, 
+      label: langText?.step3 || (locale === 'ar' ? 'المراجعة والدفع' : 'Review & Pay'),
+      title: langText?.checkoutTitle || (locale === 'ar' ? 'استكمال معلومات التوصيل' : 'Complete your Order Info'),
+      description: langText?.checkoutDesc || (locale === 'ar' ? 'أدخل تفاصيل العنوان والدفع' : 'Provide shipping and payment details')
+    },
   ]
 
   // Detect step changes for animation
@@ -37,11 +52,33 @@ function DesignStepper({ activeStep, locale, langText }) {
 
   const getStatusText = () => {
     if (activeStep === 4) return locale === 'ar' ? 'تم إكمال الطلب بنجاح' : 'Order completed successfully'
-    return steps.find(s => s.num === activeStep)?.label || ''
+    const currentStep = steps.find(s => s.num === activeStep)
+    return currentStep ? currentStep.title : ''
+  }
+
+  const getActiveStepData = () => {
+    return steps.find(s => s.num === activeStep) || steps[0]
   }
 
   return (
     <div className="ds-container">
+      {/* Active Step Info Card */}
+      {activeStep <= 3 && (
+        <div className="ds-step-info">
+          <div className="ds-step-info__content">
+            <h3 className="ds-step-info__title">
+              {getActiveStepData().title}
+            </h3>
+            <p className="ds-step-info__description">
+              {getActiveStepData().description}
+            </p>
+          </div>
+          <div className="ds-step-info__badge">
+            {locale === 'ar' ? `الخطوة ${activeStep}` : `Step ${activeStep}`}
+          </div>
+        </div>
+      )}
+
       <div className="ds-track">
         {/* Progress bar background */}
         <div className="ds-track__bg" />
@@ -104,10 +141,12 @@ function DesignStepper({ activeStep, locale, langText }) {
       </div>
 
       {/* Status indicator */}
-      <div className="ds-status">
-        <div className="ds-status__dot" />
-        <span className="ds-status__text" key={activeStep}>{getStatusText()}</span>
-      </div>
+      {activeStep === 4 && (
+        <div className="ds-status">
+          <div className="ds-status__dot" />
+          <span className="ds-status__text" key={activeStep}>{getStatusText()}</span>
+        </div>
+      )}
     </div>
   )
 }

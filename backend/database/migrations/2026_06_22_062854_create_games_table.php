@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name_ar');
             $table->text('description_ar')->nullable();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
-            $table->foreignId('game_platform_id')->constrained('game_platforms')->cascadeOnDelete();
+            $table->foreignId('platform_id')->constrained('platforms')->cascadeOnDelete();
             $table->json('tags')->nullable();
             $table->double('size_gb', 8, 2)->default(0.00);
             $table->unsignedBigInteger('downloads')->default(0);

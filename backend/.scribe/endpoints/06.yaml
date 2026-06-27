@@ -1,23 +1,222 @@
-name: Customers
+name: 'Storage Devices'
 description: |-
 
-  Manage customer accounts and governorates.
+  APIs for managing physical storage devices (USB sticks, HDDs, SSDs, etc.)
 endpoints:
   -
     custom: []
     httpMethods:
-      - POST
-    uri: api/customers
+      - GET
+    uri: api/storage-devices
     metadata:
       custom: []
-      groupName: Customers
+      groupName: 'Storage Devices'
       groupDescription: |-
 
-        Manage customer accounts and governorates.
-      subgroup: Public
+        APIs for managing physical storage devices (USB sticks, HDDs, SSDs, etc.)
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Register a customer'
-      description: 'Create a new customer account. Public endpoint.'
+      title: 'List all storage devices'
+      description: 'Retrieve a paginated list of all storage devices with their type information.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Number of items per page.'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      storage_type_id:
+        custom: []
+        name: storage_type_id
+        description: 'Filter by storage device type ID.'
+        required: false
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      search:
+        custom: []
+        name: search
+        description: 'Search by device name.'
+        required: false
+        example: SanDisk
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      per_page: 15
+      page: 1
+      storage_type_id: 3
+      search: SanDisk
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+              "data": [
+                  {
+                      "id": 1,
+                      "name_en": "SanDisk USB Stick 16GB",
+                      "name_ar": "سان ديسك فلاش ميموري 16GB",
+                      "description_en": "High-speed portable storage device",
+                      "description_ar": "جهاز تخزين محمول عالي السرعة",
+                      "storage_type_id": 3,
+                      "size_mb": 16384,
+                      "real_size_mb": 15234,
+                      "price_iqd": 25000.00,
+                      "marka": "SanDisk",
+                      "interface": "USB 3.0",
+                      "created_at": "2026-06-26T20:00:00.000000Z",
+                      "updated_at": "2026-06-26T20:00:00.000000Z",
+                      "storage_type": {
+                          "id": 3,
+                          "name_en": "USB Stick",
+                          "name_ar": "فلاش ميموري"
+                      }
+                  }
+              ],
+              "meta": {
+                  "current_page": 1,
+                  "last_page": 5,
+                  "per_page": 15,
+                  "total": 20
+              }
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/storage-devices/{id}'
+    metadata:
+      custom: []
+      groupName: 'Storage Devices'
+      groupDescription: |-
+
+        APIs for managing physical storage devices (USB sticks, HDDs, SSDs, etc.)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get a specific storage device'
+      description: 'Retrieve detailed information about a specific storage device by ID.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the storage device.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+              "data": {
+                  "id": 1,
+                  "name_en": "SanDisk USB Stick 16GB",
+                  "name_ar": "سان ديسك فلاش ميموري 16GB",
+                  "description_en": "High-speed portable storage device",
+                  "description_ar": "جهاز تخزين محمول عالي السرعة",
+                  "storage_type_id": 3,
+                  "size_mb": 16384,
+                  "real_size_mb": 15234,
+                  "price_iqd": 25000.00,
+                  "marka": "SanDisk",
+                  "interface": "USB 3.0",
+                  "created_at": "2026-06-26T20:00:00.000000Z",
+                  "updated_at": "2026-06-26T20:00:00.000000Z",
+                  "storage_type": {
+                      "id": 3,
+                      "name_en": "USB Stick",
+                      "name_ar": "فلاش ميموري"
+                  }
+              }
+          }
+        headers: []
+        description: Success
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\StorageDevice] 999"
+          }
+        headers: []
+        description: 'Not Found'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/storage-devices
+    metadata:
+      custom: []
+      groupName: 'Storage Devices'
+      groupDescription: |-
+
+        APIs for managing physical storage devices (USB sticks, HDDs, SSDs, etc.)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create a new storage device'
+      description: 'Create a new storage device with all required information.'
       authenticated: false
       deprecated: false
     headers:
@@ -28,341 +227,166 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      name:
-        custom: []
-        name: name
-        description: 'Full name.'
-        required: true
-        example: 'John Doe'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      phone:
-        custom: []
-        name: phone
-        description: 'Iraqi phone number (must be unique).'
-        required: true
-        example: '07701234567'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      email:
-        custom: []
-        name: email
-        description: 'Email address (must be unique).'
-        required: false
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        deprecated: false
-      password:
-        custom: []
-        name: password
-        description: 'Minimum 8 characters, no spaces.'
-        required: true
-        example: secret123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      governorate_id:
-        custom: []
-        name: governorate_id
-        description: 'Governorate ID.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      address:
-        custom: []
-        name: address
-        description: 'Address details.'
-        required: false
-        example: architecto
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      nearest_service_point:
-        custom: []
-        name: nearest_service_point
-        description: 'Nearest service point.'
-        required: false
-        example: architecto
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-    cleanBodyParameters:
-      name: 'John Doe'
-      phone: '07701234567'
-      email: john@example.com
-      password: secret123
-      governorate_id: 1
-      address: architecto
-      nearest_service_point: architecto
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 201
-        content: '{"id": 1, "name": "John Doe", "phone": "07701234567", "governorate": {...}}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: 'api/customers/{customer_id}'
-    metadata:
-      custom: []
-      groupName: Customers
-      groupDescription: |-
-
-        Manage customer accounts and governorates.
-      subgroup: Admin
-      subgroupDescription: ''
-      title: 'Show a customer'
-      description: 'Get details of a single customer. Admin only.'
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      customer_id:
-        custom: []
-        name: customer_id
-        description: 'The ID of the customer.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      customer:
-        custom: []
-        name: customer
-        description: 'The customer ID.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-    cleanUrlParameters:
-      customer_id: 1
-      customer: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"id": 1, "name": "John Doe", "phone": "07701234567", "email": "john@example.com", "governorate": {...}}'
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: api/governorates
-    metadata:
-      custom: []
-      groupName: Customers
-      groupDescription: |-
-
-        Manage customer accounts and governorates.
-      subgroup: Public
-      subgroupDescription: ''
-      title: 'List governorates'
-      description: 'Get a list of all Iraqi governorates for address selection.'
-      authenticated: false
-      deprecated: false
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '[{"id": 1, "name_en": "Baghdad", "name_ar": "بغداد"}, ...]'
-        headers: []
-        description: ''
-    responseFields:
-      id:
-        custom: []
-        name: id
-        description: 'Governorate ID.'
-        required: false
-        example: null
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
       name_en:
         custom: []
         name: name_en
-        description: 'English name.'
-        required: false
-        example: null
+        description: 'The English name.'
+        required: true
+        example: 'SanDisk USB Stick 16GB'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       name_ar:
         custom: []
         name: name_ar
-        description: 'Arabic name.'
-        required: false
-        example: null
+        description: 'The Arabic name.'
+        required: true
+        example: 'سان ديسك فلاش ميموري 16GB'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
-    auth: []
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: api/customers
-    metadata:
-      custom: []
-      groupName: Customers
-      groupDescription: |-
-
-        Manage customer accounts and governorates.
-      subgroup: Admin
-      subgroupDescription: ''
-      title: 'List customers'
-      description: 'Get all registered customers with their governorates. Admin only.'
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
+      description_en:
+        custom: []
+        name: description_en
+        description: 'nullable The English description.'
+        required: false
+        example: 'High-speed portable storage'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: 'nullable The Arabic description.'
+        required: false
+        example: 'جهاز تخزين محمول عالي السرعة'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      storage_type_id:
+        custom: []
+        name: storage_type_id
+        description: 'The storage device type ID.'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      size_mb:
+        custom: []
+        name: size_mb
+        description: 'The advertised size in MB.'
+        required: true
+        example: 16384
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      real_size_mb:
+        custom: []
+        name: real_size_mb
+        description: 'nullable The actual usable size in MB.'
+        required: false
+        example: 15234
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      price_iqd:
+        custom: []
+        name: price_iqd
+        description: 'The price in Iraqi Dinar.'
+        required: true
+        example: '25000.00'
+        type: numeric
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      marka:
+        custom: []
+        name: marka
+        description: 'The brand name.'
+        required: true
+        example: SanDisk
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      interface:
+        custom: []
+        name: interface
+        description: 'The interface type.'
+        required: true
+        example: 'USB 3.0'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name_en: 'SanDisk USB Stick 16GB'
+      name_ar: 'سان ديسك فلاش ميموري 16GB'
+      description_en: 'High-speed portable storage'
+      description_ar: 'جهاز تخزين محمول عالي السرعة'
+      storage_type_id: 3
+      size_mb: 16384
+      real_size_mb: 15234
+      price_iqd: '25000.00'
+      marka: SanDisk
+      interface: 'USB 3.0'
     fileParameters: []
     responses:
       -
         custom: []
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
-    responseFields:
-      id:
+        status: 201
+        content: |-
+          {
+              "data": {
+                  "id": 21,
+                  "name_en": "SanDisk USB Stick 16GB",
+                  "name_ar": "سان ديسك فلاش ميموري 16GB",
+                  "description_en": "High-speed portable storage",
+                  "description_ar": "جهاز تخزين محمول عالي السرعة",
+                  "storage_type_id": 3,
+                  "size_mb": 16384,
+                  "real_size_mb": 15234,
+                  "price_iqd": 25000.00,
+                  "marka": "SanDisk",
+                  "interface": "USB 3.0",
+                  "created_at": "2026-06-26T20:00:00.000000Z",
+                  "updated_at": "2026-06-26T20:00:00.000000Z"
+              }
+          }
+        headers: []
+        description: Success
+      -
         custom: []
-        name: id
-        description: 'Customer ID.'
-        required: false
-        example: null
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      name:
-        custom: []
-        name: name
-        description: 'Customer name.'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      phone:
-        custom: []
-        name: phone
-        description: 'Phone number.'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      email:
-        custom: []
-        name: email
-        description: 'Email address.'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      governorate:
-        custom: []
-        name: governorate
-        description: "The customer's governorate."
-        required: false
-        example: null
-        type: object
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+        status: 422
+        content: |-
+          {
+              "message": "The given data was invalid.",
+              "errors": {
+                  "name_en": ["The name en field is required."]
+              }
+          }
+        headers: []
+        description: 'Validation Error'
+    responseFields: []
+    auth: []
     controller: null
     method: null
     route: null
@@ -370,39 +394,28 @@ endpoints:
     custom: []
     httpMethods:
       - PUT
-    uri: 'api/customers/{customer_id}'
+      - PATCH
+    uri: 'api/storage-devices/{id}'
     metadata:
       custom: []
-      groupName: Customers
+      groupName: 'Storage Devices'
       groupDescription: |-
 
-        Manage customer accounts and governorates.
-      subgroup: Admin
+        APIs for managing physical storage devices (USB sticks, HDDs, SSDs, etc.)
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Update a customer'
-      description: "Update an existing customer's information. Admin only."
-      authenticated: true
+      title: 'Update a storage device'
+      description: 'Update the information of an existing storage device.'
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      customer_id:
+      id:
         custom: []
-        name: customer_id
-        description: 'The ID of the customer.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      customer:
-        custom: []
-        name: customer
-        description: 'The customer ID.'
+        name: id
+        description: 'The ID of the storage device.'
         required: true
         example: 1
         type: integer
@@ -411,97 +424,159 @@ endpoints:
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      customer_id: 1
-      customer: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      name:
+      name_en:
         custom: []
-        name: name
-        description: 'Full name.'
+        name: name_en
+        description: 'The English name.'
+        required: true
+        example: 'SanDisk USB Stick 16GB'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'The Arabic name.'
+        required: true
+        example: 'سان ديسك فلاش ميموري 16GB'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: 'nullable The English description.'
         required: false
         example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
-        nullable: false
+        nullable: true
         deprecated: false
-      phone:
+      description_ar:
         custom: []
-        name: phone
-        description: 'Iraqi phone number.'
+        name: description_ar
+        description: 'nullable The Arabic description.'
         required: false
         example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
-        nullable: false
+        nullable: true
         deprecated: false
-      email:
+      storage_type_id:
         custom: []
-        name: email
-        description: 'Email address.'
-        required: false
-        example: gbailey@example.net
-        type: string
+        name: storage_type_id
+        description: 'The storage device type ID.'
+        required: true
+        example: 3
+        type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
-      governorate_id:
+      size_mb:
         custom: []
-        name: governorate_id
-        description: 'Governorate ID.'
+        name: size_mb
+        description: 'The advertised size in MB.'
+        required: true
+        example: 16384
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      real_size_mb:
+        custom: []
+        name: real_size_mb
+        description: 'nullable The actual usable size in MB.'
         required: false
         example: 16
         type: integer
         enumValues: []
         exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      price_iqd:
+        custom: []
+        name: price_iqd
+        description: 'The price in Iraqi Dinar.'
+        required: true
+        example: '25000.00'
+        type: numeric
+        enumValues: []
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
-      address:
+      marka:
         custom: []
-        name: address
-        description: 'Address details.'
-        required: false
-        example: architecto
+        name: marka
+        description: 'The brand name.'
+        required: true
+        example: SanDisk
         type: string
         enumValues: []
-        exampleWasSpecified: false
-        nullable: true
+        exampleWasSpecified: true
+        nullable: false
         deprecated: false
-      nearest_service_point:
+      interface:
         custom: []
-        name: nearest_service_point
-        description: 'Nearest service point.'
-        required: false
-        example: architecto
+        name: interface
+        description: 'The interface type.'
+        required: true
+        example: 'USB 3.0'
         type: string
         enumValues: []
-        exampleWasSpecified: false
-        nullable: true
+        exampleWasSpecified: true
+        nullable: false
         deprecated: false
     cleanBodyParameters:
-      name: architecto
-      phone: architecto
-      email: gbailey@example.net
-      governorate_id: 16
-      address: architecto
-      nearest_service_point: architecto
+      name_en: 'SanDisk USB Stick 16GB'
+      name_ar: 'سان ديسك فلاش ميموري 16GB'
+      description_en: architecto
+      description_ar: architecto
+      storage_type_id: 3
+      size_mb: 16384
+      real_size_mb: 16
+      price_iqd: '25000.00'
+      marka: SanDisk
+      interface: 'USB 3.0'
     fileParameters: []
     responses:
       -
         custom: []
         status: 200
-        content: '{"id": 1, "name": "John Doe", "phone": "07701234567", "governorate": {...}}'
+        content: |-
+          {
+              "data": {
+                  "id": 1,
+                  "name_en": "SanDisk USB Stick 16GB",
+                  "name_ar": "سان ديسك فلاش ميموري 16GB",
+                  "price_iqd": 27000.00,
+                  "updated_at": "2026-06-26T20:05:00.000000Z"
+              }
+          }
         headers: []
-        description: ''
+        description: Success
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\StorageDevice] 999"
+          }
+        headers: []
+        description: 'Not Found'
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null
@@ -509,39 +584,27 @@ endpoints:
     custom: []
     httpMethods:
       - DELETE
-    uri: 'api/customers/{customer_id}'
+    uri: 'api/storage-devices/{id}'
     metadata:
       custom: []
-      groupName: Customers
+      groupName: 'Storage Devices'
       groupDescription: |-
 
-        Manage customer accounts and governorates.
-      subgroup: Admin
+        APIs for managing physical storage devices (USB sticks, HDDs, SSDs, etc.)
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Delete a customer'
-      description: 'Remove a customer account. Admin only.'
-      authenticated: true
+      title: 'Delete a storage device'
+      description: 'Permanently delete a storage device from the database.'
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      customer_id:
+      id:
         custom: []
-        name: customer_id
-        description: 'The ID of the customer.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      customer:
-        custom: []
-        name: customer
-        description: 'The customer ID.'
+        name: id
+        description: 'The ID of the storage device.'
         required: true
         example: 1
         type: integer
@@ -550,8 +613,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      customer_id: 1
-      customer: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -563,12 +625,27 @@ endpoints:
         status: 204
         content: ''
         headers: []
-        description: ''
+        description: Success
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\StorageDevice] 999"
+          }
+        headers: []
+        description: 'Not Found'
+      -
+        custom: []
+        status: 409
+        content: |-
+          {
+              "message": "Cannot delete storage device because it is used in orders."
+          }
+        headers: []
+        description: Conflict
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null

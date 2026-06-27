@@ -1,17 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { API_BASE, AUTH_CONFIG } from '../../config'
 import { Modal, Button, Form, Nav } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import './AuthModal.css'
 
 function AuthModal({ show, onClose, onAuth, locale }) {
   const [activeTab, setActiveTab] = useState('login')
   const [loginData, setLoginData] = useState({ identifier: '', password: '' })
-  const [registerData, setRegisterData] = useState({ name: '', identifier: '', password: '', confirmPassword: '' })
+  const [registerData, setRegisterData] = useState({ name: '', identifier: '', password: '', confirmPassword: '', governorate_id: '' })
+  const [governorates, setGovernorates] = useState([])
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-const translations = {
+  const translations = {
     en: {
+      phone: 'Phone',
       login: 'Login',
       register: 'Register',
       emailOrPhone: 'Email or phone',
@@ -60,7 +64,7 @@ const translations = {
   }
 
 
-  const labels = translations[locale] || translations.en
+  const labels = (translations && translations[locale]) ? translations[locale] : (translations.en || {})
 
   const validatePassword = (password) => {
     if (password.length < (AUTH_CONFIG?.minPasswordLength ?? 8)) {
@@ -126,7 +130,7 @@ const translations = {
         if (user) localStorage.setItem('user', JSON.stringify(user))
         if (settings) localStorage.setItem('siteSettings', JSON.stringify(settings))
 
-        onAuth({ user, token, settings })
+        if (typeof onAuth === 'function') onAuth({ user, token, settings })
         setLoginData({ identifier: '', password: '' })
       } catch (err) {
         console.error(err)
@@ -164,7 +168,7 @@ const translations = {
     }
 
     setTimeout(() => {
-      onAuth(payload)
+      if (typeof onAuth === 'function') onAuth(payload)
       setRegisterData({ name: '', identifier: '', password: '', confirmPassword: '' })
       setIsLoading(false)
     }, 500)
@@ -174,18 +178,21 @@ const translations = {
     setError('')
     setLoginData({ identifier: '', password: '' })
     setRegisterData({ name: '', identifier: '', password: '', confirmPassword: '' })
-    onClose()
+    if (typeof onClose === 'function') onClose()
   }
 
   return (
     <Modal show={show} onHide={handleClose} centered className="auth-modal">
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title>{activeTab === 'login' ? labels.login : labels.register}</Modal.Title>
+        <button className="modal-close-btn" onClick={handleClose} aria-label={labels.close}>
+          <FontAwesomeIcon icon={faXmark} />
+        </button>
       </Modal.Header>
 
       <Modal.Body>
         {/* Tabs */}
-        <Nav variant="tabs" className="mb-4" activeKey={activeTab} onSelect={(k) => { setError(''); setActiveTab(k) }}>
+        <Nav variant="tabs" className="mb-4" activeKey={activeTab} onSelect={(k) => { setError(''); if (k) setActiveTab(k) }}>
           <Nav.Item>
             <Nav.Link eventKey="login" className={activeTab === 'login' ? 'active' : ''}>
               {labels.login}

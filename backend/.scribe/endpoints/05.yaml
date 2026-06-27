@@ -1,23 +1,23 @@
-name: 'USB Sticks'
+name: 'Storage Device Types'
 description: |-
 
-  Manage available USB stick models.
+  APIs for managing storage device types (CD-ROM, DVD-ROM, USB Stick, HDD, SSD, M.2)
 endpoints:
   -
     custom: []
     httpMethods:
       - GET
-    uri: api/usb-sticks
+    uri: api/storage-device-types
     metadata:
       custom: []
-      groupName: 'USB Sticks'
+      groupName: 'Storage Device Types'
       groupDescription: |-
 
-        Manage available USB stick models.
-      subgroup: Public
+        APIs for managing storage device types (CD-ROM, DVD-ROM, USB Stick, HDD, SSD, M.2)
+      subgroup: ''
       subgroupDescription: ''
-      title: 'List USB sticks'
-      description: 'Get a list of available USB stick models.'
+      title: 'List all storage device types'
+      description: 'Retrieve a list of all available storage device types with their names and descriptions in both English and Arabic.'
       authenticated: false
       deprecated: false
     headers:
@@ -34,79 +34,23 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '[{"id":11,"name_en":"enim USB","name_ar":"saepe USB","description_en":"Facere harum et amet dolorem consequuntur accusantium.","description_ar":"Quasi voluptatem sint illo sint non.","size_gb":8,"interface":"3.2","price_iqd":"40000.00","created_at":"2026-06-25T16:48:59.000000Z","updated_at":"2026-06-25T16:48:59.000000Z"},{"id":12,"name_en":"animi USB","name_ar":"dolores USB","description_en":"Voluptas distinctio voluptas cumque enim.","description_ar":"Eaque sit consequatur adipisci possimus tempore.","size_gb":8,"interface":"3.2","price_iqd":"7500.00","created_at":"2026-06-25T16:48:59.000000Z","updated_at":"2026-06-25T16:48:59.000000Z"},{"id":13,"name_en":"ducimus USB","name_ar":"molestias USB","description_en":"Aliquam quis voluptate et possimus architecto aperiam.","description_ar":"Quaerat vero magni velit.","size_gb":4,"interface":"3.2","price_iqd":"30000.00","created_at":"2026-06-25T16:48:59.000000Z","updated_at":"2026-06-25T16:48:59.000000Z"},{"id":14,"name_en":"unde USB","name_ar":"laboriosam USB","description_en":"Qui voluptatem voluptatem delectus odit aut facere.","description_ar":"Impedit commodi eum ducimus occaecati.","size_gb":1,"interface":"3.0","price_iqd":"25000.00","created_at":"2026-06-25T16:48:59.000000Z","updated_at":"2026-06-25T16:48:59.000000Z"},{"id":15,"name_en":"sed USB","name_ar":"quia USB","description_en":"Qui autem reprehenderit repellendus mollitia corporis.","description_ar":"Est corporis sit illo.","size_gb":2,"interface":"3.1","price_iqd":"50000.00","created_at":"2026-06-25T16:48:59.000000Z","updated_at":"2026-06-25T16:48:59.000000Z"},{"id":16,"name_en":"dignissimos USB","name_ar":"tenetur USB","description_en":"Quia amet sit incidunt rerum eos.","description_ar":"Asperiores illum vitae quae fuga occaecati voluptatem voluptate.","size_gb":0.5,"interface":"3.1","price_iqd":"5000.00","created_at":"2026-06-25T16:48:59.000000Z","updated_at":"2026-06-25T16:48:59.000000Z"},{"id":17,"name_en":"expedita USB","name_ar":"officiis USB","description_en":"Cumque sed aperiam hic officiis necessitatibus natus.","description_ar":"Possimus tempora et aliquid sint.","size_gb":4,"interface":"3.1","price_iqd":"10000.00","created_at":"2026-06-25T16:48:59.000000Z","updated_at":"2026-06-25T16:48:59.000000Z"},{"id":18,"name_en":"ipsam USB","name_ar":"nihil USB","description_en":"Et magni sit omnis temporibus.","description_ar":"Aliquam molestias praesentium ut distinctio sed omnis officiis.","size_gb":8,"interface":"3.2","price_iqd":"30000.00","created_at":"2026-06-25T16:48:59.000000Z","updated_at":"2026-06-25T16:48:59.000000Z"},{"id":19,"name_en":"corporis USB","name_ar":"aut USB","description_en":"Vel et aut odit et tempora soluta.","description_ar":"Voluptatem in nihil dicta voluptatem.","size_gb":8,"interface":"3.1","price_iqd":"35000.00","created_at":"2026-06-25T16:48:59.000000Z","updated_at":"2026-06-25T16:48:59.000000Z"},{"id":20,"name_en":"quidem USB","name_ar":"omnis USB","description_en":"Rerum dolores eligendi odit voluptas reprehenderit esse maxime.","description_ar":"Natus neque et qui ex aut.","size_gb":8,"interface":"3.2","price_iqd":"30000.00","created_at":"2026-06-25T16:48:59.000000Z","updated_at":"2026-06-25T16:48:59.000000Z"}]'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
-    responseFields:
-      id:
-        custom: []
-        name: id
-        description: 'USB stick ID.'
-        required: false
-        example: null
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      name_en:
-        custom: []
-        name: name_en
-        description: 'English name.'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      name_ar:
-        custom: []
-        name: name_ar
-        description: 'Arabic name.'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      size_gb:
-        custom: []
-        name: size_gb
-        description: 'Storage capacity in GB.'
-        required: false
-        example: null
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      interface:
-        custom: []
-        name: interface
-        description: 'Connection interface (e.g. USB 3.0).'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      price_iqd:
-        custom: []
-        name: price_iqd
-        description: 'Price in Iraqi Dinar.'
-        required: false
-        example: null
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
+        content: |-
+          {
+              "data": [
+                  {
+                      "id": 1,
+                      "name_en": "USB Stick",
+                      "name_ar": "فلاش ميموري",
+                      "description_en": "Universal Serial Bus flash drive - Portable solid-state storage",
+                      "description_ar": "محرك أقراص فلاش USB - تخزين صلبة محمولة",
+                      "created_at": "2026-06-26T20:00:00.000000Z",
+                      "updated_at": "2026-06-26T20:00:00.000000Z"
+                  }
+              ]
+          }
+        headers: []
+        description: Success
+    responseFields: []
     auth: []
     controller: null
     method: null
@@ -115,17 +59,17 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: 'api/usb-sticks/{id}'
+    uri: 'api/storage-device-types/{id}'
     metadata:
       custom: []
-      groupName: 'USB Sticks'
+      groupName: 'Storage Device Types'
       groupDescription: |-
 
-        Manage available USB stick models.
-      subgroup: Public
+        APIs for managing storage device types (CD-ROM, DVD-ROM, USB Stick, HDD, SSD, M.2)
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Show a USB stick'
-      description: 'Get details of a single USB stick model.'
+      title: 'Get a specific storage device type'
+      description: 'Retrieve detailed information about a specific storage device type by ID.'
       authenticated: false
       deprecated: false
     headers:
@@ -135,18 +79,7 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The ID of the usb stick.'
-        required: true
-        example: 11
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      usb_stick:
-        custom: []
-        name: usb_stick
-        description: 'The USB stick ID.'
+        description: 'The ID of the storage device type.'
         required: true
         example: 1
         type: integer
@@ -155,8 +88,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 11
-      usb_stick: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -166,9 +98,29 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"id": 1, "name_en": "32GB USB 3.0", "name_ar": "32 جيجا USB 3.0", "size_gb": 32, "interface": "USB 3.0", "price_iqd": 15000}'
+        content: |-
+          {
+              "data": {
+                  "id": 1,
+                  "name_en": "USB Stick",
+                  "name_ar": "فلاش ميموري",
+                  "description_en": "Universal Serial Bus flash drive - Portable solid-state storage",
+                  "description_ar": "محرك أقراص فلاش USB - تخزين صلبة محمولة",
+                  "created_at": "2026-06-26T20:00:00.000000Z",
+                  "updated_at": "2026-06-26T20:00:00.000000Z"
+              }
+          }
         headers: []
-        description: ''
+        description: Success
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\StorageDeviceType] 999"
+          }
+        headers: []
+        description: 'Not Found'
     responseFields: []
     auth: []
     controller: null
@@ -178,21 +130,20 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/usb-sticks
+    uri: api/storage-device-types
     metadata:
       custom: []
-      groupName: 'USB Sticks'
+      groupName: 'Storage Device Types'
       groupDescription: |-
 
-        Manage available USB stick models.
-      subgroup: Admin
+        APIs for managing storage device types (CD-ROM, DVD-ROM, USB Stick, HDD, SSD, M.2)
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Create a USB stick'
-      description: 'Add a new USB stick model. Admin only.'
-      authenticated: true
+      title: 'Create a new storage device type'
+      description: 'Create a new storage device type with bilingual names and descriptions.'
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -203,9 +154,9 @@ endpoints:
       name_en:
         custom: []
         name: name_en
-        description: 'English name.'
+        description: 'The English name of the device type.'
         required: true
-        example: '64GB USB 3.1'
+        example: 'USB Stick'
         type: string
         enumValues: []
         exampleWasSpecified: true
@@ -214,9 +165,9 @@ endpoints:
       name_ar:
         custom: []
         name: name_ar
-        description: 'Arabic name.'
+        description: 'The Arabic name of the device type.'
         required: true
-        example: '64 جيجا USB 3.1'
+        example: 'فلاش ميموري'
         type: string
         enumValues: []
         exampleWasSpecified: true
@@ -225,79 +176,63 @@ endpoints:
       description_en:
         custom: []
         name: description_en
-        description: 'English description.'
+        description: 'nullable The English description.'
         required: false
-        example: architecto
+        example: 'Portable solid-state storage'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         deprecated: false
       description_ar:
         custom: []
         name: description_ar
-        description: 'Arabic description.'
+        description: 'nullable The Arabic description.'
         required: false
-        example: architecto
+        example: 'تخزين صلبة محمولة'
         type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      size_gb:
-        custom: []
-        name: size_gb
-        description: 'Storage capacity in GB.'
-        required: true
-        example: '64'
-        type: numeric
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      interface:
-        custom: []
-        name: interface
-        description: 'Connection interface.'
-        required: true
-        example: 'USB 3.1'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      price_iqd:
-        custom: []
-        name: price_iqd
-        description: 'Price in Iraqi Dinar.'
-        required: false
-        example: '25000'
-        type: numeric
         enumValues: []
         exampleWasSpecified: true
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      name_en: '64GB USB 3.1'
-      name_ar: '64 جيجا USB 3.1'
-      description_en: architecto
-      description_ar: architecto
-      size_gb: '64'
-      interface: 'USB 3.1'
-      price_iqd: '25000'
+      name_en: 'USB Stick'
+      name_ar: 'فلاش ميموري'
+      description_en: 'Portable solid-state storage'
+      description_ar: 'تخزين صلبة محمولة'
     fileParameters: []
     responses:
       -
         custom: []
         status: 201
-        content: '{"id": 2, "name_en": "64GB USB 3.1", "name_ar": "64 جيجا USB 3.1", "size_gb": 64, "interface": "USB 3.1", "price_iqd": 25000}'
+        content: |-
+          {
+              "data": {
+                  "id": 7,
+                  "name_en": "USB Stick",
+                  "name_ar": "فلاش ميموري",
+                  "description_en": "Portable solid-state storage",
+                  "description_ar": "تخزين صلبة محمولة",
+                  "created_at": "2026-06-26T20:00:00.000000Z",
+                  "updated_at": "2026-06-26T20:00:00.000000Z"
+              }
+          }
         headers: []
-        description: ''
+        description: Success
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+              "message": "The given data was invalid.",
+              "errors": {
+                  "name_en": ["The name en field is required."]
+              }
+          }
+        headers: []
+        description: 'Validation Error'
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null
@@ -305,39 +240,28 @@ endpoints:
     custom: []
     httpMethods:
       - PUT
-    uri: 'api/usb-sticks/{usb_stick_id}'
+      - PATCH
+    uri: 'api/storage-device-types/{id}'
     metadata:
       custom: []
-      groupName: 'USB Sticks'
+      groupName: 'Storage Device Types'
       groupDescription: |-
 
-        Manage available USB stick models.
-      subgroup: Admin
+        APIs for managing storage device types (CD-ROM, DVD-ROM, USB Stick, HDD, SSD, M.2)
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Update a USB stick'
-      description: 'Update an existing USB stick model. Admin only.'
-      authenticated: true
+      title: 'Update a storage device type'
+      description: 'Update the information of an existing storage device type.'
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      usb_stick_id:
+      id:
         custom: []
-        name: usb_stick_id
-        description: 'The ID of the usb stick.'
-        required: true
-        example: 11
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      usb_stick:
-        custom: []
-        name: usb_stick
-        description: 'The USB stick ID.'
+        name: id
+        description: 'The ID of the storage device type.'
         required: true
         example: 1
         type: integer
@@ -346,37 +270,36 @@ endpoints:
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      usb_stick_id: 11
-      usb_stick: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
       name_en:
         custom: []
         name: name_en
-        description: 'English name.'
-        required: false
-        example: architecto
+        description: 'The English name.'
+        required: true
+        example: 'USB Stick'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       name_ar:
         custom: []
         name: name_ar
-        description: 'Arabic name.'
-        required: false
-        example: architecto
+        description: 'The Arabic name.'
+        required: true
+        example: 'فلاش ميموري'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
       description_en:
         custom: []
         name: description_en
-        description: 'English description.'
+        description: 'nullable The English description.'
         required: false
         example: architecto
         type: string
@@ -387,68 +310,46 @@ endpoints:
       description_ar:
         custom: []
         name: description_ar
-        description: 'Arabic description.'
+        description: 'nullable The Arabic description.'
         required: false
         example: architecto
         type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      size_gb:
-        custom: []
-        name: size_gb
-        description: 'Storage capacity in GB.'
-        required: false
-        example: architecto
-        type: numeric
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      interface:
-        custom: []
-        name: interface
-        description: 'Connection interface.'
-        required: false
-        example: architecto
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      price_iqd:
-        custom: []
-        name: price_iqd
-        description: 'Price in Iraqi Dinar.'
-        required: false
-        example: architecto
-        type: numeric
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      name_en: architecto
-      name_ar: architecto
+      name_en: 'USB Stick'
+      name_ar: 'فلاش ميموري'
       description_en: architecto
       description_ar: architecto
-      size_gb: architecto
-      interface: architecto
-      price_iqd: architecto
     fileParameters: []
     responses:
       -
         custom: []
         status: 200
-        content: '{"id": 1, "name_en": "32GB USB 3.0", "name_ar": "32 جيجا USB 3.0", "size_gb": 32, "interface": "USB 3.0", "price_iqd": 15000}'
+        content: |-
+          {
+              "data": {
+                  "id": 1,
+                  "name_en": "USB Stick",
+                  "name_ar": "فلاش ميموري",
+                  "updated_at": "2026-06-26T20:05:00.000000Z"
+              }
+          }
         headers: []
-        description: ''
+        description: Success
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\StorageDeviceType] 999"
+          }
+        headers: []
+        description: 'Not Found'
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null
@@ -456,39 +357,27 @@ endpoints:
     custom: []
     httpMethods:
       - DELETE
-    uri: 'api/usb-sticks/{usb_stick_id}'
+    uri: 'api/storage-device-types/{id}'
     metadata:
       custom: []
-      groupName: 'USB Sticks'
+      groupName: 'Storage Device Types'
       groupDescription: |-
 
-        Manage available USB stick models.
-      subgroup: Admin
+        APIs for managing storage device types (CD-ROM, DVD-ROM, USB Stick, HDD, SSD, M.2)
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Delete a USB stick'
-      description: 'Remove a USB stick model. Admin only.'
-      authenticated: true
+      title: 'Delete a storage device type'
+      description: 'Permanently delete a storage device type from the database.'
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      usb_stick_id:
+      id:
         custom: []
-        name: usb_stick_id
-        description: 'The ID of the usb stick.'
-        required: true
-        example: 11
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      usb_stick:
-        custom: []
-        name: usb_stick
-        description: 'The USB stick ID.'
+        name: id
+        description: 'The ID of the storage device type.'
         required: true
         example: 1
         type: integer
@@ -497,8 +386,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      usb_stick_id: 11
-      usb_stick: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -510,12 +398,27 @@ endpoints:
         status: 204
         content: ''
         headers: []
-        description: ''
+        description: Success
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\StorageDeviceType] 999"
+          }
+        headers: []
+        description: 'Not Found'
+      -
+        custom: []
+        status: 409
+        content: |-
+          {
+              "message": "Cannot delete storage device type because it has associated devices."
+          }
+        headers: []
+        description: Conflict
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null

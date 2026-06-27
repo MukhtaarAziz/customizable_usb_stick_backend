@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Modal, Button, Badge, ListGroup } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 function PackageDetailsModal({ pkg, show, onClose, onOrder, locale, t }) {
   const [packageState, setPackageState] = useState(pkg)
@@ -26,8 +28,11 @@ function PackageDetailsModal({ pkg, show, onClose, onOrder, locale, t }) {
 
   return (
     <Modal show={show} onHide={onClose} centered dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-      <Modal.Header closeButton className={locale === 'ar' ? 'justify-content-between flex-row-reverse' : ''}>
+      <Modal.Header className={locale === 'ar' ? 'justify-content-between flex-row-reverse' : ''}>
         <Modal.Title>{name}</Modal.Title>
+        <button className="modal-close-btn" onClick={onClose} aria-label={locale === 'ar' ? 'إغلاق' : 'Close'}>
+          <FontAwesomeIcon icon={faXmark} />
+        </button>
       </Modal.Header>
 
       <Modal.Body style={{ textAlign: locale === 'ar' ? 'right' : 'left' }}>

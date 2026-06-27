@@ -1,0 +1,8 @@
+.cart__body {
+  padding: 1.25rem;
+}
+
+.cart__items {
+  max-height: 320px;
+  overflow-y: auto;
+}

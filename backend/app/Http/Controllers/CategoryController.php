@@ -9,10 +9,22 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
+        // If frontend asks for all categories (client filters), return full collection
+        if ($request->query('show_all') === 'true' || $request->query('show_all') === '1') {
+            return Category::with('categoryType')->get();
+        }
+
         $perPage = (int) $request->query('per_page', 15);
         $perPage = max(1, min($perPage, 100));
 
         $query = Category::with('categoryType');
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($builder) use ($search) {
+                $builder->where('name_en', 'like', "%{$search}%")
+                    ->orWhere('name_ar', 'like', "%{$search}%");
+            });
+        }
 
         if ($typeId = $request->query('category_type_id')) {
             $query->where('category_type_id', $typeId);

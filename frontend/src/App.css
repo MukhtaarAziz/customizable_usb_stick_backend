@@ -329,3 +329,38 @@ html[dir="rtl"] {
     background: #6d28d9;
   }
 }
+
+/* Shared modal close button (RTL-aware) */
+.modal-header {
+  position: relative;
+}
+
+.modal-close-btn {
+  position: absolute;
+  inset-inline-end: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.3rem;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.modal-close-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+
+body.theme-dark .modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}

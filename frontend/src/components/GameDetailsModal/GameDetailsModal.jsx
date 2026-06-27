@@ -1,6 +1,6 @@
 import { Modal, Button, Badge, Row, Col } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGamepad, faCode, faDownload, faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
+import { faGamepad, faCode, faDownload, faCalendarAlt, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 function GameDetailsModal({ show, onHide, item, locale }) {
   if (!item) {
@@ -22,7 +22,7 @@ function GameDetailsModal({ show, onHide, item, locale }) {
 
   return (
     <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title>
           <Badge bg={isGame ? 'primary' : 'indigo'} className="me-2 py-1 px-2" style={isGame ? {} : { background: '#6366f1' }}>
             <FontAwesomeIcon icon={isGame ? faGamepad : faCode} className="me-1" />
@@ -30,6 +30,9 @@ function GameDetailsModal({ show, onHide, item, locale }) {
           </Badge>
           {name}
         </Modal.Title>
+        <button className="modal-close-btn" onClick={onHide} aria-label={locale === 'ar' ? 'إغلاق' : 'Close'}>
+          <FontAwesomeIcon icon={faXmark} />
+        </button>
       </Modal.Header>
       <Modal.Body>
         <Row className="g-3">

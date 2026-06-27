@@ -1,0 +1,23 @@
+.packages-checkout {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.packages-checkout .card {
+  border-radius: 12px;
+}
+
+.packages-checkout .btn {
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .packages-checkout {
+    padding: 1rem;
+  }
+
+  .packages-checkout h1 {
+    font-size: 1.5rem;
+  }
+}

@@ -1,23 +1,23 @@
-name: Platforms
+name: Games
 description: |-
 
-  Manage gaming platforms.
+  Manage games.
 endpoints:
   -
     custom: []
     httpMethods:
       - GET
-    uri: api/platforms
+    uri: api/games
     metadata:
       custom: []
-      groupName: Platforms
+      groupName: Games
       groupDescription: |-
 
-        Manage gaming platforms.
+        Manage games.
       subgroup: Public
       subgroupDescription: ''
-      title: 'List platforms'
-      description: 'Get a paginated list of supported gaming platforms.'
+      title: 'List games'
+      description: 'Get a paginated list of games, filterable by search, platform, and category.'
       authenticated: false
       deprecated: false
     headers:
@@ -29,7 +29,7 @@ endpoints:
       per_page:
         custom: []
         name: per_page
-        description: 'Number of results per page (1-100). Defaults to 15.'
+        description: 'Results per page (1-100). Defaults to 15.'
         required: false
         example: 15
         type: integer
@@ -37,8 +37,44 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         deprecated: false
+      search:
+        custom: []
+        name: search
+        description: 'Search by English or Arabic name.'
+        required: false
+        example: war
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      platform_id:
+        custom: []
+        name: platform_id
+        description: 'Filter by platform ID.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      category_id:
+        custom: []
+        name: category_id
+        description: 'Filter by category ID.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
     cleanQueryParameters:
       per_page: 15
+      search: war
+      platform_id: 1
+      category_id: 2
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -46,7 +82,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"current_page":1,"data":[{"id":1,"name_en":"PC","name_ar":"بي سي","description_en":"Personal computer platform.","description_ar":"منصة الحاسوب الشخصي.","created_at":null,"updated_at":null},{"id":2,"name_en":"PS1","name_ar":"بلاي ستيشن 1","description_en":"PlayStation 1 console.","description_ar":"جهاز بلاي ستيشن 1.","created_at":null,"updated_at":null},{"id":3,"name_en":"PS2","name_ar":"بلاي ستيشن 2","description_en":"PlayStation 2 console.","description_ar":"جهاز بلاي ستيشن 2.","created_at":null,"updated_at":null},{"id":4,"name_en":"PS3","name_ar":"بلاي ستيشن 3","description_en":"PlayStation 3 console.","description_ar":"جهاز بلاي ستيشن 3.","created_at":null,"updated_at":null},{"id":5,"name_en":"PS4","name_ar":"بلاي ستيشن 4","description_en":"PlayStation 4 console.","description_ar":"جهاز بلاي ستيشن 4.","created_at":null,"updated_at":null},{"id":6,"name_en":"PS5","name_ar":"بلاي ستيشن 5","description_en":"PlayStation 5 console.","description_ar":"جهاز بلاي ستيشن 5.","created_at":null,"updated_at":null},{"id":7,"name_en":"PSP","name_ar":"بي إس بي","description_en":"PlayStation Portable platform.","description_ar":"منصة بلاي ستيشن المحمولة.","created_at":null,"updated_at":null},{"id":8,"name_en":"Android","name_ar":"أندرويد","description_en":"Android mobile platform.","description_ar":"منصة أندرويد المحمولة.","created_at":null,"updated_at":null},{"id":9,"name_en":"IOS","name_ar":"آي أو إس","description_en":"iOS mobile platform.","description_ar":"منصة آي أو إس المحمولة.","created_at":null,"updated_at":null}],"first_page_url":"http:\/\/localhost\/api\/platforms?per_page=15&page=1","from":1,"last_page":1,"last_page_url":"http:\/\/localhost\/api\/platforms?per_page=15&page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/platforms?per_page=15&page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost\/api\/platforms","per_page":15,"prev_page_url":null,"to":9,"total":9}'
+        content: '{"current_page":1,"data":[],"first_page_url":"http:\/\/localhost\/api\/games?per_page=15&search=war&platform_id=1&category_id=2&page=1","from":null,"last_page":1,"last_page_url":"http:\/\/localhost\/api\/games?per_page=15&search=war&platform_id=1&category_id=2&page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/games?per_page=15&search=war&platform_id=1&category_id=2&page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost\/api\/games","per_page":15,"prev_page_url":null,"to":null,"total":0}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -56,7 +92,7 @@ endpoints:
       'data[].id':
         custom: []
         name: 'data[].id'
-        description: 'Platform ID.'
+        description: 'Game ID.'
         required: false
         example: null
         type: integer
@@ -86,24 +122,46 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      'data[].description_en':
+      'data[].size_gb':
         custom: []
-        name: 'data[].description_en'
-        description: 'English description.'
+        name: 'data[].size_gb'
+        description: 'Size in GB.'
         required: false
         example: null
-        type: string
+        type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      'data[].description_ar':
+      'data[].category':
         custom: []
-        name: 'data[].description_ar'
-        description: 'Arabic description.'
+        name: 'data[].category'
+        description: 'The game category.'
         required: false
         example: null
-        type: string
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].platform':
+        custom: []
+        name: 'data[].platform'
+        description: 'The gaming platform.'
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data[].images':
+        custom: []
+        name: 'data[].images'
+        description: 'List of images.'
+        required: false
+        example: null
+        type: 'string[]'
         enumValues: []
         exampleWasSpecified: false
         nullable: false
@@ -116,17 +174,17 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: 'api/platforms/{id}'
+    uri: 'api/games/{id}'
     metadata:
       custom: []
-      groupName: Platforms
+      groupName: Games
       groupDescription: |-
 
-        Manage gaming platforms.
+        Manage games.
       subgroup: Public
       subgroupDescription: ''
-      title: 'Show a platform'
-      description: 'Get details of a single platform by ID.'
+      title: 'Show a game'
+      description: 'Get details of a single game by ID with its category and platform.'
       authenticated: false
       deprecated: false
     headers:
@@ -136,7 +194,7 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The platform ID.'
+        description: 'The game ID.'
         required: true
         example: 1
         type: integer
@@ -155,7 +213,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"id": 1, "name_en": "PlayStation 5", "name_ar": "بلاي ستيشن 5", "description_en": null, "description_ar": null}'
+        content: '{"id": 1, "name_en": "Call of Duty", "name_ar": "كول أوف ديوتي", "size_gb": 72.5, "category": {...}, "platform": {...}}'
         headers: []
         description: ''
     responseFields: []
@@ -167,17 +225,17 @@ endpoints:
     custom: []
     httpMethods:
       - POST
-    uri: api/platforms
+    uri: api/games
     metadata:
       custom: []
-      groupName: Platforms
+      groupName: Games
       groupDescription: |-
 
-        Manage gaming platforms.
+        Manage games.
       subgroup: Admin
       subgroupDescription: ''
-      title: 'Create a platform'
-      description: 'Add a new gaming platform. Admin only.'
+      title: 'Create a game'
+      description: 'Add a new game entry. Admin only.'
       authenticated: true
       deprecated: false
     headers:
@@ -194,7 +252,7 @@ endpoints:
         name: name_en
         description: 'English name.'
         required: true
-        example: 'PlayStation 5'
+        example: 'Call of Duty'
         type: string
         enumValues: []
         exampleWasSpecified: true
@@ -205,7 +263,7 @@ endpoints:
         name: name_ar
         description: 'Arabic name.'
         required: true
-        example: 'بلاي ستيشن 5'
+        example: 'كول أوف ديوتي'
         type: string
         enumValues: []
         exampleWasSpecified: true
@@ -216,10 +274,10 @@ endpoints:
         name: description_en
         description: 'English description.'
         required: false
-        example: "Sony's latest console"
+        example: architecto
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: true
         deprecated: false
       description_ar:
@@ -233,17 +291,93 @@ endpoints:
         exampleWasSpecified: false
         nullable: true
         deprecated: false
+      category_id:
+        custom: []
+        name: category_id
+        description: 'Category ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      platform_id:
+        custom: []
+        name: platform_id
+        description: 'Platform ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      tags:
+        custom: []
+        name: tags
+        description: 'Array of tags.'
+        required: false
+        example:
+          - shooter
+          - multiplayer
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      size_gb:
+        custom: []
+        name: size_gb
+        description: 'Game file size in GB.'
+        required: true
+        example: '72.5'
+        type: numeric
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      downloads:
+        custom: []
+        name: downloads
+        description: 'Download count.'
+        required: false
+        example: 15000
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      date_release:
+        custom: []
+        name: date_release
+        description: 'Release date.'
+        required: false
+        example: '2024-10-25'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
-      name_en: 'PlayStation 5'
-      name_ar: 'بلاي ستيشن 5'
-      description_en: "Sony's latest console"
+      name_en: 'Call of Duty'
+      name_ar: 'كول أوف ديوتي'
+      description_en: architecto
       description_ar: architecto
+      category_id: 1
+      platform_id: 1
+      tags:
+        - shooter
+        - multiplayer
+      size_gb: '72.5'
+      downloads: 15000
+      date_release: '2024-10-25'
     fileParameters: []
     responses:
       -
         custom: []
         status: 201
-        content: '{"id": 1, "name_en": "PlayStation 5", "name_ar": "بلاي ستيشن 5", "description_en": null, "description_ar": null}'
+        content: '{"id": 1, "name_en": "Call of Duty", "name_ar": "كول أوف ديوتي", "size_gb": 72.5, ...}'
         headers: []
         description: ''
     responseFields: []
@@ -259,17 +393,17 @@ endpoints:
     httpMethods:
       - PUT
       - PATCH
-    uri: 'api/platforms/{id}'
+    uri: 'api/games/{id}'
     metadata:
       custom: []
-      groupName: Platforms
+      groupName: Games
       groupDescription: |-
 
-        Manage gaming platforms.
+        Manage games.
       subgroup: Admin
       subgroupDescription: ''
-      title: 'Update a platform'
-      description: 'Update an existing gaming platform. Admin only.'
+      title: 'Update a game'
+      description: 'Update an existing game entry. Admin only.'
       authenticated: true
       deprecated: false
     headers:
@@ -280,7 +414,7 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The platform ID.'
+        description: 'The game ID.'
         required: true
         example: 1
         type: integer
@@ -337,17 +471,91 @@ endpoints:
         exampleWasSpecified: false
         nullable: true
         deprecated: false
+      category_id:
+        custom: []
+        name: category_id
+        description: 'Category ID.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      platform_id:
+        custom: []
+        name: platform_id
+        description: 'Platform ID.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      tags:
+        custom: []
+        name: tags
+        description: 'Array of tags.'
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      size_gb:
+        custom: []
+        name: size_gb
+        description: 'Game file size in GB.'
+        required: false
+        example: architecto
+        type: numeric
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      downloads:
+        custom: []
+        name: downloads
+        description: 'Download count.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      date_release:
+        custom: []
+        name: date_release
+        description: 'Release date.'
+        required: false
+        example: architecto
+        type: date
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
       name_en: architecto
       name_ar: architecto
       description_en: architecto
       description_ar: architecto
+      category_id: 16
+      platform_id: 16
+      tags:
+        - architecto
+      size_gb: architecto
+      downloads: 16
+      date_release: architecto
     fileParameters: []
     responses:
       -
         custom: []
         status: 200
-        content: '{"id": 1, "name_en": "PlayStation 5", "name_ar": "بلاي ستيشن 5", "description_en": "Updated description", "description_ar": null}'
+        content: '{"id": 1, "name_en": "Call of Duty", "name_ar": "كول أوف ديوتي", "size_gb": 72.5, ...}'
         headers: []
         description: ''
     responseFields: []
@@ -362,17 +570,17 @@ endpoints:
     custom: []
     httpMethods:
       - DELETE
-    uri: 'api/platforms/{id}'
+    uri: 'api/games/{id}'
     metadata:
       custom: []
-      groupName: Platforms
+      groupName: Games
       groupDescription: |-
 
-        Manage gaming platforms.
+        Manage games.
       subgroup: Admin
       subgroupDescription: ''
-      title: 'Delete a platform'
-      description: 'Remove a gaming platform. Admin only.'
+      title: 'Delete a game'
+      description: 'Remove a game entry. Admin only.'
       authenticated: true
       deprecated: false
     headers:
@@ -383,7 +591,7 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The platform ID.'
+        description: 'The game ID.'
         required: true
         example: 1
         type: integer

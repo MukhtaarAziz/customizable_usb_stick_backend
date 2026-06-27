@@ -22,7 +22,7 @@ class ProgramController extends Controller
         }
 
         if ($platformId = $request->query('platform_id')) {
-            $query->where('program_platform_id', $platformId);
+            $query->where('platform_id', $platformId);
         }
 
         if ($categoryId = $request->query('category_id')) {
@@ -42,7 +42,7 @@ class ProgramController extends Controller
             'description_en' => ['nullable', 'string'],
             'description_ar' => ['nullable', 'string'],
             'category_id' => ['required', 'exists:categories,id'],
-            'program_platform_id' => ['required', 'exists:program_platforms,id'],
+            'platform_id' => ['required', 'exists:platforms,id'],
             'tags' => ['nullable', 'array'],
             'tags.*' => ['string'],
             'size_gb' => ['required', 'numeric'],
@@ -68,7 +68,7 @@ class ProgramController extends Controller
             'description_en' => ['nullable', 'string'],
             'description_ar' => ['nullable', 'string'],
             'category_id' => ['sometimes', 'required', 'exists:categories,id'],
-            'program_platform_id' => ['sometimes', 'required', 'exists:program_platforms,id'],
+            'platform_id' => ['sometimes', 'required', 'exists:platforms,id'],
             'tags' => ['nullable', 'array'],
             'tags.*' => ['string'],
             'size_gb' => ['sometimes', 'required', 'numeric'],

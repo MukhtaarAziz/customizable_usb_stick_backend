@@ -1,0 +1,13 @@
+.package-receipt-card {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.package-receipt-card .border-bottom:last-child {
+  border-bottom: none !important;
+}
+
+body.theme-dark .package-receipt-card {
+  background: var(--surface-card);
+  border-color: var(--border-color);
+}

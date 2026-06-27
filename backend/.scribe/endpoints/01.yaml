@@ -1,23 +1,19 @@
-name: Categories
-description: |-
-
-  Manage game categories.
+name: Endpoints
+description: ''
 endpoints:
   -
     custom: []
     httpMethods:
       - GET
-    uri: api/categories
+    uri: api/game-categories
     metadata:
       custom: []
-      groupName: Categories
-      groupDescription: |-
-
-        Manage game categories.
-      subgroup: Public
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
       subgroupDescription: ''
-      title: 'List categories'
-      description: 'Get a paginated list of game categories.'
+      title: ''
+      description: ''
       authenticated: false
       deprecated: false
     headers:
@@ -25,20 +21,8 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters:
-      per_page:
-        custom: []
-        name: per_page
-        description: 'Number of results per page (1-100). Defaults to 15.'
-        required: false
-        example: 15
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-    cleanQueryParameters:
-      per_page: 15
+    queryParameters: []
+    cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -46,68 +30,13 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"current_page":1,"data":[{"id":1,"name_en":"Action","name_ar":"أكشن","description_en":"Fast paced action games.","description_ar":"ألعاب أكشن سريعة التفاعل.","created_at":null,"updated_at":null},{"id":2,"name_en":"Sport","name_ar":"رياضة","description_en":"Sports and athletic simulation games.","description_ar":"ألعاب رياضية ومحاكاة الأداء.","created_at":null,"updated_at":null},{"id":3,"name_en":"Racing","name_ar":"سباق","description_en":"High speed racing games.","description_ar":"ألعاب سباق بسرعات عالية.","created_at":null,"updated_at":null},{"id":4,"name_en":"RPG","name_ar":"RPG","description_en":"Role playing games with story and progression.","description_ar":"ألعاب تقمص الأدوار بقصة وتطور.","created_at":null,"updated_at":null},{"id":5,"name_en":"Indie","name_ar":"مستقلة","description_en":"Independent games from small studios.","description_ar":"ألعاب مستقلة من استوديوهات صغيرة.","created_at":null,"updated_at":null}],"first_page_url":"http:\/\/localhost\/api\/categories?per_page=15&page=1","from":1,"last_page":1,"last_page_url":"http:\/\/localhost\/api\/categories?per_page=15&page=1","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/categories?per_page=15&page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"next_page_url":null,"path":"http:\/\/localhost\/api\/categories","per_page":15,"prev_page_url":null,"to":5,"total":5}'
+        content: '{"current_page":1,"data":[{"id":1,"category_type_id":1,"name_en":"Action","name_ar":"أكشن","description_en":"Fast-paced action games with combat and adventure.","description_ar":"ألعاب أكشن سريعة مع قتال ومغامرة.","created_at":null,"updated_at":null},{"id":2,"category_type_id":1,"name_en":"Racing","name_ar":"سباق","description_en":"High-speed racing and driving simulation games.","description_ar":"ألعاب سباق ومحاكاة القيادة بسرعات عالية.","created_at":null,"updated_at":null},{"id":3,"category_type_id":1,"name_en":"Sports","name_ar":"رياضة","description_en":"Sports and athletic simulation games.","description_ar":"ألعاب رياضية ومحاكاة الأداء الرياضي.","created_at":null,"updated_at":null},{"id":4,"category_type_id":1,"name_en":"RPG","name_ar":"تقمص أدوار","description_en":"Role-playing games with story and character progression.","description_ar":"ألعاب تقمص الأدوار بقصة وتطور الشخصية.","created_at":null,"updated_at":null},{"id":5,"category_type_id":1,"name_en":"Shooter","name_ar":"إطلاق نار","description_en":"First-person and third-person shooter games.","description_ar":"ألعاب إطلاق نار من منظور شخص أول وثالث.","created_at":null,"updated_at":null},{"id":6,"category_type_id":1,"name_en":"Adventure","name_ar":"مغامرة","description_en":"Exploration and puzzle-solving adventure games.","description_ar":"ألعاب مغامرة باستكشاف وحل الألغاز.","created_at":null,"updated_at":null},{"id":7,"category_type_id":1,"name_en":"Fighting","name_ar":"قتال","description_en":"One-on-one combat and martial arts games.","description_ar":"ألعاب قتال فردي وفنون قتالية.","created_at":null,"updated_at":null},{"id":8,"category_type_id":1,"name_en":"Strategy","name_ar":"استراتيجية","description_en":"Tactical and strategic planning games.","description_ar":"ألعاب تكتيكية وتخطيط استراتيجي.","created_at":null,"updated_at":null},{"id":9,"category_type_id":1,"name_en":"Horror","name_ar":"رعب","description_en":"Scary and suspenseful horror games.","description_ar":"ألعاب رعب مرعبة ومليئة بالتشويق.","created_at":null,"updated_at":null},{"id":10,"category_type_id":1,"name_en":"Puzzle","name_ar":"ألغاز","description_en":"Brain-teasing puzzle and logic games.","description_ar":"ألعاب ألغاز ومنطق لتحدي الدماغ.","created_at":null,"updated_at":null},{"id":11,"category_type_id":1,"name_en":"Simulation","name_ar":"محاكاة","description_en":"Life and vehicle simulation games.","description_ar":"ألعاب محاكاة الحياة والمركبات.","created_at":null,"updated_at":null},{"id":12,"category_type_id":1,"name_en":"Platformer","name_ar":"منصات","description_en":"Classic platform jumping games.","description_ar":"ألعاب منصات كلاسيكية بالقفز.","created_at":null,"updated_at":null},{"id":13,"category_type_id":1,"name_en":"Stealth","name_ar":"تخفي","description_en":"Stealth and espionage games.","description_ar":"ألعاب التخفي والتجسس.","created_at":null,"updated_at":null},{"id":14,"category_type_id":1,"name_en":"Open World","name_ar":"عالم مفتوح","description_en":"Open-world exploration games.","description_ar":"ألعاب استكشاف العالم المفتوح.","created_at":null,"updated_at":null},{"id":15,"category_type_id":1,"name_en":"Battle Royale","name_ar":"باتل رويال","description_en":"Last-player-standing multiplayer games.","description_ar":"ألعاب لاعبين متعددين البقاء الأخير.","created_at":null,"updated_at":null}],"first_page_url":"http:\/\/localhost\/api\/game-categories?page=1","from":1,"last_page":2,"last_page_url":"http:\/\/localhost\/api\/game-categories?page=2","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/game-categories?page=1","label":"1","page":1,"active":true},{"url":"http:\/\/localhost\/api\/game-categories?page=2","label":"2","page":2,"active":false},{"url":"http:\/\/localhost\/api\/game-categories?page=2","label":"Next &raquo;","page":2,"active":false}],"next_page_url":"http:\/\/localhost\/api\/game-categories?page=2","path":"http:\/\/localhost\/api\/game-categories","per_page":15,"prev_page_url":null,"to":15,"total":20}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
           access-control-allow-origin: '*'
         description: null
-    responseFields:
-      'data[].id':
-        custom: []
-        name: 'data[].id'
-        description: 'Category ID.'
-        required: false
-        example: null
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      'data[].name_en':
-        custom: []
-        name: 'data[].name_en'
-        description: 'English name.'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      'data[].name_ar':
-        custom: []
-        name: 'data[].name_ar'
-        description: 'Arabic name.'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      'data[].description_en':
-        custom: []
-        name: 'data[].description_en'
-        description: 'English description.'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      'data[].description_ar':
-        custom: []
-        name: 'data[].description_ar'
-        description: 'Arabic description.'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
+    responseFields: []
     auth: []
     controller: null
     method: null
@@ -116,17 +45,15 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: 'api/categories/{id}'
+    uri: 'api/game-categories/{id}'
     metadata:
       custom: []
-      groupName: Categories
-      groupDescription: |-
-
-        Manage game categories.
-      subgroup: Public
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Show a category'
-      description: 'Get details of a single category by ID.'
+      title: ''
+      description: ''
       authenticated: false
       deprecated: false
     headers:
@@ -136,12 +63,12 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The category ID.'
+        description: 'The ID of the game category.'
         required: true
         example: 1
         type: integer
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
@@ -155,9 +82,887 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"id": 1, "name_en": "Action", "name_ar": "أكشن", "description_en": "Action games", "description_ar": null}'
-        headers: []
+        content: '{"id":1,"category_type_id":1,"name_en":"Action","name_ar":"أكشن","description_en":"Fast-paced action games with combat and adventure.","description_ar":"ألعاب أكشن سريعة مع قتال ومغامرة.","created_at":null,"updated_at":null}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/program-categories
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"current_page":1,"data":[{"id":21,"category_type_id":2,"name_en":"Audio and Music","name_ar":"صوتيات وموسيقى","description_en":"Audio editing, music production, and sound tools.","description_ar":"برامج تحرير الصوت وإنتاج الموسيقى والأدوات الصوتية.","created_at":null,"updated_at":null},{"id":22,"category_type_id":2,"name_en":"Video Editing","name_ar":"مونتاج فيديو","description_en":"Video editing and production software.","description_ar":"برامج تحرير وإنتاج الفيديو.","created_at":null,"updated_at":null},{"id":23,"category_type_id":2,"name_en":"Photo Editing","name_ar":"تحرير صور","description_en":"Image editing and graphic design software.","description_ar":"برامج تحرير الصور والتصميم الجرافيكي.","created_at":null,"updated_at":null},{"id":24,"category_type_id":2,"name_en":"Office Suite","name_ar":"مكتبية","description_en":"Word processing, spreadsheets, and office tools.","description_ar":"برامج معالجة النصوص والجداول الحسابية وأدوات مكتبية.","created_at":null,"updated_at":null},{"id":25,"category_type_id":2,"name_en":"Antivirus","name_ar":"مضاد فيروسات","description_en":"Security and antivirus protection software.","description_ar":"برامج الحماية ومكافحة الفيروسات.","created_at":null,"updated_at":null},{"id":26,"category_type_id":2,"name_en":"Internet and Network","name_ar":"إنترنت وشبكات","description_en":"Browsers, download managers, and network tools.","description_ar":"المتصفحات ومديري التنزيل وأدوات الشبكة.","created_at":null,"updated_at":null},{"id":27,"category_type_id":2,"name_en":"System Tools","name_ar":"أدوات النظام","description_en":"System optimization and maintenance utilities.","description_ar":"برامج تحسين وصيانة النظام.","created_at":null,"updated_at":null},{"id":28,"category_type_id":2,"name_en":"Programming","name_ar":"برمجة","description_en":"IDEs, code editors, and development tools.","description_ar":"بيئات التطوير ومحررات الأكواد وأدوات البرمجة.","created_at":null,"updated_at":null},{"id":29,"category_type_id":2,"name_en":"Database","name_ar":"قواعد بيانات","description_en":"Database management and administration tools.","description_ar":"برامج إدارة وإدارة قواعد البيانات.","created_at":null,"updated_at":null},{"id":30,"category_type_id":2,"name_en":"File Compression","name_ar":"ضغط ملفات","description_en":"File compression and archiving software.","description_ar":"برامج ضغط وأرشفة الملفات.","created_at":null,"updated_at":null},{"id":31,"category_type_id":2,"name_en":"Communication","name_ar":"تواصل","description_en":"Messaging, video calls, and communication apps.","description_ar":"تطبيقات المراسلة والمكالمات المرئية والتواصل.","created_at":null,"updated_at":null},{"id":32,"category_type_id":2,"name_en":"Download Manager","name_ar":"مدير تنزيل","description_en":"Download acceleration and management tools.","description_ar":"أدوات تسريع وإدارة التنزيلات.","created_at":null,"updated_at":null},{"id":33,"category_type_id":2,"name_en":"Media Player","name_ar":"مشغل وسائط","description_en":"Video and audio media players.","description_ar":"مشغلات الوسائط الصوتية والمرئية.","created_at":null,"updated_at":null},{"id":34,"category_type_id":2,"name_en":"3D and CAD","name_ar":"تصميم ثلاثي الأبعاد","description_en":"3D modeling and CAD design software.","description_ar":"برامج النمذجة ثلاثية الأبعاد وتصميم CAD.","created_at":null,"updated_at":null},{"id":35,"category_type_id":2,"name_en":"Education","name_ar":"تعليم","description_en":"Educational and learning software.","description_ar":"برامج تعليمية وتعلمية.","created_at":null,"updated_at":null}],"first_page_url":"http:\/\/localhost\/api\/program-categories?page=1","from":1,"last_page":2,"last_page_url":"http:\/\/localhost\/api\/program-categories?page=2","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/program-categories?page=1","label":"1","page":1,"active":true},{"url":"http:\/\/localhost\/api\/program-categories?page=2","label":"2","page":2,"active":false},{"url":"http:\/\/localhost\/api\/program-categories?page=2","label":"Next &raquo;","page":2,"active":false}],"next_page_url":"http:\/\/localhost\/api\/program-categories?page=2","path":"http:\/\/localhost\/api\/program-categories","per_page":15,"prev_page_url":null,"to":15,"total":20}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/program-categories/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the program category.'
+        required: true
+        example: 21
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 21
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"id":21,"category_type_id":2,"name_en":"Audio and Music","name_ar":"صوتيات وموسيقى","description_en":"Audio editing, music production, and sound tools.","description_ar":"برامج تحرير الصوت وإنتاج الموسيقى والأدوات الصوتية.","created_at":null,"updated_at":null}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/programs
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"current_page":1,"data":[{"id":1,"name_en":"Adobe Photoshop 2025","description_en":"Adobe Photoshop 2025 is a professional Photo Editing application available on Windows.","name_ar":"أدوبي فوتوشوب 2025","description_ar":"أدوبي فوتوشوب 2025 هو تطبيق Photo Editing احترافي متوفر على Windows.","category_id":23,"platform_id":18,"tags":["design","photo-editing","graphics"],"size_gb":3.8,"downloads":3000000,"date_release":"2025-05-20T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":23,"category_type_id":2,"name_en":"Photo Editing","name_ar":"تحرير صور","description_en":"Image editing and graphic design software.","description_ar":"برامج تحرير الصور والتصميم الجرافيكي.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":2,"name_en":"Adobe Premiere Pro","description_en":"Adobe Premiere Pro is a professional Video Editing application available on Windows.","name_ar":"أدوبي بريمير برو","description_ar":"أدوبي بريمير برو هو تطبيق Video Editing احترافي متوفر على Windows.","category_id":22,"platform_id":18,"tags":["video-editing","professional","production"],"size_gb":5.2,"downloads":1500000,"date_release":"2025-04-10T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":22,"category_type_id":2,"name_en":"Video Editing","name_ar":"مونتاج فيديو","description_en":"Video editing and production software.","description_ar":"برامج تحرير وإنتاج الفيديو.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":3,"name_en":"Adobe After Effects","description_en":"Adobe After Effects is a professional Video Editing application available on Windows.","name_ar":"أدوبي أفتر إفكتس","description_ar":"أدوبي أفتر إفكتس هو تطبيق Video Editing احترافي متوفر على Windows.","category_id":22,"platform_id":18,"tags":["motion-graphics","vfx","animation"],"size_gb":4.5,"downloads":1200000,"date_release":"2025-03-15T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":22,"category_type_id":2,"name_en":"Video Editing","name_ar":"مونتاج فيديو","description_en":"Video editing and production software.","description_ar":"برامج تحرير وإنتاج الفيديو.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":4,"name_en":"Adobe Illustrator","description_en":"Adobe Illustrator is a professional Graphics Design application available on Windows.","name_ar":"أدوبي إلستريتور","description_ar":"أدوبي إلستريتور هو تطبيق Graphics Design احترافي متوفر على Windows.","category_id":39,"platform_id":18,"tags":["vector","design","illustration"],"size_gb":2.5,"downloads":2500000,"date_release":"2025-04-01T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":39,"category_type_id":2,"name_en":"Graphics Design","name_ar":"تصميم جرافيكي","description_en":"Graphic design and illustration software.","description_ar":"برامج التصميم الجرافيكي والرسوم.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":5,"name_en":"Adobe Lightroom","description_en":"Adobe Lightroom is a professional Photo Editing application available on Windows.","name_ar":"أدوبي لايتورم","description_ar":"أدوبي لايتورم هو تطبيق Photo Editing احترافي متوفر على Windows.","category_id":23,"platform_id":18,"tags":["photo-editing","raw","photography"],"size_gb":1.5,"downloads":2200000,"date_release":"2025-02-10T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":23,"category_type_id":2,"name_en":"Photo Editing","name_ar":"تحرير صور","description_en":"Image editing and graphic design software.","description_ar":"برامج تحرير الصور والتصميم الجرافيكي.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":6,"name_en":"Adobe InDesign","description_en":"Adobe InDesign is a professional Graphics Design application available on Windows.","name_ar":"أدوبي إن ديزاين","description_ar":"أدوبي إن ديزاين هو تطبيق Graphics Design احترافي متوفر على Windows.","category_id":39,"platform_id":18,"tags":["layout","publishing","design"],"size_gb":2,"downloads":1800000,"date_release":"2024-11-20T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":39,"category_type_id":2,"name_en":"Graphics Design","name_ar":"تصميم جرافيكي","description_en":"Graphic design and illustration software.","description_ar":"برامج التصميم الجرافيكي والرسوم.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":7,"name_en":"Microsoft Office 2024","description_en":"Microsoft Office 2024 is a professional Office Suite application available on Windows.","name_ar":"مايكروسوفت أوفيس 2024","description_ar":"مايكروسوفت أوفيس 2024 هو تطبيق Office Suite احترافي متوفر على Windows.","category_id":24,"platform_id":18,"tags":["office","productivity","documents"],"size_gb":4.5,"downloads":5000000,"date_release":"2024-10-01T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":24,"category_type_id":2,"name_en":"Office Suite","name_ar":"مكتبية","description_en":"Word processing, spreadsheets, and office tools.","description_ar":"برامج معالجة النصوص والجداول الحسابية وأدوات مكتبية.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":8,"name_en":"Microsoft Word","description_en":"Microsoft Word is a professional Office Suite application available on Windows.","name_ar":"مايكروسوفت وورد","description_ar":"مايكروسوفت وورد هو تطبيق Office Suite احترافي متوفر على Windows.","category_id":24,"platform_id":18,"tags":["word-processing","documents","office"],"size_gb":1.2,"downloads":8000000,"date_release":"2024-10-01T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":24,"category_type_id":2,"name_en":"Office Suite","name_ar":"مكتبية","description_en":"Word processing, spreadsheets, and office tools.","description_ar":"برامج معالجة النصوص والجداول الحسابية وأدوات مكتبية.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":9,"name_en":"Microsoft Excel","description_en":"Microsoft Excel is a professional Office Suite application available on Windows.","name_ar":"مايكروسوفت إكسل","description_ar":"مايكروسوفت إكسل هو تطبيق Office Suite احترافي متوفر على Windows.","category_id":24,"platform_id":18,"tags":["spreadsheet","data","office"],"size_gb":1.5,"downloads":7500000,"date_release":"2024-10-01T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":24,"category_type_id":2,"name_en":"Office Suite","name_ar":"مكتبية","description_en":"Word processing, spreadsheets, and office tools.","description_ar":"برامج معالجة النصوص والجداول الحسابية وأدوات مكتبية.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":10,"name_en":"Microsoft PowerPoint","description_en":"Microsoft PowerPoint is a professional Office Suite application available on Windows.","name_ar":"مايكروسوفت بوربوينت","description_ar":"مايكروسوفت بوربوينت هو تطبيق Office Suite احترافي متوفر على Windows.","category_id":24,"platform_id":18,"tags":["presentation","slides","office"],"size_gb":1,"downloads":7000000,"date_release":"2024-10-01T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":24,"category_type_id":2,"name_en":"Office Suite","name_ar":"مكتبية","description_en":"Word processing, spreadsheets, and office tools.","description_ar":"برامج معالجة النصوص والجداول الحسابية وأدوات مكتبية.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":11,"name_en":"Microsoft Access","description_en":"Microsoft Access is a professional Database application available on Windows.","name_ar":"مايكروسوفت أكسس","description_ar":"مايكروسوفت أكسس هو تطبيق Database احترافي متوفر على Windows.","category_id":29,"platform_id":18,"tags":["database","management","office"],"size_gb":0.8,"downloads":1200000,"date_release":"2024-10-01T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":29,"category_type_id":2,"name_en":"Database","name_ar":"قواعد بيانات","description_en":"Database management and administration tools.","description_ar":"برامج إدارة وإدارة قواعد البيانات.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":12,"name_en":"Microsoft Outlook","description_en":"Microsoft Outlook is a professional Communication application available on Windows.","name_ar":"مايكروسوفت أوتلوك","description_ar":"مايكروسوفت أوتلوك هو تطبيق Communication احترافي متوفر على Windows.","category_id":31,"platform_id":18,"tags":["email","calendar","office"],"size_gb":0.9,"downloads":5500000,"date_release":"2024-10-01T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":31,"category_type_id":2,"name_en":"Communication","name_ar":"تواصل","description_en":"Messaging, video calls, and communication apps.","description_ar":"تطبيقات المراسلة والمكالمات المرئية والتواصل.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":13,"name_en":"Visual Studio Code","description_en":"Visual Studio Code is a professional Programming application available on Windows.","name_ar":"فيجوال ستوديو كود","description_ar":"فيجوال ستوديو كود هو تطبيق Programming احترافي متوفر على Windows.","category_id":28,"platform_id":18,"tags":["editor","development","free"],"size_gb":0.4,"downloads":8000000,"date_release":"2025-01-20T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":28,"category_type_id":2,"name_en":"Programming","name_ar":"برمجة","description_en":"IDEs, code editors, and development tools.","description_ar":"بيئات التطوير ومحررات الأكواد وأدوات البرمجة.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":14,"name_en":"Visual Studio 2025","description_en":"Visual Studio 2025 is a professional Programming application available on Windows.","name_ar":"فيجوال ستوديو 2025","description_ar":"فيجوال ستوديو 2025 هو تطبيق Programming احترافي متوفر على Windows.","category_id":28,"platform_id":18,"tags":["ide","development","microsoft"],"size_gb":6.5,"downloads":3200000,"date_release":"2025-03-15T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":28,"category_type_id":2,"name_en":"Programming","name_ar":"برمجة","description_en":"IDEs, code editors, and development tools.","description_ar":"بيئات التطوير ومحررات الأكواد وأدوات البرمجة.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]},{"id":15,"name_en":"IntelliJ IDEA Ultimate","description_en":"IntelliJ IDEA Ultimate is a professional Programming application available on Windows.","name_ar":"إنتيليجي أييديا ألتيميت","description_ar":"إنتيليجي أييديا ألتيميت هو تطبيق Programming احترافي متوفر على Windows.","category_id":28,"platform_id":18,"tags":["ide","java","development"],"size_gb":2.1,"downloads":1200000,"date_release":"2024-11-05T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":28,"category_type_id":2,"name_en":"Programming","name_ar":"برمجة","description_en":"IDEs, code editors, and development tools.","description_ar":"بيئات التطوير ومحررات الأكواد وأدوات البرمجة.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null},"images":[]}],"first_page_url":"http:\/\/localhost\/api\/programs?page=1","from":1,"last_page":7,"last_page_url":"http:\/\/localhost\/api\/programs?page=7","links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/programs?page=1","label":"1","page":1,"active":true},{"url":"http:\/\/localhost\/api\/programs?page=2","label":"2","page":2,"active":false},{"url":"http:\/\/localhost\/api\/programs?page=3","label":"3","page":3,"active":false},{"url":"http:\/\/localhost\/api\/programs?page=4","label":"4","page":4,"active":false},{"url":"http:\/\/localhost\/api\/programs?page=5","label":"5","page":5,"active":false},{"url":"http:\/\/localhost\/api\/programs?page=6","label":"6","page":6,"active":false},{"url":"http:\/\/localhost\/api\/programs?page=7","label":"7","page":7,"active":false},{"url":"http:\/\/localhost\/api\/programs?page=2","label":"Next &raquo;","page":2,"active":false}],"next_page_url":"http:\/\/localhost\/api\/programs?page=2","path":"http:\/\/localhost\/api\/programs","per_page":15,"prev_page_url":null,"to":15,"total":100}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/programs/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the program.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"id":1,"name_en":"Adobe Photoshop 2025","description_en":"Adobe Photoshop 2025 is a professional Photo Editing application available on Windows.","name_ar":"أدوبي فوتوشوب 2025","description_ar":"أدوبي فوتوشوب 2025 هو تطبيق Photo Editing احترافي متوفر على Windows.","category_id":23,"platform_id":18,"tags":["design","photo-editing","graphics"],"size_gb":3.8,"downloads":3000000,"date_release":"2025-05-20T00:00:00.000000Z","created_at":"2026-06-27T12:04:46.000000Z","updated_at":"2026-06-27T12:04:46.000000Z","category":{"id":23,"category_type_id":2,"name_en":"Photo Editing","name_ar":"تحرير صور","description_en":"Image editing and graphic design software.","description_ar":"برامج تحرير الصور والتصميم الجرافيكي.","created_at":null,"updated_at":null},"platform":{"id":18,"name_en":"Windows","name_ar":"ويندوز","description_en":"Microsoft Windows operating system.","description_ar":"نظام تشغيل ويندوز من مايكروسوفت.","created_at":null,"updated_at":null}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/categories/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the category.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"id":1,"category_type_id":1,"name_en":"Action","name_ar":"أكشن","description_en":"Fast-paced action games with combat and adventure.","description_ar":"ألعاب أكشن سريعة مع قتال ومغامرة.","created_at":null,"updated_at":null,"category_type":{"id":1,"name_en":"Game","name_ar":"لعبة","created_at":null,"updated_at":null}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/usb-stick-orders
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/usb-stick-orders
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/usb-stick-orders/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the usb stick order.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/usb-stick-orders/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the usb stick order.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      notes:
+        custom: []
+        name: notes
         description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      custom_message:
+        custom: []
+        name: custom_message
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      delivery_address:
+        custom: []
+        name: delivery_address
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      phone:
+        custom: []
+        name: phone
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      game_ids:
+        custom: []
+        name: game_ids
+        description: 'Must match an existing stored value.'
+        required: false
+        example: null
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      program_ids:
+        custom: []
+        name: program_ids
+        description: 'Must match an existing stored value.'
+        required: false
+        example: null
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      notes: architecto
+      custom_message: architecto
+      delivery_address: architecto
+      phone: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/usb-stick-orders/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the usb stick order.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/programs/{program_id}/images/{program_image_id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      program_id:
+        custom: []
+        name: program_id
+        description: 'The ID of the program.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      program_image_id:
+        custom: []
+        name: program_image_id
+        description: 'The ID of the program image.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      program_id: 1
+      program_image_id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\ProgramImage] architecto"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/programs/{program_id}/images/{program_image_id}/thumbnail'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      program_id:
+        custom: []
+        name: program_id
+        description: 'The ID of the program.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      program_image_id:
+        custom: []
+        name: program_image_id
+        description: 'The ID of the program image.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      program_id: 1
+      program_image_id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\ProgramImage] architecto"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/game-categories
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
+        custom: []
+        name: name_en
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name_en: b
+      name_ar: 'n'
+      description_en: architecto
+      description_ar: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/game-categories/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the game category.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
+        custom: []
+        name: name_en
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name_en: b
+      name_ar: 'n'
+      description_en: architecto
+      description_ar: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/game-categories/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the game category.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
     responseFields: []
     auth: []
     controller: null
@@ -170,18 +975,15 @@ endpoints:
     uri: api/categories
     metadata:
       custom: []
-      groupName: Categories
-      groupDescription: |-
-
-        Manage game categories.
-      subgroup: Admin
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Create a category'
-      description: 'Add a new game category. Admin only.'
-      authenticated: true
+      title: ''
+      description: ''
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -189,68 +991,71 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
+      category_type_id:
+        custom: []
+        name: category_type_id
+        description: 'Must match an existing stored value.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
       name_en:
         custom: []
         name: name_en
-        description: 'English name.'
+        description: 'Must not be greater than 255 characters.'
         required: true
-        example: Action
+        example: 'n'
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         deprecated: false
       name_ar:
         custom: []
         name: name_ar
-        description: 'Arabic name.'
+        description: 'Must not be greater than 255 characters.'
         required: true
-        example: أكشن
+        example: g
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         deprecated: false
       description_en:
         custom: []
         name: description_en
-        description: 'English description.'
+        description: ''
         required: false
-        example: 'Action games'
+        example: architecto
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: true
         deprecated: false
       description_ar:
         custom: []
         name: description_ar
-        description: 'Arabic description.'
+        description: ''
         required: false
-        example: 'ألعاب الأكشن'
+        example: architecto
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      name_en: Action
-      name_ar: أكشن
-      description_en: 'Action games'
-      description_ar: 'ألعاب الأكشن'
+      category_type_id: architecto
+      name_en: 'n'
+      name_ar: g
+      description_en: architecto
+      description_ar: architecto
     fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 201
-        content: '{"id": 1, "name_en": "Action", "name_ar": "أكشن", "description_en": null, "description_ar": null}'
-        headers: []
-        description: ''
+    responses: []
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null
@@ -262,30 +1067,27 @@ endpoints:
     uri: 'api/categories/{id}'
     metadata:
       custom: []
-      groupName: Categories
-      groupDescription: |-
-
-        Manage game categories.
-      subgroup: Admin
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Update a category'
-      description: 'Update an existing game category. Admin only.'
-      authenticated: true
+      title: ''
+      description: ''
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
       id:
         custom: []
         name: id
-        description: 'The category ID.'
+        description: 'The ID of the category.'
         required: true
         example: 1
         type: integer
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
@@ -293,68 +1095,70 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
+      category_type_id:
+        custom: []
+        name: category_type_id
+        description: 'Must match an existing stored value.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
       name_en:
         custom: []
         name: name_en
-        description: 'English name.'
+        description: 'Must not be greater than 255 characters.'
         required: false
-        example: Racing
+        example: b
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         deprecated: false
       name_ar:
         custom: []
         name: name_ar
-        description: 'Arabic name.'
+        description: 'Must not be greater than 255 characters.'
         required: false
-        example: سباق
+        example: 'n'
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         deprecated: false
       description_en:
         custom: []
         name: description_en
-        description: 'English description.'
+        description: ''
         required: false
-        example: 'Racing games'
+        example: architecto
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: true
         deprecated: false
       description_ar:
         custom: []
         name: description_ar
-        description: 'Arabic description.'
+        description: ''
         required: false
-        example: 'ألعاب السباق'
+        example: architecto
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      name_en: Racing
-      name_ar: سباق
-      description_en: 'Racing games'
-      description_ar: 'ألعاب السباق'
+      name_en: b
+      name_ar: 'n'
+      description_en: architecto
+      description_ar: architecto
     fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"id": 1, "name_en": "Racing", "name_ar": "سباق", "description_en": "Racing games", "description_ar": null}'
-        headers: []
-        description: ''
+    responses: []
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null
@@ -365,30 +1169,27 @@ endpoints:
     uri: 'api/categories/{id}'
     metadata:
       custom: []
-      groupName: Categories
-      groupDescription: |-
-
-        Manage game categories.
-      subgroup: Admin
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Delete a category'
-      description: 'Remove a game category. Admin only.'
-      authenticated: true
+      title: ''
+      description: ''
+      authenticated: false
       deprecated: false
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
       id:
         custom: []
         name: id
-        description: 'The category ID.'
+        description: 'The ID of the category.'
         required: true
         example: 1
         type: integer
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
@@ -398,18 +1199,717 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 204
-        content: ''
-        headers: []
-        description: ''
+    responses: []
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/program-categories
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
+        custom: []
+        name: name_en
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name_en: b
+      name_ar: 'n'
+      description_en: architecto
+      description_ar: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/program-categories/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the program category.'
+        required: true
+        example: 21
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 21
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
+        custom: []
+        name: name_en
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name_en: b
+      name_ar: 'n'
+      description_en: architecto
+      description_ar: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/program-categories/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the program category.'
+        required: true
+        example: 21
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 21
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/programs
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
+        custom: []
+        name: name_en
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      category_id:
+        custom: []
+        name: category_id
+        description: 'Must match an existing stored value.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      platform_id:
+        custom: []
+        name: platform_id
+        description: 'Must match an existing stored value.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      tags:
+        custom: []
+        name: tags
+        description: ''
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      size_gb:
+        custom: []
+        name: size_gb
+        description: ''
+        required: true
+        example: 4326.41688
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      downloads:
+        custom: []
+        name: downloads
+        description: 'Must be at least 0.'
+        required: false
+        example: 77
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      date_release:
+        custom: []
+        name: date_release
+        description: 'Must be a valid date.'
+        required: false
+        example: '2026-06-27T12:09:17'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name_en: b
+      name_ar: 'n'
+      description_en: architecto
+      description_ar: architecto
+      category_id: architecto
+      platform_id: architecto
+      tags:
+        - architecto
+      size_gb: 4326.41688
+      downloads: 77
+      date_release: '2026-06-27T12:09:17'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/programs/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the program.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name_en:
+        custom: []
+        name: name_en
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      name_ar:
+        custom: []
+        name: name_ar
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description_en:
+        custom: []
+        name: description_en
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description_ar:
+        custom: []
+        name: description_ar
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      category_id:
+        custom: []
+        name: category_id
+        description: 'Must match an existing stored value.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      platform_id:
+        custom: []
+        name: platform_id
+        description: 'Must match an existing stored value.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      tags:
+        custom: []
+        name: tags
+        description: ''
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      size_gb:
+        custom: []
+        name: size_gb
+        description: ''
+        required: false
+        example: 4326.41688
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      downloads:
+        custom: []
+        name: downloads
+        description: 'Must be at least 0.'
+        required: false
+        example: 77
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      date_release:
+        custom: []
+        name: date_release
+        description: 'Must be a valid date.'
+        required: false
+        example: '2026-06-27T12:09:17'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name_en: b
+      name_ar: 'n'
+      description_en: architecto
+      description_ar: architecto
+      tags:
+        - architecto
+      size_gb: 4326.41688
+      downloads: 77
+      date_release: '2026-06-27T12:09:17'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/programs/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the program.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/programs/{program_id}/images'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters:
+      program_id:
+        custom: []
+        name: program_id
+        description: 'The ID of the program.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      program_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      image:
+        custom: []
+        name: image
+        description: 'Must be a file. Must not be greater than 10240 kilobytes.'
+        required: true
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      type:
+        custom: []
+        name: type
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      alt:
+        custom: []
+        name: alt
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      type: architecto
+      alt: architecto
+    fileParameters:
+      image: null
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/programs/{program_id}/images/{program_image_id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      program_id:
+        custom: []
+        name: program_id
+        description: 'The ID of the program.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      program_image_id:
+        custom: []
+        name: program_image_id
+        description: 'The ID of the program image.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      program_id: 1
+      program_image_id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
     controller: null
     method: null
     route: null

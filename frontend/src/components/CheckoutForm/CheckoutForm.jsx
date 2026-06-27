@@ -9,7 +9,9 @@ import {
   faBuilding,
   faExclamationTriangle,
   faSpinner,
-  faCheck
+  faCheck,
+  faArrowLeft,
+  faArrowRight
 } from '@fortawesome/free-solid-svg-icons'
 import './CheckoutForm.css'
 
@@ -164,7 +166,7 @@ function CheckoutForm({
             onClick={onBack}
             className="checkout-form__btn-back"
           >
-            <FontAwesomeIcon icon={locale === 'ar' ? faCheck : faUser} className={locale === 'ar' ? 'ms-2' : 'me-2'} />
+            <FontAwesomeIcon icon={locale === 'ar' ? faArrowRight : faArrowLeft} className={locale === 'ar' ? 'ms-2' : 'me-2'} />
             <span className="checkout-form__btn-text">{langText.backToGames}</span>
           </Button>
 

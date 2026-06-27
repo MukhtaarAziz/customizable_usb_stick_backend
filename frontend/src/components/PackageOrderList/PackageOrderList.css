@@ -1,0 +1,116 @@
+.package-order-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.package-order-card {
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+}
+
+.package-order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md) !important;
+}
+
+.package-order-card__header {
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.package-order-status-badge {
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-xl);
+  font-weight: 500;
+}
+
+.package-order-items-section {
+  padding: 0.75rem;
+  background: var(--surface-page);
+  border-radius: var(--radius-sm);
+}
+
+.package-order-item {
+  padding: 0.5rem 0.75rem;
+  background: var(--surface-card);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.package-order-item-notes {
+  padding: 0.25rem 0 0 1.5rem;
+}
+
+.package-order-detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--surface-page);
+  border-radius: var(--radius-sm);
+  height: 100%;
+}
+
+.package-order-detail-item__icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-card);
+  border-radius: var(--radius-sm);
+  color: var(--color-success);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.package-order-detail-item__content {
+  flex: 1;
+}
+
+.package-order-detail-item__content small {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.package-order-detail-item__content p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+body.theme-dark .package-order-detail-item {
+  background: var(--surface-overlay);
+}
+
+body.theme-dark .package-order-detail-item__icon {
+  background: var(--surface-page);
+}
+
+body.theme-dark .package-order-items-section {
+  background: var(--surface-overlay);
+}
+
+body.theme-dark .package-order-item {
+  background: var(--surface-card);
+  border-color: var(--border-color);
+}
+
+@media (max-width: 768px) {
+  .package-order-card__header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .package-order-status-badge {
+    align-self: flex-start;
+  }
+}

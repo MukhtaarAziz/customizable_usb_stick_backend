@@ -4,6 +4,7 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faEnvelope, faPhone, faArrowLeft, faArrowRightFromBracket, faBox, faLocationDot, faMapLocation } from '@fortawesome/free-solid-svg-icons'
 import OrderList from '../components/OrderList/OrderList.jsx'
+import PackageOrderList from '../components/PackageOrderList/PackageOrderList.jsx'
 import CustomPagination from '../components/CustomPagination/CustomPagination.jsx'
 import './ProfilePage.css'
 
@@ -15,6 +16,10 @@ function ProfilePage({ user, onLogout, locale, t }) {
   const [currentPage, setCurrentPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
   const ordersPerPage = 5
+
+  const [packageOrders, setPackageOrders] = useState([])
+  const [packageOrdersLoading, setPackageOrdersLoading] = useState(true)
+  const [packageOrdersError, setPackageOrdersError] = useState(null)
 
   useEffect(() => {
     async function loadOrders(page = 1) {
@@ -71,6 +76,59 @@ function ProfilePage({ user, onLogout, locale, t }) {
     }
 
     loadOrders(1)
+  }, [user, locale])
+
+  useEffect(() => {
+    async function loadPackageOrders() {
+      try {
+        setPackageOrdersLoading(true)
+        setPackageOrdersError(null)
+
+        if (!user) {
+          setPackageOrdersError(locale === 'ar' ? 'يرجى تسجيل الدخول' : 'Please login')
+          setPackageOrdersLoading(false)
+          return
+        }
+
+        const token = user?.token || localStorage.getItem('authToken')
+
+        if (!token) {
+          setPackageOrdersError(locale === 'ar' ? 'يرجى تسجيل الدخول' : 'Please login')
+          setPackageOrdersLoading(false)
+          return
+        }
+
+        const response = await fetch('/api/package-orders', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+          }
+        })
+
+        if (!response.ok) {
+          throw new Error(locale === 'ar' ? 'فشل تحميل طلبات الباقات' : 'Failed to load package orders')
+        }
+
+        const data = await response.json()
+
+        let ordersArray = []
+        if (Array.isArray(data)) {
+          ordersArray = data
+        } else if (data.data && Array.isArray(data.data)) {
+          ordersArray = data.data
+        } else if (data.data && typeof data.data === 'object') {
+          ordersArray = [data.data]
+        }
+
+        setPackageOrders(ordersArray)
+      } catch (err) {
+        setPackageOrdersError(err.message)
+      } finally {
+        setPackageOrdersLoading(false)
+      }
+    }
+
+    loadPackageOrders()
   }, [user, locale])
 
   const handlePageChange = (page) => {
@@ -255,6 +313,35 @@ function ProfilePage({ user, onLogout, locale, t }) {
                         </div>
                       )}
                     </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+
+            <Row className="mt-4">
+              <Col xs={12}>
+                <Card className="profile-panel shadow-sm">
+                  <Card.Body className="p-3 p-md-4">
+                    <div className="d-flex align-items-center gap-3 mb-3 mb-md-4">
+                      <div className="panel-icon panel-icon--orders">
+                        <FontAwesomeIcon icon={faBox} />
+                      </div>
+                      <div>
+                        <h5 className="fw-bold mb-0">
+                          {locale === 'ar' ? 'طلبات الباقات' : 'Package Orders'}
+                        </h5>
+                        <p className="text-muted small mb-0">
+                          {locale === 'ar' ? 'سجل طلباتك للباقات' : 'Your package order history'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <PackageOrderList
+                      orders={packageOrders}
+                      locale={locale}
+                      loading={packageOrdersLoading}
+                      error={packageOrdersError}
+                    />
                   </Card.Body>
                 </Card>
               </Col>

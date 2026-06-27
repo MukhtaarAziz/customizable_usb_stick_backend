@@ -18,6 +18,9 @@ return new class extends Migration
             $table->decimal('total_price', 10, 2)->default(0.00);
             $table->string('status')->default('pending'); // pending, processing, shipped, delivered, cancelled
             $table->text('notes')->nullable();
+            $table->text('custom_message')->nullable();
+            $table->text('delivery_address')->nullable();
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
     }

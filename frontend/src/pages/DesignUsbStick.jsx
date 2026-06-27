@@ -191,11 +191,10 @@ function DesignUsbStick({
   useEffect(() => {
     async function loadMeta() {
       try {
-        const [usbRes, platRes, catRes, progPlatRes, govRes] = await Promise.all([
+        const [usbRes, platRes, catRes, govRes] = await Promise.all([
           fetch('/api/usb-sticks'),
-          fetch('/api/game-platforms'),
-          fetch('/api/categories'),
-          fetch('/api/program-platforms'),
+          fetch('/api/game-platforms?show_all=true'),
+          fetch('/api/categories?show_all=true'),
           fetch('/api/governorates')
         ])
 
@@ -204,30 +203,19 @@ function DesignUsbStick({
           setUsbSticks(data.data ?? data)
         }
 
-        const allPlatforms = []
-        const allCategories = []
-
         if (platRes.ok) {
           const data = await platRes.json()
-          const gamePlatforms = (data.data ?? data).map(p => ({ ...p, type: 'game' }))
-          allPlatforms.push(...gamePlatforms)
+          setPlatforms(data.data ?? data)
         }
-        if (progPlatRes.ok) {
-          const data = await progPlatRes.json()
-          const progPlatforms = (data.data ?? data).map(p => ({ ...p, type: 'program' }))
-          allPlatforms.push(...progPlatforms)
-        }
-        setPlatforms(allPlatforms)
 
         if (catRes.ok) {
           const data = await catRes.json()
-          const categories = (data.data ?? data).map(c => ({
+          const allCategories = (data.data ?? data).map(c => ({
             ...c,
             type: c.category_type_id === 1 ? 'game' : 'program'
           }))
-          allCategories.push(...categories)
+          setCategories(allCategories)
         }
-        setCategories(allCategories)
 
         if (govRes.ok) {
           const data = await govRes.json()
@@ -415,7 +403,9 @@ function DesignUsbStick({
       })
 
       if (!orderResponse.ok) {
-        throw new Error(locale === 'ar' ? 'فشل إرسال الطلب.' : 'Failed to submit order.')
+          const errorData = await orderResponse.json().catch(() => ({}))
+          const errorMessage = errorData.message || errorData.error || (locale === 'ar' ? 'فشل إرسال الطلب.' : 'Failed to submit order.')
+          throw new Error(errorMessage)
       }
 
       // Success - clear selections and show success screen
@@ -455,29 +445,19 @@ function DesignUsbStick({
       {/* ================= STEP 1: SELECT USB ================= */}
       {activeStep === 1 && (
         <Card className="design-usb__card shadow-sm border-0">
-          <div className="mb-4">
-            <h4 className="fw-bold mb-1">{langText.selectUsbTitle}</h4>
-            <p className="text-muted small">{langText.selectUsbDesc}</p>
-          </div>
+          <Card.Body className="p-4">
+            <div className="mb-4">
+              <h4 className="fw-bold mb-1">{langText.selectUsbTitle}</h4>
+              <p className="text-muted small">{langText.selectUsbDesc}</p>
+            </div>
 
-          <UsbSelectionGrid
-            usbSticks={usbSticks}
-            selectedUsbId={selectedUsbId}
-            onSelect={handleUsbChange}
-            locale={locale}
-          />
-
-          <div className="d-flex justify-content-end mt-4">
-            <Button
-              variant="primary"
-              disabled={!selectedUsbId}
-              onClick={() => setActiveStep(2)}
-              className="wizard-btn-next"
-            >
-              <span className="wizard-btn-text">{langText.nextSelectGames}</span>
-              <FontAwesomeIcon icon={locale === 'ar' ? faArrowLeft : faArrowRight} />
-            </Button>
-          </div>
+            <UsbSelectionGrid
+              usbSticks={usbSticks}
+              selectedUsbId={selectedUsbId}
+              onSelect={handleUsbChange}
+              locale={locale}
+            />
+          </Card.Body>
         </Card>
       )}
 
@@ -485,10 +465,12 @@ function DesignUsbStick({
       {activeStep === 2 && (
         <Row className="gy-4">
           <Col xs={12}>
-            <div className="mb-4">
-              <h4 className="fw-bold mb-1">{langText.chooseGamesTitle}</h4>
-              <p className="text-muted small">{langText.chooseGamesDesc}</p>
-            </div>
+            <Card className="design-usb__card shadow-sm border-0 mb-4">
+              <div className="mb-4">
+                <h4 className="fw-bold mb-1">{langText.chooseGamesTitle}</h4>
+                <p className="text-muted small">{langText.chooseGamesDesc}</p>
+              </div>
+            </Card>
 
             <GamesCatalog
               items={items}
@@ -519,27 +501,6 @@ function DesignUsbStick({
               locale={locale}
             />
 
-            {/* Stepper buttons */}
-            <div className="wizard-nav-buttons">
-              <Button 
-                variant="outline-secondary" 
-                className="wizard-btn-back text-start rtl-float"
-                onClick={() => setActiveStep(1)}
-              >
-                <FontAwesomeIcon icon={locale === 'ar' ? faArrowRight : faArrowLeft} />
-                <span className="wizard-btn-text">{langText.backToUsb}</span>
-              </Button>
-
-              <Button 
-                variant="primary" 
-                className="wizard-btn-next text-end rtl-float"
-                disabled={selectedItems.length === 0 || isOverCapacity}
-                onClick={() => setActiveStep(3)}
-              >
-                <span className="wizard-btn-text">{langText.nextCheckout}</span>
-                <FontAwesomeIcon icon={locale === 'ar' ? faArrowLeft : faArrowRight} />
-              </Button>
-            </div>
 
             {/* Floating Action Button for Desktop/Tablet - Now Positioned Absolutely */}
             <Button 
@@ -572,12 +533,13 @@ function DesignUsbStick({
           <Col xs={12} lg={7}>
             {user ? (
               <Card className="design-usb__card border-0 shadow-sm">
-                <div className="mb-4">
-                  <h4 className="fw-bold mb-1">{langText.checkoutTitle}</h4>
-                  <p className="text-muted small">{langText.checkoutDesc}</p>
-                </div>
+                <Card.Body className="p-4">
+                  <div className="mb-4">
+                    <h4 className="fw-bold mb-1">{langText.checkoutTitle}</h4>
+                    <p className="text-muted small">{langText.checkoutDesc}</p>
+                  </div>
 
-                <CheckoutForm
+                  <CheckoutForm
                   checkoutForm={checkoutForm}
                   validationError={validationError}
                   isSubmitting={isSubmitting}
@@ -589,22 +551,25 @@ function DesignUsbStick({
                   onSubmit={handleOrderSubmit}
                   onBack={() => setActiveStep(2)}
                 />
+                </Card.Body>
               </Card>
             ) : (
-              <Card className="design-usb__card border-0 shadow-sm text-center py-5">
-                <FontAwesomeIcon icon={faUserLock} className="text-muted mb-3" style={{ fontSize: '4rem' }} />
-                <h4 className="fw-bold mb-2">{langText.loginRequired}</h4>
-                <p className="text-muted mb-4">{langText.loginPrompt}</p>
-                <div className="d-flex justify-content-center gap-3">
-                  <Button variant="outline-secondary" onClick={() => setActiveStep(2)}>
-                    <FontAwesomeIcon icon={locale === 'ar' ? faArrowRight : faArrowLeft} className="me-2" />
-                    {langText.backToGames}
-                  </Button>
-                  <Button variant="primary" size="lg" onClick={onShowAuth}>
-                    <FontAwesomeIcon icon={faArrowRightToBracket} className="me-2" />
-                    {langText.loginToContinue}
-                  </Button>
-                </div>
+              <Card className="design-usb__card border-0 shadow-sm">
+                <Card.Body className="text-center py-5">
+                  <FontAwesomeIcon icon={faUserLock} className="text-muted mb-3" style={{ fontSize: '4rem' }} />
+                  <h4 className="fw-bold mb-2">{langText.loginRequired}</h4>
+                  <p className="text-muted mb-4">{langText.loginPrompt}</p>
+                  <div className="d-flex justify-content-center gap-3">
+                    <Button variant="outline-secondary" onClick={() => setActiveStep(2)}>
+                      <FontAwesomeIcon icon={locale === 'ar' ? faArrowRight : faArrowLeft} className="me-2" />
+                      {langText.backToGames}
+                    </Button>
+                    <Button variant="primary" size="lg" onClick={onShowAuth}>
+                      <FontAwesomeIcon icon={faArrowRightToBracket} className="me-2" />
+                      {langText.loginToContinue}
+                    </Button>
+                  </div>
+                </Card.Body>
               </Card>
             )}
           </Col>
@@ -632,6 +597,48 @@ function DesignUsbStick({
             onReset={handleResetWizard}
             onGoToProfile={() => {}}
           />
+        </Card>
+      )}
+
+      {/* Persistent Navigation Buttons at Bottom */}
+      {activeStep >= 1 && activeStep <= 3 && (
+        <Card className="design-usb__card shadow-sm border-0 mt-4">
+          <Card.Body className="p-4">
+            <div className="wizard-nav-buttons">
+              {activeStep > 1 && (
+                <Button 
+                  variant="outline-secondary" 
+                  className="wizard-btn-back text-start rtl-float"
+                  onClick={() => {
+                    if (activeStep === 2) setActiveStep(1)
+                    if (activeStep === 3) setActiveStep(2)
+                  }}
+                >
+                  <FontAwesomeIcon icon={locale === 'ar' ? faArrowRight : faArrowLeft} />
+                  <span className="wizard-btn-text">
+                    {activeStep === 2 ? langText.backToUsb : langText.backToGames}
+                  </span>
+                </Button>
+              )}
+
+              {activeStep < 3 && (
+                <Button 
+                  variant="primary" 
+                  className="wizard-btn-next text-end rtl-float"
+                  disabled={activeStep === 1 ? !selectedUsbId : (selectedItems.length === 0 || isOverCapacity)}
+                  onClick={() => {
+                    if (activeStep === 1) setActiveStep(2)
+                    if (activeStep === 2) setActiveStep(3)
+                  }}
+                >
+                  <span className="wizard-btn-text">
+                    {activeStep === 1 ? langText.nextSelectGames : langText.nextCheckout}
+                  </span>
+                  <FontAwesomeIcon icon={locale === 'ar' ? faArrowLeft : faArrowRight} />
+                </Button>
+              )}
+            </div>
+          </Card.Body>
         </Card>
       )}
 

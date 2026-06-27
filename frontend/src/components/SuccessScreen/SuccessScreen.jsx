@@ -22,7 +22,7 @@ function SuccessScreen({ locale, langText, user, onReset, onGoToProfile }) {
           <FontAwesomeIcon icon={faRedo} className={locale === 'ar' ? 'ms-2' : 'me-2'} />
           {langText.designNew}
         </Button>
-        {user && (
+        {user && onGoToProfile && (
           <Button href="/profile" variant="outline-secondary" size="lg" onClick={onGoToProfile}>
             <FontAwesomeIcon icon={faUser} className={locale === 'ar' ? 'ms-2' : 'me-2'} />
             {langText.goProfile}

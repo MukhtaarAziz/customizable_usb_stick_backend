@@ -1,0 +1,3 @@
+.cart-item:last-child {
+  border-bottom: none !important;
+}

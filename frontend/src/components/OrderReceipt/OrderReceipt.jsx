@@ -45,29 +45,72 @@ function OrderReceipt({ selectedUsb, selectedItems, totalItemsSize, locale, lang
           </div>
         </div>
 
-        <h6 className="fw-bold mt-4 mb-2">
-          {locale === 'ar' ? 'قائمة العناصر المضمنة' : 'Included Items'} ({selectedItems.length})
-        </h6>
-        <div className="receipt-games-list" style={{ maxHeight: '250px' }}>
-          {selectedItems.map((item, index) => {
-            const isGame = item.type === 'game'
-            return (
-              <div key={`${item.type}-${item.id}`} className="receipt-game-item">
-                <span className="receipt-game-number">{index + 1}.</span>
-                <span className="receipt-game-name flex-grow-1">
-                  {locale === 'ar' ? item.name_ar || item.name_en : item.name_en || item.name_ar}
-                </span>
-                <Badge bg={isGame ? 'primary' : 'indigo'} className="me-1 py-0 px-1" style={isGame ? {} : { background: '#6366f1' }}>
-                  <FontAwesomeIcon icon={isGame ? faGamepad : faCode} className="me-1" />
-                  {isGame ? (locale === 'ar' ? 'لعبة' : 'Game') : (locale === 'ar' ? 'برنامج' : 'App')}
-                </Badge>
-                <span className="receipt-game-size text-muted ms-2">
-                  {Number(item.size_gb).toFixed(1)} GB
-                </span>
-              </div>
-            )
-          })}
-        </div>
+        {(() => {
+          const games = selectedItems.filter(item => item.type === 'game')
+          const programs = selectedItems.filter(item => item.type === 'program')
+          
+          return (
+            <>
+              {games.length > 0 && (
+                <>
+                  <h6 className="fw-bold mt-4 mb-2 text-primary">
+                    <FontAwesomeIcon icon={faGamepad} className="me-2" />
+                    {locale === 'ar' ? 'الألعاب' : 'Games'} ({games.length})
+                  </h6>
+                  <div className="receipt-games-list" style={{ maxHeight: '200px' }}>
+                    {games.map((item, index) => (
+                      <div key={`game-${item.id}`} className="receipt-game-item">
+                        <span className="receipt-game-number">{index + 1}.</span>
+                        <span className="receipt-game-name flex-grow-1">
+                          {locale === 'ar' ? item.name_ar || item.name_en : item.name_en || item.name_ar}
+                        </span>
+                        <Badge bg="primary" className="me-1 py-0 px-1">
+                          <FontAwesomeIcon icon={faGamepad} className="me-1" />
+                          {locale === 'ar' ? 'لعبة' : 'Game'}
+                        </Badge>
+                        <span className="receipt-game-size text-muted ms-2">
+                          {Number(item.size_gb).toFixed(1)} GB
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {programs.length > 0 && (
+                <>
+                  <h6 className="fw-bold mt-4 mb-2 text-indigo">
+                    <FontAwesomeIcon icon={faCode} className="me-2" />
+                    {locale === 'ar' ? 'البرامج' : 'Programs'} ({programs.length})
+                  </h6>
+                  <div className="receipt-programs-list" style={{ maxHeight: '200px' }}>
+                    {programs.map((item, index) => (
+                      <div key={`program-${item.id}`} className="receipt-game-item">
+                        <span className="receipt-game-number">{index + 1}.</span>
+                        <span className="receipt-game-name flex-grow-1">
+                          {locale === 'ar' ? item.name_ar || item.name_en : item.name_en || item.name_ar}
+                        </span>
+                        <Badge className="me-1 py-0 px-1" style={{ background: '#6366f1' }}>
+                          <FontAwesomeIcon icon={faCode} className="me-1" />
+                          {locale === 'ar' ? 'برنامج' : 'App'}
+                        </Badge>
+                        <span className="receipt-game-size text-muted ms-2">
+                          {Number(item.size_gb).toFixed(1)} GB
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {selectedItems.length === 0 && (
+                <div className="text-center text-muted py-3">
+                  {locale === 'ar' ? 'لم يتم إضافة عناصر بعد' : 'No items added yet'}
+                </div>
+              )}
+            </>
+          )
+        })()}
       </Card.Body>
     </Card>
   )

@@ -3,14 +3,16 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Database\Seeders\CategoryPlatformGameSeeder;
-use Database\Seeders\CategoryPlatformProgramSeeder;
+use Database\Seeders\CategoriesTableSeeder;
 use Database\Seeders\GovernoratesTableSeeder;
 use Database\Seeders\CustomersTableSeeder;
-use Database\Seeders\PackagesTableSeeder;
-use Database\Seeders\GamePackagesSeeder;
-use Database\Seeders\ProgramPackagesSeeder;
+use Database\Seeders\GamesTableSeeder;
+use Database\Seeders\ProgramsTableSeeder;
 use Database\Seeders\UsbSticksTableSeeder;
+use Database\Seeders\PackageCategoryTypesTableSeeder;
+use Database\Seeders\PackagesTableSeeder;
+use Database\Seeders\StorageDeviceTypesTableSeeder;
+use Database\Seeders\StorageDevicesTableSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -36,13 +38,16 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        $this->call(CategoryPlatformGameSeeder::class);
-        $this->call(CategoryPlatformProgramSeeder::class);
-        $this->call(PackagesTableSeeder::class);
-        $this->call(GamePackagesSeeder::class);
-        $this->call(ProgramPackagesSeeder::class);
+        $this->call(CategoriesTableSeeder::class);
+        $this->call(PlatformsTableSeeder::class);
+        $this->call(GamesTableSeeder::class);
+        $this->call(ProgramsTableSeeder::class);
         $this->call(GovernoratesTableSeeder::class);
         $this->call(CustomersTableSeeder::class);
         $this->call(UsbSticksTableSeeder::class);
+        $this->call(StorageDeviceTypesTableSeeder::class);
+        $this->call(StorageDevicesTableSeeder::class);
+        $this->call(PackageCategoryTypesTableSeeder::class);
+        $this->call(PackagesTableSeeder::class);
     }
 }

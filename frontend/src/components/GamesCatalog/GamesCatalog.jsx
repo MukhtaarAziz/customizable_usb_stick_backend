@@ -56,10 +56,6 @@ function GamesCatalog({
     return <Alert variant="danger">{error}</Alert>
   }
 
-  const filteredPlatforms = catalogType === 'all'
-    ? platforms
-    : platforms.filter(p => p.type === catalogType)
-
   const filteredCategories = catalogType === 'all'
     ? categories
     : categories.filter(c => c.type === catalogType)
@@ -114,10 +110,9 @@ function GamesCatalog({
               </InputGroup.Text>
               <Form.Select value={platformId} onChange={onPlatformChange}>
                 <option value="">{locale === 'ar' ? 'كل المنصات' : 'All platforms'}</option>
-                {filteredPlatforms.map((platform) => (
-                  <option key={`${platform.type}-${platform.id}`} value={platform.id}>
+                {platforms.map((platform) => (
+                  <option key={platform.id} value={platform.id}>
                     {locale === 'ar' ? platform.name_ar || platform.name_en : platform.name_en || platform.name_ar}
-                    {catalogType === 'all' && ` [${platform.type === 'game' ? (locale === 'ar' ? 'لعبة' : 'Game') : (locale === 'ar' ? 'برنامج' : 'App')}]`}
                   </option>
                 ))}
               </Form.Select>

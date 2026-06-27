@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 function LoginModal({ show, onClose, onLogin, locale }) {
   const [identifier, setIdentifier] = useState('')
@@ -40,8 +42,11 @@ function LoginModal({ show, onClose, onLogin, locale }) {
   return (
     <Modal show={show} onHide={onClose} centered>
       <Form onSubmit={submit}>
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>{locale === 'ar' ? 'تسجيل الدخول' : 'Login'}</Modal.Title>
+          <button type="button" className="modal-close-btn" onClick={onClose} aria-label={locale === 'ar' ? 'إغلاق' : 'Close'}>
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
         </Modal.Header>
         <Modal.Body>
           <Form.Group className="mb-3">

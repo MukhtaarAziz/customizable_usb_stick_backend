@@ -1,83 +1,137 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\GameCategoryController;
 use App\Http\Controllers\GameController;
-use App\Http\Controllers\GamePlatformController;
-use App\Http\Controllers\GameImageController;
-use App\Http\Controllers\GamePackageController;
-use App\Http\Controllers\UsbStickController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\UsbStickOrderController;
-use App\Http\Controllers\ProgramCategoryController;
+use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProgramController;
-use App\Http\Controllers\ProgramPlatformController;
-use App\Http\Controllers\ProgramImageController;
-use App\Http\Controllers\ProgramPackageController;
-use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\PlatformController;
+use App\Http\Controllers\PackageCategoryTypeController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Middleware\EnsureAdmin;
+use App\Http\Controllers\CategoryTypeController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\UsbStickController;
+use App\Http\Controllers\PackageOrderController;
+use App\Http\Controllers\UsbStickOrderController;
+use App\Http\Controllers\StorageDeviceOrderController;
+use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\StorageDeviceController;
+use App\Http\Controllers\StorageDeviceTypeController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::get('me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "api" middleware group. Make something great!
+|
+*/
 
-Route::apiResource('game-categories', GameCategoryController::class)->only(['index', 'show']);
-Route::apiResource('game-platforms', GamePlatformController::class)->only(['index', 'show']);
-Route::apiResource('games', GameController::class)->only(['index', 'show']);
-Route::apiResource('game-packages', GamePackageController::class)->only(['index', 'show']);
-Route::apiResource('program-categories', ProgramCategoryController::class)->only(['index', 'show']);
-Route::apiResource('program-platforms', ProgramPlatformController::class)->only(['index', 'show']);
-Route::apiResource('programs', ProgramController::class)->only(['index', 'show']);
-Route::apiResource('program-packages', ProgramPackageController::class)->only(['index', 'show']);
-Route::get('catalog', [CatalogController::class, 'index']);
-Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
-Route::apiResource('usb-sticks', UsbStickController::class)->only(['index', 'show']);
-
-// Customer routes - public register and view
-Route::post('customers', [CustomerController::class, 'store']);
-Route::get('customers/{customer}', [CustomerController::class, 'show']);
-Route::get('governorates', [CustomerController::class, 'governorates']);
-
-// USB Stick Order routes (authenticated customers)
-Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('usb-stick-orders', UsbStickOrderController::class);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
 });
 
-// Public access to images via request (served from storage)
-Route::get('games/{game}/images/{game_image}', [GameImageController::class, 'show']);
-Route::get('games/{game}/images/{game_image}/thumbnail', [GameImageController::class, 'showThumbnail']);
-Route::get('programs/{program}/images/{program_image}', [ProgramImageController::class, 'show']);
-Route::get('programs/{program}/images/{program_image}/thumbnail', [ProgramImageController::class, 'showThumbnail']);
+// Authentication endpoints (login, logout, me)
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->get('/me', [AuthController::class, 'me']);
 
-Route::middleware(['auth:sanctum', EnsureAdmin::class])->group(function () {
-    Route::apiResource('game-categories', GameCategoryController::class)->only(['store', 'update', 'destroy']);
-    Route::apiResource('game-platforms', GamePlatformController::class)->only(['store', 'update', 'destroy']);
-    Route::apiResource('games', GameController::class)->only(['store', 'update', 'destroy']);
-    Route::apiResource('game-packages', GamePackageController::class)->only(['store', 'update', 'destroy']);
-    // Admin: increment views and orders for packages
-    Route::post('game-packages/{game_package}/views', [GamePackageController::class, 'incrementViews']);
-    Route::post('game-packages/{game_package}/orders', [GamePackageController::class, 'incrementOrders']);
-    // Admin: upload and delete images for a game
-    Route::post('games/{game}/images', [GameImageController::class, 'store']);
-    Route::delete('games/{game}/images/{game_image}', [GameImageController::class, 'destroy']);
-    // Admin: program CRUD
-    Route::apiResource('categories', CategoryController::class)->only(['store', 'update', 'destroy']);
-    Route::apiResource('program-categories', ProgramCategoryController::class)->only(['store', 'update', 'destroy']);
-    Route::apiResource('program-platforms', ProgramPlatformController::class)->only(['store', 'update', 'destroy']);
-    Route::apiResource('programs', ProgramController::class)->only(['store', 'update', 'destroy']);
-    Route::apiResource('program-packages', ProgramPackageController::class)->only(['store', 'update', 'destroy']);
-    Route::post('program-packages/{program_package}/views', [ProgramPackageController::class, 'incrementViews']);
-    Route::post('program-packages/{program_package}/orders', [ProgramPackageController::class, 'incrementOrders']);
-    Route::post('programs/{program}/images', [ProgramImageController::class, 'store']);
-    Route::delete('programs/{program}/images/{program_image}', [ProgramImageController::class, 'destroy']);
-    // Admin: CRUD for usb sticks
-    Route::post('usb-sticks', [UsbStickController::class, 'store']);
-    Route::put('usb-sticks/{usb_stick}', [UsbStickController::class, 'update']);
-    Route::delete('usb-sticks/{usb_stick}', [UsbStickController::class, 'destroy']);
-    // Admin: Customer management
-    Route::get('customers', [CustomerController::class, 'index']);
-    Route::put('customers/{customer}', [CustomerController::class, 'update']);
-    Route::delete('customers/{customer}', [CustomerController::class, 'destroy']);
+// Public API endpoints expected by the frontend
+Route::get('/games', [GameController::class, 'index']);
+Route::get('/games/{id}', [GameController::class, 'show']);
+
+Route::get('/programs', [ProgramController::class, 'index']);
+Route::get('/programs/{id}', [ProgramController::class, 'show']);
+
+Route::get('/platforms', [PlatformController::class, 'index']);
+Route::get('/game-platforms', [PlatformController::class, 'index']);
+Route::get('/program-platforms', [PlatformController::class, 'index']);
+
+Route::get('/package-category-types', [PackageCategoryTypeController::class, 'index']);
+
+Route::get('/packages', [PackageController::class, 'index']);
+Route::get('/packages/{id}', [PackageController::class, 'show']);
+Route::get('/game-packages', [PackageController::class, 'index']);
+Route::get('/game-packages/{id}', [PackageController::class, 'show']);
+
+Route::get('/categories', [CategoryController::class, 'index']);
+// Convenience endpoints returning categories filtered by type
+Route::get('/game-categories', function (Request $request) {
+    $request->merge(['category_type_id' => 1]);
+    return app(CategoryController::class)->index($request);
+});
+Route::get('/program-categories', function (Request $request) {
+    $request->merge(['category_type_id' => 2]);
+    return app(CategoryController::class)->index($request);
+});
+Route::get('/category-types', [CategoryTypeController::class, 'index']);
+
+Route::get('/governorates', [CustomerController::class, 'governorates']);
+
+// Customer registration (public)
+Route::post('/customers', [CustomerController::class, 'store']);
+
+Route::get('/usb-sticks', [UsbStickController::class, 'index']);
+
+// Storage device types and devices
+Route::get('/storage-device-types', [StorageDeviceTypeController::class, 'index']);
+Route::get('/storage-devices', [StorageDeviceController::class, 'index']);
+Route::get('/storage-devices/{id}', [StorageDeviceController::class, 'show']);
+
+// Orders (some endpoints may require authentication in production)
+Route::get('/package-orders', [PackageOrderController::class, 'index']);
+Route::post('/package-orders', [PackageOrderController::class, 'store']);
+Route::get('/usb-stick-orders', [UsbStickOrderController::class, 'index']);
+Route::post('/usb-stick-orders', [UsbStickOrderController::class, 'store']);
+Route::get('/storage-device-orders', [StorageDeviceOrderController::class, 'index']);
+Route::post('/storage-device-orders', [StorageDeviceOrderController::class, 'store']);
+
+// Catalog endpoints
+Route::get('/catalog', [CatalogController::class, 'index']);
+
+// Cart endpoints (authenticated customers)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/cart', [CartController::class, 'show']);
+    Route::post('/cart/sync', [CartController::class, 'sync']);
+    Route::delete('/cart', [CartController::class, 'destroy']);
+});
+
+// User management and admin endpoints
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::apiResource('users', UserController::class);
+    Route::patch('/users/{user}/role', [UserController::class, 'updateRole']);
+
+    // Admin customer management
+    Route::get('/customers', [CustomerController::class, 'index']);
+    Route::get('/customers/{customer}', [CustomerController::class, 'show']);
+    Route::put('/customers/{customer}', [CustomerController::class, 'update']);
+    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy']);
+
+    // Admin dashboard and management endpoints used by the frontend
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
+    Route::get('/admin/orders', [AdminController::class, 'orders']);
+    Route::patch('/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
+    Route::get('/admin/users', [AdminController::class, 'users']);
+    Route::patch('/admin/users/{id}/role', [AdminController::class, 'updateUserRole']);
+    Route::post('/admin/users', [AdminController::class, 'storeUser']);
+    Route::put('/admin/users/{id}', [AdminController::class, 'updateUser']);
+    Route::delete('/admin/users/{id}', [AdminController::class, 'destroyUser']);
+    Route::get('/admin/settings', [AdminController::class, 'settings']);
+    Route::post('/admin/settings', [AdminController::class, 'updateSettings']);
+
+    // Admin package management
+    Route::post('/packages', [PackageController::class, 'store']);
+    Route::put('/packages/{id}', [PackageController::class, 'update']);
+    Route::delete('/packages/{id}', [PackageController::class, 'destroy']);
+
+    // Admin storage device management
+    Route::post('/storage-devices', [StorageDeviceController::class, 'store']);
+    Route::put('/storage-devices/{id}', [StorageDeviceController::class, 'update']);
+    Route::delete('/storage-devices/{id}', [StorageDeviceController::class, 'destroy']);
 });
