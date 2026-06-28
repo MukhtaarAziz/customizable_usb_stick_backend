@@ -28,6 +28,10 @@ class Program extends Model
 {
     use HasFactory;
 
+    protected $attributes = [
+        'active' => true,
+    ];
+
     protected $fillable = [
         'name_en',
         'description_en',
@@ -39,12 +43,14 @@ class Program extends Model
         'size_gb',
         'downloads',
         'date_release',
+        'active',
     ];
 
     protected $casts = [
         'tags' => 'array',
         'date_release' => 'date',
         'size_gb' => 'double',
+        'active' => 'boolean',
     ];
 
     public function category(): BelongsTo

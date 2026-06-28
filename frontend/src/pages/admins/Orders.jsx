@@ -5,8 +5,9 @@ import { faRotate, faSearch, faEye } from '@fortawesome/free-solid-svg-icons'
 import OrderStatusBadge from '../../components/admins/OrderStatusBadge.jsx'
 import OrderStatusSelect from '../../components/admins/OrderStatusSelect.jsx'
 import PackageOrderDetailsModal from '../../components/admins/PackageOrderDetailsModal.jsx'
+import PackageDetailsModal from '../../components/PackageDetailsModal/PackageDetailsModal.jsx'
 
-const API_ORDERS = '/api/admin/orders'
+const API_ORDERS = '/api/admin/package-orders'
 const TOKEN_KEY = 'authToken'
 const METHODS = { PATCH: 'PATCH' }
 const CURRENCY = 'IQD'
@@ -22,6 +23,8 @@ function AdminOrders() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [showDetails, setShowDetails] = useState(false)
+  const [selectedPackage, setSelectedPackage] = useState(null)
+  const [showPackageModal, setShowPackageModal] = useState(false)
   const token = localStorage.getItem(TOKEN_KEY)
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' }
 
@@ -75,6 +78,11 @@ function AdminOrders() {
     setShowDetails(true)
   }
 
+  const handleOpenPackageDetails = (pkg) => {
+    setSelectedPackage(pkg)
+    setShowPackageModal(true)
+  }
+
   if (loading) return <div className="text-center py-5"><Spinner animation="border" /></div>
 
   return (
@@ -115,6 +123,7 @@ function AdminOrders() {
               <th>Total</th>
               <th>Status</th>
               <th>Date</th>
+              <th style={{ minWidth: 260 }}>Ordered Packages</th>
               <th style={{ width: 240 }}>Actions</th>
             </tr>
           </thead>
@@ -130,6 +139,37 @@ function AdminOrders() {
                 <td>{Number(item.total_price ?? 0).toLocaleString()} {CURRENCY}</td>
                 <td><OrderStatusBadge status={item.status} /></td>
                 <td>{item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</td>
+                <td>
+                  <div className="d-flex flex-column gap-2">
+                    {(item.items || []).length === 0 && <span className="text-muted small">No packages</span>}
+                    {(item.items || []).slice(0, 3).map((orderItem) => {
+                      const pkg = orderItem.package
+                      const packageName = pkg?.name_en || pkg?.name_ar || `#${orderItem.package_id}`
+                      const qty = Number(orderItem.quantity || 0)
+                      const contentSummary = (pkg?.games || []).slice(0, 2).map((game) => game.name_en || game.name_ar || '').filter(Boolean)
+                      const programSummary = (pkg?.programs || []).slice(0, 2).map((program) => program.name_en || program.name_ar || '').filter(Boolean)
+                      const summaryParts = [...contentSummary, ...programSummary]
+                      const detailsText = summaryParts.length > 0 ? summaryParts.join(', ') : 'Package contents not available'
+
+                      return (
+                        <div key={orderItem.id || `${item.id}-${orderItem.package_id}`} className="d-flex flex-column gap-1 border rounded p-2">
+                          <div className="d-flex align-items-center justify-content-between gap-2">
+                            <span className="small fw-semibold">
+                              {packageName} <span className="text-muted">× {qty}</span>
+                            </span>
+                            {pkg && (
+                              <Button size="sm" variant="outline-primary" onClick={() => handleOpenPackageDetails(pkg)}>
+                                View
+                              </Button>
+                            )}
+                          </div>
+                          <span className="small text-muted">{detailsText}</span>
+                        </div>
+                      )
+                    })}
+                    {(item.items || []).length > 3 && <span className="small text-muted">+ {(item.items || []).length - 3} more</span>}
+                  </div>
+                </td>
                 <td>
                   <div className="d-flex gap-2">
                     <Button size="sm" variant="outline-dark" onClick={() => handleOpenDetails(item)}>
@@ -152,6 +192,21 @@ function AdminOrders() {
         show={showDetails}
         onHide={() => setShowDetails(false)}
         order={selectedOrder}
+      />
+
+      <PackageDetailsModal
+        pkg={selectedPackage}
+        show={showPackageModal}
+        onClose={() => {
+          setShowPackageModal(false)
+          setSelectedPackage(null)
+        }}
+        onOrder={() => {
+          setShowPackageModal(false)
+          setSelectedPackage(null)
+        }}
+        locale="en"
+        t={{}}
       />
     </>
   )

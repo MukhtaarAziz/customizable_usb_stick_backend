@@ -118,7 +118,11 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     // Admin dashboard and management endpoints used by the frontend
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
     Route::get('/admin/orders', [AdminController::class, 'orders']);
+    Route::get('/admin/package-orders', [AdminController::class, 'packageOrders']);
+    Route::get('/admin/usb-stick-orders', [AdminController::class, 'usbStickOrders']);
     Route::patch('/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
+    Route::patch('/admin/package-orders/{id}/status', [AdminController::class, 'updatePackageOrderStatus']);
+    Route::patch('/admin/usb-stick-orders/{id}/status', [AdminController::class, 'updateUsbStickOrderStatus']);
     Route::get('/admin/users', [AdminController::class, 'users']);
     Route::patch('/admin/users/{id}/role', [AdminController::class, 'updateUserRole']);
     Route::post('/admin/users', [AdminController::class, 'storeUser']);
@@ -128,6 +132,16 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/admin/settings', [AdminController::class, 'updateSettings']);
 
     // Admin package management
+    Route::post('/games', [GameController::class, 'store']);
+    Route::put('/games/{id}', [GameController::class, 'update']);
+    Route::patch('/games/{id}/active', [GameController::class, 'toggleActive']);
+    Route::delete('/games/{id}', [GameController::class, 'destroy']);
+
+    Route::post('/programs', [ProgramController::class, 'store']);
+    Route::put('/programs/{id}', [ProgramController::class, 'update']);
+    Route::patch('/programs/{id}/active', [ProgramController::class, 'toggleActive']);
+    Route::delete('/programs/{id}', [ProgramController::class, 'destroy']);
+
     Route::post('/packages', [PackageController::class, 'store']);
     Route::put('/packages/{id}', [PackageController::class, 'update']);
     Route::post('/packages/{package}/items', [PackageItemController::class, 'store']);

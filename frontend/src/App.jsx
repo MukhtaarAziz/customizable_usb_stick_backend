@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import HeroSection from './components/HeroSection/HeroSection.jsx'
@@ -23,8 +23,8 @@ import AdminPlatforms from './pages/admins/Platforms.jsx'
 import AdminCategories from './pages/admins/Categories.jsx'
 import AdminContentCategories from './pages/admins/ContentCategories.jsx'
 import AdminCategoryTypes from './pages/admins/CategoryTypes.jsx'
-import AdminOrders from './pages/admins/Orders.jsx'
-import AdminSubOrders from './pages/admins/SubOrders.jsx'
+import AdminPackageOrders from './pages/admins/Orders.jsx'
+import AdminUsbStickOrders from './pages/admins/SubOrders.jsx'
 import AdminUsers from './pages/admins/Users.jsx'
 import AdminCustomers from './pages/admins/Customers.jsx'
 import AdminSettings from './pages/admins/Settings.jsx'
@@ -396,8 +396,10 @@ function App() {
         <Route path="category-types" element={<AdminCategoryTypes />} />
         <Route path="content-categories" element={<AdminContentCategories />} />
         <Route path="package-categories" element={<AdminCategories />} />
-        <Route path="orders" element={<AdminOrders />} />
-        <Route path="sub-orders" element={<AdminSubOrders />} />
+        <Route path="orders" element={<Navigate to="orders/packages" replace />} />
+        <Route path="orders/packages" element={<AdminPackageOrders />} />
+        <Route path="orders/usb-sticks" element={<AdminUsbStickOrders />} />
+        <Route path="sub-orders" element={<Navigate to="orders/usb-sticks" replace />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="customers" element={<AdminCustomers />} />
         <Route path="settings" element={<AdminSettings />} />

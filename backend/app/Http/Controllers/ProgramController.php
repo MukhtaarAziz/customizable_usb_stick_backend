@@ -48,6 +48,7 @@ class ProgramController extends Controller
             'size_gb' => ['required', 'numeric'],
             'downloads' => ['nullable', 'integer', 'min:0'],
             'date_release' => ['nullable', 'date'],
+            'active' => ['nullable', 'boolean'],
         ]);
 
         return Program::create($data);
@@ -74,6 +75,20 @@ class ProgramController extends Controller
             'size_gb' => ['sometimes', 'required', 'numeric'],
             'downloads' => ['nullable', 'integer', 'min:0'],
             'date_release' => ['nullable', 'date'],
+            'active' => ['nullable', 'boolean'],
+        ]);
+
+        $program->update($data);
+
+        return $program;
+    }
+
+    public function toggleActive(Request $request, string $id)
+    {
+        $program = Program::findOrFail($id);
+
+        $data = $request->validate([
+            'active' => ['required', 'boolean'],
         ]);
 
         $program->update($data);

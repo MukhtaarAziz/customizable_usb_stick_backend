@@ -5,7 +5,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 const TOKEN_KEY = 'authToken'
 
-const EMPTY_FORM = { name_en: '', name_ar: '', platform_id: '', category_id: '', tags: [], size_gb: '', downloads: '', date_release: '' }
+const EMPTY_FORM = { name_en: '', name_ar: '', platform_id: '', category_id: '', tags: [], size_gb: '', downloads: '', date_release: '', active: true }
 
 function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi, title }) {
   const [form, setForm] = useState(EMPTY_FORM)
@@ -41,6 +41,7 @@ function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi,
         size_gb: editing.size_gb ?? '',
         downloads: editing.downloads ?? '',
         date_release: editing.date_release ?? '',
+        active: editing.active ?? true,
       })
       setTagsInput(tags.join(', '))
     } else {
@@ -116,6 +117,14 @@ function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi,
         <Form.Group className="mb-2">
           <Form.Label>Release Date</Form.Label>
           <Form.Control type="date" value={form.date_release} onChange={e => setForm({ ...form, date_release: e.target.value })} />
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Check
+            type="switch"
+            label="Active"
+            checked={form.active}
+            onChange={e => setForm({ ...form, active: e.target.checked })}
+          />
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>Tags (comma separated)</Form.Label>

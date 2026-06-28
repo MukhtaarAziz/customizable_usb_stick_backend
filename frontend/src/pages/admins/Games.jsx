@@ -81,6 +81,20 @@ function AdminGames() {
     }
   }
 
+  const handleToggleActive = async (item) => {
+    try {
+      const res = await fetch(`${API_BASE}/${item.id}/active`, {
+        method: 'PATCH',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ active: !item.active }),
+      })
+      if (!res.ok) throw new Error('Toggle active failed')
+      load()
+    } catch (e) {
+      setError(e.message)
+    }
+  }
+
   if (loading) return <div className="text-center py-5"><Spinner animation="border" /></div>
 
   return (
@@ -110,7 +124,8 @@ function AdminGames() {
               <th>Category</th>
               <th>Size (GB)</th>
               <th>Tags</th>
-              <th style={{ width: 120 }}>Actions</th>
+              <th>Active</th>
+              <th style={{ width: 160 }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -123,7 +138,16 @@ function AdminGames() {
                 <td>{item.category?.name_en || '-'}</td>
                 <td>{item.size_gb ?? '-'}</td>
                 <td>{Array.isArray(item.tags) ? item.tags.join(', ') : '-'}</td>
+                <td className={item.active ? 'text-success' : 'text-danger'}>{item.active ? 'Active' : 'Inactive'}</td>
                 <td>
+                  <Button
+                    variant={item.active ? 'outline-warning' : 'outline-success'}
+                    size="sm"
+                    className="me-1"
+                    onClick={() => handleToggleActive(item)}
+                  >
+                    {item.active ? 'Deactivate' : 'Activate'}
+                  </Button>
                   <Button variant="outline-primary" size="sm" className="me-1" onClick={() => openEdit(item)}><FontAwesomeIcon icon={faPen} /></Button>
                   <Button variant="outline-danger" size="sm" onClick={() => handleDelete(item.id)}><FontAwesomeIcon icon={faTrashCan} /></Button>
                 </td>

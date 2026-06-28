@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\PackageOrder;
 use App\Models\Package;
+use App\Models\UsbStickOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -17,9 +18,9 @@ class AdminController extends Controller
         return response()->json([
             'data' => [
                 'total_packages' => Package::count(),
-                'total_orders' => PackageOrder::count(),
+                'total_orders' => PackageOrder::count() + UsbStickOrder::count(),
                 'total_users' => User::count(),
-                'total_revenue' => (float) PackageOrder::where('status', 'delivered')->sum('total_price'),
+                'total_revenue' => (float) PackageOrder::where('status', 'delivered')->sum('total_price') + (float) UsbStickOrder::where('status', 'delivered')->sum('total_price'),
             ]
         ]);
     }
@@ -30,10 +31,41 @@ class AdminController extends Controller
         return response()->json(['data' => $orders]);
     }
 
+    public function packageOrders()
+    {
+        $orders = PackageOrder::with(['customer', 'items.package.items.itemable', 'governorate'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json(['data' => $orders]);
+    }
+
+    public function usbStickOrders()
+    {
+        $orders = UsbStickOrder::with(['customer', 'usbStick'])->orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => $orders]);
+    }
+
     public function updateOrderStatus(Request $request, $id)
     {
         $request->validate(['status' => 'required|string']);
         $order = PackageOrder::findOrFail($id);
+        $order->update(['status' => $request->status]);
+        return response()->json(['message' => 'Status updated']);
+    }
+
+    public function updatePackageOrderStatus(Request $request, $id)
+    {
+        $request->validate(['status' => 'required|string']);
+        $order = PackageOrder::findOrFail($id);
+        $order->update(['status' => $request->status]);
+        return response()->json(['message' => 'Status updated']);
+    }
+
+    public function updateUsbStickOrderStatus(Request $request, $id)
+    {
+        $request->validate(['status' => 'required|string']);
+        $order = UsbStickOrder::findOrFail($id);
         $order->update(['status' => $request->status]);
         return response()->json(['message' => 'Status updated']);
     }

@@ -1,27 +1,28 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Table, Button, Spinner, Alert, Form, InputGroup } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRotate, faSearch, faEye } from '@fortawesome/free-solid-svg-icons'
+import { faRotate, faSearch } from '@fortawesome/free-solid-svg-icons'
 import OrderStatusBadge from '../../components/admins/OrderStatusBadge.jsx'
 import OrderStatusSelect from '../../components/admins/OrderStatusSelect.jsx'
-import PackageOrderDetailsModal from '../../components/admins/PackageOrderDetailsModal.jsx'
+import UsbDetailsModal from '../../components/UsbDetailsModal/UsbDetailsModal.jsx'
 
-const API_ORDERS = '/api/admin/orders'
+const API_ORDERS = '/api/admin/usb-stick-orders'
 const TOKEN_KEY = 'authToken'
 const METHODS = { PATCH: 'PATCH' }
 const CURRENCY = 'IQD'
 
 const ALL_STATUSES = ['all', 'pending', 'processing', 'shipped', 'delivered', 'cancelled']
 
-function AdminSubOrders() {
+function AdminUsbStickOrders() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [updatingId, setUpdatingId] = useState(null)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
-  const [selectedOrder, setSelectedOrder] = useState(null)
-  const [showDetails, setShowDetails] = useState(false)
+  const [selectedUsb, setSelectedUsb] = useState(null)
+  const [selectedUsbItems, setSelectedUsbItems] = useState([])
+  const [showUsbDetails, setShowUsbDetails] = useState(false)
   const token = localStorage.getItem(TOKEN_KEY)
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' }
 
@@ -29,7 +30,7 @@ function AdminSubOrders() {
     setLoading(true)
     try {
       const res = await fetch(API_ORDERS, { headers: { Authorization: `Bearer ${token}` } })
-      if (!res.ok) throw new Error('Failed to load')
+      if (!res.ok) throw new Error('Failed to load USB stick orders')
       const data = await res.json()
       setItems(data.data ?? [])
     } catch (e) {
@@ -51,6 +52,17 @@ function AdminSubOrders() {
     finally { setUpdatingId(null) }
   }
 
+  const handleOpenUsbDetails = (order) => {
+    const items = [
+      ...(order.games || []).map((game) => ({ ...game, type: 'game' })),
+      ...(order.programs || []).map((program) => ({ ...program, type: 'program' }))
+    ]
+
+    setSelectedUsb(order.usb_stick || null)
+    setSelectedUsbItems(items)
+    setShowUsbDetails(true)
+  }
+
   const filteredItems = useMemo(() => {
     const q = search.trim().toLowerCase()
 
@@ -64,23 +76,18 @@ function AdminSubOrders() {
       const customerName = String(item.customer?.name || item.customer_name || '').toLowerCase()
       const phone = String(item.phone || '').toLowerCase()
       const id = String(item.id || '').toLowerCase()
-      const uuid = String(item.uuid || '').toLowerCase()
+      const usbStick = String(item.usb_stick?.name || item.usb_stick?.model || '').toLowerCase()
 
-      return customerName.includes(q) || phone.includes(q) || id.includes(q) || uuid.includes(q)
+      return customerName.includes(q) || phone.includes(q) || id.includes(q) || usbStick.includes(q)
     })
   }, [items, search, statusFilter])
-
-  const handleOpenDetails = (order) => {
-    setSelectedOrder(order)
-    setShowDetails(true)
-  }
 
   if (loading) return <div className="text-center py-5"><Spinner animation="border" /></div>
 
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="fw-bold mb-0">Sub Orders</h4>
+        <h4 className="fw-bold mb-0">USB Stick Orders</h4>
         <Button size="sm" variant="outline-secondary" onClick={load}><FontAwesomeIcon icon={faRotate} className="me-1" /> Refresh</Button>
       </div>
 
@@ -89,7 +96,7 @@ function AdminSubOrders() {
           <InputGroup>
             <InputGroup.Text><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
             <Form.Control
-              placeholder="Search by order id, uuid, customer, or phone"
+              placeholder="Search by order id, customer, phone, or USB stick"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -112,29 +119,51 @@ function AdminSubOrders() {
               <th>ID</th>
               <th>Customer</th>
               <th>Phone</th>
+              <th>USB Stick</th>
+              <th>Items</th>
               <th>Total</th>
               <th>Status</th>
               <th>Date</th>
+              <th style={{ minWidth: 260 }}>Order Details</th>
               <th style={{ width: 240 }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredItems.length === 0 && (
-              <tr><td colSpan={7} className="text-center text-muted py-3">No package orders found.</td></tr>
+              <tr><td colSpan={9} className="text-center text-muted py-3">No USB stick orders found.</td></tr>
             )}
             {filteredItems.map(item => (
               <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.customer?.name || item.customer_name || '-'}</td>
                 <td>{item.phone || '-'}</td>
+                <td>{item.usb_stick?.name || item.usb_stick?.model || '-'}</td>
+                <td>{(item.games?.length || 0) + (item.programs?.length || 0)}</td>
                 <td>{Number(item.total_price ?? 0).toLocaleString()} {CURRENCY}</td>
                 <td><OrderStatusBadge status={item.status} /></td>
                 <td>{item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</td>
                 <td>
-                  <div className="d-flex gap-2">
-                    <Button size="sm" variant="outline-dark" onClick={() => handleOpenDetails(item)}>
-                      <FontAwesomeIcon icon={faEye} className="me-1" /> Details
+                  <div className="d-flex flex-column gap-2">
+                    <div className="small text-muted">
+                      <strong>USB:</strong> {item.usb_stick?.name || item.usb_stick?.model || '-'}
+                    </div>
+                    {(item.games?.length || 0) > 0 && (
+                      <div className="small text-muted">
+                        <strong>Games:</strong> {(item.games || []).slice(0, 2).map((game) => game.name_en || game.name_ar || '').join(', ')}{(item.games || []).length > 2 ? '...' : ''}
+                      </div>
+                    )}
+                    {(item.programs?.length || 0) > 0 && (
+                      <div className="small text-muted">
+                        <strong>Programs:</strong> {(item.programs || []).slice(0, 2).map((program) => program.name_en || program.name_ar || '').join(', ')}{(item.programs || []).length > 2 ? '...' : ''}
+                      </div>
+                    )}
+                    <Button size="sm" variant="outline-primary" onClick={() => handleOpenUsbDetails(item)}>
+                      View details
                     </Button>
+                  </div>
+                </td>
+                <td>
+                  <div className="d-flex gap-2">
                     <OrderStatusSelect
                       value={String(item.status || 'pending').toLowerCase()}
                       disabled={updatingId === item.id}
@@ -148,13 +177,21 @@ function AdminSubOrders() {
         </Table>
       </div>
 
-      <PackageOrderDetailsModal
-        show={showDetails}
-        onHide={() => setShowDetails(false)}
-        order={selectedOrder}
+      <UsbDetailsModal
+        show={showUsbDetails}
+        onHide={() => {
+          setShowUsbDetails(false)
+          setSelectedUsb(null)
+          setSelectedUsbItems([])
+        }}
+        usb={selectedUsb}
+        selectedItems={selectedUsbItems}
+        locale="en"
+        onRemoveItem={() => {}}
+        onCheckout={() => {}}
       />
     </>
   )
 }
 
-export default AdminSubOrders
+export default AdminUsbStickOrders

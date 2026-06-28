@@ -71,6 +71,12 @@
   overflow-y: auto;
 }
 
+.admin-sidebar__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .admin-sidebar__link {
   display: flex;
   align-items: center;
@@ -103,6 +109,39 @@
   width: 20px;
   text-align: center;
   font-size: 1rem;
+}
+
+.admin-sidebar__link-caret {
+  margin-inline-start: auto;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.admin-sidebar__submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-inline-start: 2rem;
+  margin-bottom: 0.2rem;
+}
+
+.admin-sidebar__sublink {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+
+.admin-sidebar__sublink:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+}
+
+.admin-sidebar__sublink--active {
+  background: rgba(99, 102, 241, 0.2);
+  color: #fff;
 }
 
 .admin-sidebar__link--logout {
