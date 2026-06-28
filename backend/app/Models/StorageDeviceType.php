@@ -29,7 +29,7 @@ class StorageDeviceType extends Model
 
     public function devices()
     {
-        return $this->hasMany(StorageDevice::class);
+        return $this->hasMany(StorageDevice::class, 'storage_type_id');
     }
 
     public function getNameAttribute()

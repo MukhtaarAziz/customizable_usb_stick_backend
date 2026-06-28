@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGauge, faBox, faGamepad, faCode, faMicrochip, faTag, faLayerGroup, faList, faShoppingCart, faUsers, faUserGroup, faGear, faArrowRightFromBracket, faBars, faXmark, faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faGauge, faBox, faGamepad, faCode, faMicrochip, faTag, faLayerGroup, faList, faShoppingCart, faUsers, faUserGroup, faGear, faArrowRightFromBracket, faBars, faXmark, faChevronDown, faCompactDisc, faHardDrive } from '@fortawesome/free-solid-svg-icons'
 import './AdminLayout.css'
 
 const sidebarLinks = [
@@ -13,6 +13,8 @@ const sidebarLinks = [
   { path: '/admin/category-types', icon: faList, label: 'Category Types' },
   { path: '/admin/content-categories', icon: faTag, label: 'Content Categories' },
   { path: '/admin/package-categories', icon: faLayerGroup, label: 'Package Categories' },
+  { path: '/admin/storage-device-types', icon: faCompactDisc, label: 'Storage Device Types' },
+  { path: '/admin/storage-devices', icon: faHardDrive, label: 'Storage Devices' },
   {
     icon: faShoppingCart,
     label: 'Orders',

@@ -28,6 +28,8 @@ import AdminUsbStickOrders from './pages/admins/SubOrders.jsx'
 import AdminUsers from './pages/admins/Users.jsx'
 import AdminCustomers from './pages/admins/Customers.jsx'
 import AdminSettings from './pages/admins/Settings.jsx'
+import AdminStorageDeviceTypes from './pages/admins/StorageDeviceTypes.jsx'
+import AdminStorageDevices from './pages/admins/StorageDevices.jsx'
 
 const translations = {
   en: {
@@ -402,6 +404,8 @@ function App() {
         <Route path="sub-orders" element={<Navigate to="orders/usb-sticks" replace />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="customers" element={<AdminCustomers />} />
+        <Route path="storage-device-types" element={<AdminStorageDeviceTypes />} />
+        <Route path="storage-devices" element={<AdminStorageDevices />} />
         <Route path="settings" element={<AdminSettings />} />
       </Route>
     </Routes>

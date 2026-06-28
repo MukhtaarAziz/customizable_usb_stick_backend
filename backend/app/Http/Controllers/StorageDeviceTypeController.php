@@ -98,8 +98,8 @@ class StorageDeviceTypeController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name_en' => 'required|string|max:255',
-            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255|unique:storage_device_types,name_en',
+            'name_ar' => 'required|string|max:255|unique:storage_device_types,name_ar',
             'description_en' => 'nullable|string',
             'description_ar' => 'nullable|string',
         ]);
@@ -137,8 +137,8 @@ class StorageDeviceTypeController extends Controller
         $type = StorageDeviceType::findOrFail($id);
         
         $validated = $request->validate([
-            'name_en' => 'required|string|max:255',
-            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255|unique:storage_device_types,name_en,' . $id,
+            'name_ar' => 'required|string|max:255|unique:storage_device_types,name_ar,' . $id,
             'description_en' => 'nullable|string',
             'description_ar' => 'nullable|string',
         ]);
@@ -175,6 +175,6 @@ class StorageDeviceTypeController extends Controller
         }
 
         $type->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Storage device type deleted successfully.'], 200);
     }
 }

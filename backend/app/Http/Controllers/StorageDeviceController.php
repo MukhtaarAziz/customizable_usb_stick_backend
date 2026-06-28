@@ -169,8 +169,8 @@ class StorageDeviceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name_en' => 'required|string|max:255',
-            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255|unique:storage_devices,name_en',
+            'name_ar' => 'required|string|max:255|unique:storage_devices,name_ar',
             'description_en' => 'nullable|string',
             'description_ar' => 'nullable|string',
             'storage_type_id' => 'required|exists:storage_device_types,id',
@@ -223,8 +223,8 @@ class StorageDeviceController extends Controller
         $device = StorageDevice::findOrFail($id);
         
         $validated = $request->validate([
-            'name_en' => 'required|string|max:255',
-            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255|unique:storage_devices,name_en,' . $id,
+            'name_ar' => 'required|string|max:255|unique:storage_devices,name_ar,' . $id,
             'description_en' => 'nullable|string',
             'description_ar' => 'nullable|string',
             'storage_type_id' => 'required|exists:storage_device_types,id',
@@ -270,6 +270,6 @@ class StorageDeviceController extends Controller
         }
 
         $device->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Storage device deleted successfully.'], 200);
     }
 }

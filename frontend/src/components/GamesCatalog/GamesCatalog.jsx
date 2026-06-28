@@ -60,6 +60,8 @@ function GamesCatalog({
     ? categories
     : categories.filter(c => c.type === catalogType)
 
+  const visibleItems = items.filter((item) => item.active !== false)
+
   return (
     <div className="games-catalog">
       {/* Filters */}
@@ -139,26 +141,26 @@ function GamesCatalog({
       </div>
 
       {/* Items Grid */}
-      {items.length === 0 ? (
+      {visibleItems.length === 0 ? (
         <div className="text-center py-5">
           <FontAwesomeIcon icon={faFolderOpen} className="text-muted mb-3" style={{ fontSize: '3rem' }} />
           <h5>{locale === 'ar' ? 'لم يتم العثور على عناصر' : 'No items found'}</h5>
         </div>
       ) : (
         <Row xs={1} md={viewMode === 'grid' ? 2 : 1} lg={viewMode === 'grid' ? 3 : 1} className="g-4">
-          {items.map((item) => (
+          {visibleItems.map((item) => (
             <Col key={`${item.type}-${item.id}`}>
               <GameCard
                 item={item}
                 locale={locale}
                 viewMode={viewMode}
                 onView={onViewItemDetails}
-              onAdd={onAddItem}
-              added={selectedIds.includes(`${item.type}-${item.id}`)}
-            />
-          </Col>
-        ))}
-      </Row>
+                onAdd={onAddItem}
+                added={selectedIds.includes(`${item.type}-${item.id}`)}
+              />
+            </Col>
+          ))}
+        </Row>
       )}
 
       {/* Bottom Controls */}

@@ -152,4 +152,9 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/storage-devices', [StorageDeviceController::class, 'store']);
     Route::put('/storage-devices/{id}', [StorageDeviceController::class, 'update']);
     Route::delete('/storage-devices/{id}', [StorageDeviceController::class, 'destroy']);
+
+    // Admin storage device type management
+    Route::post('/storage-device-types', [StorageDeviceTypeController::class, 'store']);
+    Route::put('/storage-device-types/{id}', [StorageDeviceTypeController::class, 'update']);
+    Route::delete('/storage-device-types/{id}', [StorageDeviceTypeController::class, 'destroy']);
 });

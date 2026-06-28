@@ -7,12 +7,14 @@ const TOKEN_KEY = 'authToken'
 
 function NameEditModal({ show, onHide, onSaved, editing, apiBase, title, withDescription }) {
   const [form, setForm] = useState({ name_en: '', name_ar: '', description_en: '', description_ar: '' })
+  const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
   const token = localStorage.getItem(TOKEN_KEY)
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' }
 
   useEffect(() => {
     if (!show) return
+    setErrors({})
     if (editing) {
       setForm({
         name_en: editing.name_en || '',
@@ -25,18 +27,34 @@ function NameEditModal({ show, onHide, onSaved, editing, apiBase, title, withDes
     }
   }, [show, editing])
 
+  const validate = () => {
+    const errs = {}
+    if (!form.name_en.trim()) errs.name_en = 'English name is required'
+    if (!form.name_ar.trim()) errs.name_ar = 'Arabic name is required'
+    setErrors(errs)
+    return Object.keys(errs).length === 0
+  }
+
   const handleSave = async () => {
+    if (!validate()) return
     setSaving(true)
     try {
       const url = editing ? `${apiBase}/${editing.id}` : apiBase
       const method = editing ? 'PUT' : 'POST'
-      const body = { name_en: form.name_en, name_ar: form.name_ar }
+      const body = { name_en: form.name_en.trim(), name_ar: form.name_ar.trim() }
       if (withDescription) {
         body.description_en = form.description_en
         body.description_ar = form.description_ar
       }
       const res = await fetch(url, { method, headers, body: JSON.stringify(body) })
-      if (!res.ok) throw new Error('Save failed')
+      if (!res.ok) {
+        if (res.status === 422) {
+          const data = await res.json().catch(() => ({}))
+          setErrors(data.errors || {})
+          return
+        }
+        throw new Error('Save failed')
+      }
       onSaved()
     } catch (e) {
       alert(e.message)
@@ -54,11 +72,21 @@ function NameEditModal({ show, onHide, onSaved, editing, apiBase, title, withDes
       <Modal.Body>
         <Form.Group className="mb-2">
           <Form.Label>Name (EN)</Form.Label>
-          <Form.Control value={form.name_en} onChange={e => setForm({ ...form, name_en: e.target.value })} />
+          <Form.Control
+            value={form.name_en}
+            onChange={e => { setForm({ ...form, name_en: e.target.value }); setErrors(prev => { const n = { ...prev }; delete n.name_en; return n }) }}
+            isInvalid={!!errors.name_en}
+          />
+          <Form.Control.Feedback type="invalid">{errors.name_en}</Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>Name (AR)</Form.Label>
-          <Form.Control value={form.name_ar} onChange={e => setForm({ ...form, name_ar: e.target.value })} />
+          <Form.Control
+            value={form.name_ar}
+            onChange={e => { setForm({ ...form, name_ar: e.target.value }); setErrors(prev => { const n = { ...prev }; delete n.name_ar; return n }) }}
+            isInvalid={!!errors.name_ar}
+          />
+          <Form.Control.Feedback type="invalid">{errors.name_ar}</Form.Control.Feedback>
         </Form.Group>
         {withDescription && (
           <>
