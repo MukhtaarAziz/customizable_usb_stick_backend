@@ -29,11 +29,11 @@ class PackageItemController extends Controller
      * @responseField data[].id int Package item ID.
      * @responseField data[].itemable object The associated game or program.
      */
-    public function index(string $packageId)
+    public function index(string $package)
     {
-        $package = Package::findOrFail($packageId);
+        $pkg = Package::findOrFail($package);
 
-        return $package->items()->with('itemable')->get();
+        return $pkg->items()->with('itemable')->get();
     }
 
     /**
@@ -51,16 +51,16 @@ class PackageItemController extends Controller
      *
      * @response status=201 {"id": 1, "package_id": 1, "itemable_type": "App\\Models\\Game", "itemable_id": 1, ...}
      */
-    public function store(Request $request, string $packageId)
+    public function store(Request $request, string $package)
     {
-        $package = Package::findOrFail($packageId);
+        $pkg = Package::findOrFail($package);
 
         $data = $request->validate([
             'itemable_type' => ['required', 'string', Rule::in([Game::class, Program::class])],
             'itemable_id' => ['required', 'integer', 'min:1'],
         ]);
 
-        $data['package_id'] = $package->id;
+        $data['package_id'] = $pkg->id;
 
         return PackageItem::create($data);
     }
@@ -78,11 +78,11 @@ class PackageItemController extends Controller
      *
      * @response {"id": 1, "package_id": 1, "itemable_type": "App\\Models\\Game", "itemable_id": 1, "itemable": {...}}
      */
-    public function show(string $packageId, string $itemId)
+    public function show(string $package, string $item)
     {
-        $package = Package::findOrFail($packageId);
+        $pkg = Package::findOrFail($package);
 
-        return $package->items()->with('itemable')->findOrFail($itemId);
+        return $pkg->items()->with('itemable')->findOrFail($item);
     }
 
     /**
@@ -101,20 +101,20 @@ class PackageItemController extends Controller
      *
      * @response {"id": 1, "package_id": 1, "itemable_type": "App\\Models\\Game", "itemable_id": 2, ...}
      */
-    public function update(Request $request, string $packageId, string $itemId)
+    public function update(Request $request, string $package, string $item)
     {
-        $package = Package::findOrFail($packageId);
+        $pkg = Package::findOrFail($package);
 
-        $item = $package->items()->findOrFail($itemId);
+        $packageItem = $pkg->items()->findOrFail($item);
 
         $data = $request->validate([
             'itemable_type' => ['sometimes', 'required', 'string', Rule::in([Game::class, Program::class])],
             'itemable_id' => ['sometimes', 'required', 'integer', 'min:1'],
         ]);
 
-        $item->update($data);
+        $packageItem->update($data);
 
-        return $item;
+        return $packageItem;
     }
 
     /**
@@ -130,12 +130,12 @@ class PackageItemController extends Controller
      *
      * @response status=204
      */
-    public function destroy(string $packageId, string $itemId)
+    public function destroy(string $package, string $item)
     {
-        $package = Package::findOrFail($packageId);
+        $pkg = Package::findOrFail($package);
 
-        $item = $package->items()->findOrFail($itemId);
-        $item->delete();
+        $packageItem = $pkg->items()->findOrFail($item);
+        $packageItem->delete();
 
         return response()->json(null, 204);
     }

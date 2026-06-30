@@ -30,9 +30,74 @@ function AdminPackages() {
   const [managingItems, setManagingItems] = useState(null)
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
+  const [fieldErrors, setFieldErrors] = useState({})
   const [saving, setSaving] = useState(false)
   const token = localStorage.getItem(TOKEN_KEY)
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' }
+
+  // Validation functions
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'name_en':
+        if (!value || !value.trim()) return 'English name is required'
+        if (value.length > 255) return 'English name cannot exceed 255 characters'
+        return null
+      case 'name_ar':
+        if (!value || !value.trim()) return 'Arabic name is required'
+        if (value.length > 255) return 'Arabic name cannot exceed 255 characters'
+        return null
+      case 'description_en':
+        if (value && value.length > 5000) return 'English description cannot exceed 5000 characters'
+        return null
+      case 'description_ar':
+        if (value && value.length > 5000) return 'Arabic description cannot exceed 5000 characters'
+        return null
+      case 'platform_id':
+        if (!value) return 'Platform is required'
+        return null
+      case 'package_category_type_id':
+        if (!value) return 'Category type is required'
+        return null
+      case 'price_iqd':
+        if (value === '' || value == null) return 'Price is required'
+        if (isNaN(Number(value))) return 'Price must be a valid number'
+        if (Number(value) < 0) return 'Price cannot be negative'
+        return null
+      case 'discount':
+        if (value !== '' && isNaN(Number(value))) return 'Discount must be a valid number'
+        if (value !== '' && (Number(value) < 0 || Number(value) > 1)) return 'Discount must be between 0 and 1'
+        return null
+      default:
+        return null
+    }
+  }
+
+  const validateForm = () => {
+    const errors = {}
+    
+    errors.name_en = validateField('name_en', form.name_en)
+    errors.name_ar = validateField('name_ar', form.name_ar)
+    errors.description_en = validateField('description_en', form.description_en)
+    errors.description_ar = validateField('description_ar', form.description_ar)
+    errors.platform_id = validateField('platform_id', form.platform_id)
+    errors.package_category_type_id = validateField('package_category_type_id', form.package_category_type_id)
+    errors.price_iqd = validateField('price_iqd', form.price_iqd)
+    errors.discount = validateField('discount', form.discount)
+
+    // Remove null errors
+    Object.keys(errors).forEach(key => !errors[key] && delete errors[key])
+    
+    return errors
+  }
+
+  const handleFieldChange = (name, value) => {
+    setForm({ ...form, [name]: value })
+    // Clear error for this field if it's being fixed
+    const error = validateField(name, value)
+    if (!error && fieldErrors[name]) {
+      setFieldErrors({ ...fieldErrors, [name]: null })
+    }
+  }
 
   useEffect(() => {
     const auth = { Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}` }
@@ -70,6 +135,7 @@ function AdminPackages() {
   const openCreate = () => {
     setEditing(null)
     setForm(EMPTY_FORM)
+    setFieldErrors({})
     setShowModal(true)
   }
 
@@ -86,22 +152,40 @@ function AdminPackages() {
       discount: item.discount ?? '',
       active: item.active ?? true,
     })
+    setFieldErrors({})
     setShowModal(true)
   }
 
   const handleSave = async () => {
+    const errors = validateForm()
+    
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
+      return
+    }
+
     setSaving(true)
+    setError(null)
     try {
       const url = editing ? `${API_BASE}/${editing.id}` : API_BASE
       const method = editing ? 'PUT' : 'POST'
       const body = {
         ...form,
+        name_en: form.name_en.trim(),
+        name_ar: form.name_ar.trim(),
         price_iqd: form.price_iqd === '' ? 0 : Number(form.price_iqd),
         discount: form.discount === '' ? 0 : Number(form.discount),
         active: Boolean(form.active),
       }
       const res = await fetch(url, { method, headers, body: JSON.stringify(body) })
-      if (!res.ok) throw new Error('Save failed')
+      if (!res.ok) {
+        if (res.status === 422) {
+          const data = await res.json().catch(() => ({}))
+          setFieldErrors(data.errors || {})
+          return
+        }
+        throw new Error('Save failed')
+      }
       setShowModal(false)
       load(meta.currentPage, meta.perPage)
     } catch (e) {
@@ -229,73 +313,169 @@ function AdminPackages() {
         <Modal.Body>
           <div className="row">
             <div className="col-md-6">
-              <Form.Group className="mb-2">
+              <Form.Group className="mb-3">
                 <Form.Label>Name (EN)</Form.Label>
-                <Form.Control value={form.name_en} onChange={e => setForm({ ...form, name_en: e.target.value })} />
+                <Form.Control 
+                  isInvalid={!!fieldErrors.name_en}
+                  value={form.name_en} 
+                  onChange={e => handleFieldChange('name_en', e.target.value)}
+                  maxLength="255"
+                />
+                {fieldErrors.name_en && (
+                  <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                    {fieldErrors.name_en}
+                  </Form.Control.Feedback>
+                )}
+                <small className="text-muted d-block mt-1">{form.name_en.length}/255</small>
               </Form.Group>
             </div>
             <div className="col-md-6">
-              <Form.Group className="mb-2">
+              <Form.Group className="mb-3">
                 <Form.Label>Name (AR)</Form.Label>
-                <Form.Control value={form.name_ar} onChange={e => setForm({ ...form, name_ar: e.target.value })} />
+                <Form.Control 
+                  isInvalid={!!fieldErrors.name_ar}
+                  value={form.name_ar} 
+                  onChange={e => handleFieldChange('name_ar', e.target.value)}
+                  maxLength="255"
+                />
+                {fieldErrors.name_ar && (
+                  <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                    {fieldErrors.name_ar}
+                  </Form.Control.Feedback>
+                )}
+                <small className="text-muted d-block mt-1">{form.name_ar.length}/255</small>
               </Form.Group>
             </div>
           </div>
           <div className="row">
             <div className="col-md-6">
-              <Form.Group className="mb-2">
+              <Form.Group className="mb-3">
                 <Form.Label>Description (EN)</Form.Label>
-                <Form.Control as="textarea" rows={2} value={form.description_en} onChange={e => setForm({ ...form, description_en: e.target.value })} />
+                <Form.Control 
+                  as="textarea" 
+                  rows={2} 
+                  isInvalid={!!fieldErrors.description_en}
+                  value={form.description_en} 
+                  onChange={e => handleFieldChange('description_en', e.target.value)}
+                  maxLength="5000"
+                />
+                {fieldErrors.description_en && (
+                  <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                    {fieldErrors.description_en}
+                  </Form.Control.Feedback>
+                )}
+                <small className="text-muted d-block mt-1">{form.description_en.length}/5000</small>
               </Form.Group>
             </div>
             <div className="col-md-6">
-              <Form.Group className="mb-2">
+              <Form.Group className="mb-3">
                 <Form.Label>Description (AR)</Form.Label>
-                <Form.Control as="textarea" rows={2} value={form.description_ar} onChange={e => setForm({ ...form, description_ar: e.target.value })} />
+                <Form.Control 
+                  as="textarea" 
+                  rows={2} 
+                  isInvalid={!!fieldErrors.description_ar}
+                  value={form.description_ar} 
+                  onChange={e => handleFieldChange('description_ar', e.target.value)}
+                  maxLength="5000"
+                />
+                {fieldErrors.description_ar && (
+                  <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                    {fieldErrors.description_ar}
+                  </Form.Control.Feedback>
+                )}
+                <small className="text-muted d-block mt-1">{form.description_ar.length}/5000</small>
               </Form.Group>
             </div>
           </div>
           <div className="row">
             <div className="col-md-6">
-              <Form.Group className="mb-2">
+              <Form.Group className="mb-3">
                 <Form.Label>Category Type</Form.Label>
-                <Form.Select value={form.package_category_type_id} onChange={e => setForm({ ...form, package_category_type_id: e.target.value })}>
+                <Form.Select 
+                  isInvalid={!!fieldErrors.package_category_type_id}
+                  value={form.package_category_type_id} 
+                  onChange={e => handleFieldChange('package_category_type_id', e.target.value)}
+                >
                   <option value="">Select type...</option>
                   {categoryTypes.map(ct => (
                     <option key={ct.id} value={ct.id}>{ct.name_en} / {ct.name_ar}</option>
                   ))}
                 </Form.Select>
+                {fieldErrors.package_category_type_id && (
+                  <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                    {fieldErrors.package_category_type_id}
+                  </Form.Control.Feedback>
+                )}
               </Form.Group>
             </div>
             <div className="col-md-6">
-              <Form.Group className="mb-2">
+              <Form.Group className="mb-3">
                 <Form.Label>Platform</Form.Label>
-                <Form.Select value={form.platform_id} onChange={e => setForm({ ...form, platform_id: e.target.value })}>
+                <Form.Select 
+                  isInvalid={!!fieldErrors.platform_id}
+                  value={form.platform_id} 
+                  onChange={e => handleFieldChange('platform_id', e.target.value)}
+                >
                   <option value="">Select platform...</option>
                   {platforms.map(p => (
                     <option key={p.id} value={p.id}>{p.name_en} / {p.name_ar}</option>
                   ))}
                 </Form.Select>
+                {fieldErrors.platform_id && (
+                  <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                    {fieldErrors.platform_id}
+                  </Form.Control.Feedback>
+                )}
               </Form.Group>
             </div>
           </div>
           <div className="row">
             <div className="col-md-4">
-              <Form.Group className="mb-2">
+              <Form.Group className="mb-3">
                 <Form.Label>Price ({CURRENCY})</Form.Label>
-                <Form.Control type="number" min="0" step="0.01" value={form.price_iqd} onChange={e => setForm({ ...form, price_iqd: e.target.value })} />
+                <Form.Control 
+                  type="number" 
+                  min="0" 
+                  step="0.01" 
+                  isInvalid={!!fieldErrors.price_iqd}
+                  value={form.price_iqd} 
+                  onChange={e => handleFieldChange('price_iqd', e.target.value)}
+                />
+                {fieldErrors.price_iqd && (
+                  <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                    {fieldErrors.price_iqd}
+                  </Form.Control.Feedback>
+                )}
               </Form.Group>
             </div>
             <div className="col-md-4">
-              <Form.Group className="mb-2">
+              <Form.Group className="mb-3">
                 <Form.Label>Discount</Form.Label>
-                <Form.Control type="number" min="0" max="1" step="0.01" value={form.discount} onChange={e => setForm({ ...form, discount: e.target.value })} />
+                <Form.Control 
+                  type="number" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  isInvalid={!!fieldErrors.discount}
+                  value={form.discount} 
+                  onChange={e => handleFieldChange('discount', e.target.value)}
+                />
+                {fieldErrors.discount && (
+                  <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+                    {fieldErrors.discount}
+                  </Form.Control.Feedback>
+                )}
                 <Form.Text className="text-muted">Value between 0 and 1 (e.g. 0.2 = 20%)</Form.Text>
               </Form.Group>
             </div>
-            <div className="col-md-4 d-flex align-items-center">
-              <Form.Group className="mb-2">
-                <Form.Check type="switch" label="Active" checked={form.active} onChange={e => setForm({ ...form, active: e.target.checked })} />
+            <div className="col-md-4 d-flex align-items-end">
+              <Form.Group className="mb-3">
+                <Form.Check 
+                  type="switch" 
+                  label="Active" 
+                  checked={form.active} 
+                  onChange={e => handleFieldChange('active', e.target.checked)}
+                />
               </Form.Group>
             </div>
           </div>

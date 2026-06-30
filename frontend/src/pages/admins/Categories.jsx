@@ -45,6 +45,7 @@ function AdminPackageCategories() {
     try {
       const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE', headers })
       if (!res.ok) throw new Error('Delete failed')
+      setError(null)
       load(meta.currentPage, meta.perPage)
     } catch (e) { setError(e.message) }
   }

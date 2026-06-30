@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\PackageOrder;
+use App\Models\Customer;
+use App\Models\Game;
 use App\Models\Package;
+use App\Models\PackageOrder;
+use App\Models\Program;
+use App\Models\StorageDeviceType;
 use App\Models\UsbStickOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +23,12 @@ class AdminController extends Controller
             'data' => [
                 'total_packages' => Package::count(),
                 'total_orders' => PackageOrder::count() + UsbStickOrder::count(),
+                'total_package_orders' => PackageOrder::count(),
                 'total_users' => User::count(),
+                'total_customers' => Customer::count(),
+                'total_games' => Game::count(),
+                'total_programs' => Program::count(),
+                'total_storage_device_types' => StorageDeviceType::count(),
                 'total_revenue' => (float) PackageOrder::where('status', 'delivered')->sum('total_price') + (float) UsbStickOrder::where('status', 'delivered')->sum('total_price'),
             ]
         ]);

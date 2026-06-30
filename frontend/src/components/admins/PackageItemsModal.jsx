@@ -14,6 +14,7 @@ function PackageItemsModal({ show, onHide, pkg, onChanged }) {
   const [error, setError] = useState(null)
   const [selectedType, setSelectedType] = useState('game')
   const [selectedId, setSelectedId] = useState('')
+  const [searchInput, setSearchInput] = useState('')
 
   const token = localStorage.getItem(TOKEN_KEY)
   const authHeaders = { Authorization: `Bearer ${token}`, Accept: 'application/json', 'Content-Type': 'application/json' }
@@ -78,6 +79,7 @@ function PackageItemsModal({ show, onHide, pkg, onChanged }) {
       })
       if (!res.ok) throw new Error('Failed to add item')
       setSelectedId('')
+      setSearchInput('')
       await loadAll()
       onChanged?.()
     } catch (e) {
@@ -96,7 +98,14 @@ function PackageItemsModal({ show, onHide, pkg, onChanged }) {
         method: 'DELETE',
         headers: authHeaders,
       })
-      if (!res.ok) throw new Error('Failed to remove item')
+      if (!res.ok) {
+        let errorMsg = `Failed to remove item (Status: ${res.status})`
+        try {
+          const errData = await res.json()
+          if (errData.message) errorMsg = errData.message
+        } catch (e) {}
+        throw new Error(errorMsg)
+      }
       await loadAll()
       onChanged?.()
     } catch (e) {
@@ -117,19 +126,29 @@ function PackageItemsModal({ show, onHide, pkg, onChanged }) {
         <div className="row g-2 align-items-end mb-3">
           <div className="col-md-3">
             <Form.Label>Type</Form.Label>
-            <Form.Select value={selectedType} onChange={(e) => { setSelectedType(e.target.value); setSelectedId('') }}>
+            <Form.Select value={selectedType} onChange={(e) => { setSelectedType(e.target.value); setSelectedId(''); setSearchInput('') }}>
               <option value="game">Game</option>
               <option value="program">Program</option>
             </Form.Select>
           </div>
           <div className="col-md-7">
-            <Form.Label>Select item</Form.Label>
-            <Form.Select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
-              <option value="">Select...</option>
+            <Form.Label>Search item</Form.Label>
+            <Form.Control
+              list="itemList"
+              value={searchInput}
+              onChange={(e) => {
+                const v = e.target.value
+                setSearchInput(v)
+                const match = selectedSource.find(s => `${s.name_en}${s.name_ar ? ` (${s.name_ar})` : ''}` === v)
+                setSelectedId(match ? String(match.id) : '')
+              }}
+              placeholder="Type to search..."
+            />
+            <datalist id="itemList">
               {selectedSource.map((src) => (
-                <option key={src.id} value={src.id}>{src.name_en} {src.name_ar ? `(${src.name_ar})` : ''}</option>
+                <option key={src.id} value={`${src.name_en}${src.name_ar ? ` (${src.name_ar})` : ''}`} />
               ))}
-            </Form.Select>
+            </datalist>
           </div>
           <div className="col-md-2 d-grid">
             <Button onClick={handleAdd} disabled={!selectedId || saving}>Add</Button>

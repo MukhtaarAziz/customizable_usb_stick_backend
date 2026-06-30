@@ -87,8 +87,8 @@ class PackageController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name_en' => ['required', 'string', 'max:255'],
-            'name_ar' => ['required', 'string', 'max:255'],
+            'name_en' => ['required', 'string', 'max:255', 'unique:packages,name_en'],
+            'name_ar' => ['required', 'string', 'max:255', 'unique:packages,name_ar'],
             'description_en' => ['nullable', 'string'],
             'description_ar' => ['nullable', 'string'],
             'platform_id' => ['required', 'exists:platforms,id'],
@@ -146,8 +146,8 @@ class PackageController extends Controller
         $package = Package::findOrFail($id);
 
         $data = $request->validate([
-            'name_en' => ['sometimes', 'required', 'string', 'max:255'],
-            'name_ar' => ['sometimes', 'required', 'string', 'max:255'],
+            'name_en' => ['sometimes', 'required', 'string', 'max:255', 'unique:packages,name_en,' . $id],
+            'name_ar' => ['sometimes', 'required', 'string', 'max:255', 'unique:packages,name_ar,' . $id],
             'description_en' => ['nullable', 'string'],
             'description_ar' => ['nullable', 'string'],
             'platform_id' => ['sometimes', 'required', 'exists:platforms,id'],

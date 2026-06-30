@@ -37,8 +37,8 @@ class ProgramController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name_en' => ['required', 'string', 'max:255'],
-            'name_ar' => ['required', 'string', 'max:255'],
+            'name_en' => ['required', 'string', 'max:255', 'unique:programs,name_en'],
+            'name_ar' => ['required', 'string', 'max:255', 'unique:programs,name_ar'],
             'description_en' => ['nullable', 'string'],
             'description_ar' => ['nullable', 'string'],
             'category_id' => ['required', 'exists:categories,id'],
@@ -64,8 +64,8 @@ class ProgramController extends Controller
         $program = Program::findOrFail($id);
 
         $data = $request->validate([
-            'name_en' => ['sometimes', 'required', 'string', 'max:255'],
-            'name_ar' => ['sometimes', 'required', 'string', 'max:255'],
+            'name_en' => ['sometimes', 'required', 'string', 'max:255', 'unique:programs,name_en,' . $id],
+            'name_ar' => ['sometimes', 'required', 'string', 'max:255', 'unique:programs,name_ar,' . $id],
             'description_en' => ['nullable', 'string'],
             'description_ar' => ['nullable', 'string'],
             'category_id' => ['sometimes', 'required', 'exists:categories,id'],

@@ -8,7 +8,16 @@ import './AuthModal.css'
 function AuthModal({ show, onClose, onAuth, locale }) {
   const [activeTab, setActiveTab] = useState('login')
   const [loginData, setLoginData] = useState({ identifier: '', password: '' })
-  const [registerData, setRegisterData] = useState({ name: '', identifier: '', password: '', confirmPassword: '', governorate_id: '' })
+  const [registerData, setRegisterData] = useState({ 
+    name: '', 
+    email: '',
+    identifier: '', 
+    password: '', 
+    confirmPassword: '', 
+    governorate_id: '',
+    address: '',
+    nearest_service_point: ''
+  })
   const [governorates, setGovernorates] = useState([])
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -21,19 +30,37 @@ function AuthModal({ show, onClose, onAuth, locale }) {
       register: 'Register',
       emailOrPhone: 'Email or phone',
       password: 'Password',
-      name: 'Name',
+      name: 'Full Name',
+      email: 'Email (optional)',
+      address: 'Address (optional)',
+      nearestServicePoint: 'Nearest Service Point (optional)',
       confirmPassword: 'Confirm Password',
+      governorate: 'Governorate',
       enterEmail: 'Enter email or phone',
-      enterName: 'Enter your name',
+      enterName: 'Enter your full name',
       enterPassword: 'Enter password',
+      enterEmailAddr: 'Enter your email address',
+      enterAddress: 'Enter your delivery address',
+      enterServicePoint: 'e.g. Al-Mansour Mall, Korek branch',
       confirmPasswordPlaceholder: 'Confirm your password',
+      selectGovernorate: '-- Select governorate --',
       close: 'Close',
       submit: 'Login',
       submitRegister: 'Register',
+      // Validation errors
       passwordMinLength: 'Password must be at least 8 characters.',
       passwordNoSpaces: 'Password cannot contain spaces.',
       passwordsMismatch: 'Passwords do not match.',
-      fillAllFields: 'Please fill all fields.',
+      fillAllFields: 'Please fill all required fields.',
+      invalidPhoneNumber: 'Please enter a valid Iraqi phone number (e.g., 07701234567, 07801234567).',
+      invalidEmail: 'Please enter a valid email address.',
+      nameTooLong: 'Name cannot exceed 255 characters.',
+      emailTooLong: 'Email cannot exceed 255 characters.',
+      addressTooLong: 'Address cannot exceed 255 characters.',
+      phoneAlreadyRegistered: 'This phone number is already registered.',
+      emailAlreadyRegistered: 'This email is already registered.',
+      phoneUnique: 'This phone number is already in use.',
+      emailUnique: 'This email is already in use.',
       noAccount: "Don't have an account?",
       registerNow: 'Register now',
       haveAccount: 'Already have an account?',
@@ -45,19 +72,37 @@ function AuthModal({ show, onClose, onAuth, locale }) {
       register: 'تسجيل',
       emailOrPhone: 'البريد الإلكتروني أو رقم الهاتف',
       password: 'كلمة المرور',
-      name: 'الاسم',
+      name: 'الاسم الكامل',
+      email: 'البريد الإلكتروني (اختياري)',
+      address: 'العنوان (اختياري)',
+      nearestServicePoint: 'أقرب نقطة خدمة (اختياري)',
       confirmPassword: 'تأكيد كلمة المرور',
+      governorate: 'المحافظة',
       enterEmail: 'ادخل البريد الإلكتروني أو رقم الهاتف',
-      enterName: 'ادخل اسمك',
+      enterName: 'ادخل اسمك الكامل',
       enterPassword: 'ادخل كلمة المرور',
+      enterEmailAddr: 'ادخل بريدك الإلكتروني',
+      enterAddress: 'ادخل عنوان التوصيل الخاص بك',
+      enterServicePoint: 'مثلاً: مول المنصور، فرع كورك',
       confirmPasswordPlaceholder: 'أكد كلمة المرور',
+      selectGovernorate: '-- اختر المحافظة --',
       close: 'إغلاق',
       submit: 'دخول',
       submitRegister: 'تسجيل',
+      // Validation errors
       passwordMinLength: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل.',
       passwordNoSpaces: 'كلمة المرور لا يمكن أن تحتوي على فراغات.',
       passwordsMismatch: 'كلمات المرور غير متطابقة.',
-      fillAllFields: 'يرجى ملء جميع الحقول.',
+      fillAllFields: 'يرجى ملء جميع الحقول المطلوبة.',
+      invalidPhoneNumber: 'يرجى إدخال رقم هاتف عراقي صحيح (مثل: 07701234567، 07801234567).',
+      invalidEmail: 'يرجى إدخال عنوان بريد إلكتروني صحيح.',
+      nameTooLong: 'الاسم لا يمكن أن يتجاوز 255 حرف.',
+      emailTooLong: 'البريد الإلكتروني لا يمكن أن يتجاوز 255 حرف.',
+      addressTooLong: 'العنوان لا يمكن أن يتجاوز 255 حرف.',
+      phoneAlreadyRegistered: 'رقم الهاتف هذا مسجل بالفعل.',
+      emailAlreadyRegistered: 'هذا البريد الإلكتروني مسجل بالفعل.',
+      phoneUnique: 'رقم الهاتف قيد الاستخدام بالفعل.',
+      emailUnique: 'هذا البريد الإلكتروني قيد الاستخدام بالفعل.',
       noAccount: 'ليس لديك حساب؟',
       registerNow: 'سجل الآن',
       haveAccount: 'هل لديك حساب بالفعل؟',
@@ -83,6 +128,50 @@ function AuthModal({ show, onClose, onAuth, locale }) {
     }
     if (/\s/.test(password)) {
       setError(labels.passwordNoSpaces)
+      return false
+    }
+    return true
+  }
+
+  const validateEmail = (email) => {
+    if (!email) return true // email is optional
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailPattern.test(email)) {
+      setError(labels.invalidEmail)
+      return false
+    }
+    if (email.length > 255) {
+      setError(labels.emailTooLong)
+      return false
+    }
+    return true
+  }
+
+  const validateName = (name) => {
+    if (!name.trim()) {
+      setError(labels.fillAllFields)
+      return false
+    }
+    if (name.length > 255) {
+      setError(labels.nameTooLong)
+      return false
+    }
+    return true
+  }
+
+  const validatePhoneNumber = (phone) => {
+    const cleanPhone = phone.replace(/[\s-]/g, '')
+    const iraqiPhonePattern = /^(\+964|0)(770|771|772|773|790|791|792|793|794|780|781|782|783|784)\d{7}$/
+    if (!iraqiPhonePattern.test(cleanPhone)) {
+      setError(labels.invalidPhoneNumber)
+      return false
+    }
+    return true
+  }
+
+  const validateAddress = (address) => {
+    if (address && address.length > 255) {
+      setError(labels.addressTooLong)
       return false
     }
     return true
@@ -157,37 +246,65 @@ function AuthModal({ show, onClose, onAuth, locale }) {
     setError('')
     setNotice('')
 
-    if (!registerData.name || !registerData.identifier || !registerData.password || !registerData.confirmPassword || !registerData.governorate_id) {
+    // Validate required fields
+    if (!registerData.name.trim() || !registerData.identifier.trim() || !registerData.password || !registerData.confirmPassword || !registerData.governorate_id) {
       setError(labels.fillAllFields)
       return
     }
 
-    const cleanPhone = registerData.identifier.replace(/[\s-]/g, '')
-    const iraqiPhonePattern = /^(\+964|0)(770|771|772|773|790|791|792|793|794|780|781|782|783|784)\d{7}$/
-    if (!iraqiPhonePattern.test(cleanPhone)) {
-      setError(locale === 'ar' ? 'يرجى إدخال رقم هاتف عراقي صحيح.' : 'Please enter a valid Iraqi phone number.')
+    // Validate name
+    if (!validateName(registerData.name)) {
       return
     }
 
+    // Validate email if provided
+    if (!validateEmail(registerData.email)) {
+      return
+    }
+
+    // Validate phone
+    if (!validatePhoneNumber(registerData.identifier)) {
+      return
+    }
+
+    // Validate password
     if (!validatePassword(registerData.password)) {
       return
     }
 
+    // Check passwords match
     if (registerData.password !== registerData.confirmPassword) {
       setError(labels.passwordsMismatch)
       return
     }
 
+    // Validate address if provided
+    if (!validateAddress(registerData.address)) {
+      return
+    }
+
+    const cleanPhone = registerData.identifier.replace(/[\s-]/g, '')
     setIsLoading(true)
 
     ;(async () => {
       try {
         // 1) Register customer account
         const registerPayload = {
-          name: registerData.name,
+          name: registerData.name.trim(),
           phone: cleanPhone,
           password: registerData.password,
           governorate_id: Number(registerData.governorate_id),
+        }
+
+        // Add optional fields if provided
+        if (registerData.email.trim()) {
+          registerPayload.email = registerData.email.trim()
+        }
+        if (registerData.address.trim()) {
+          registerPayload.address = registerData.address.trim()
+        }
+        if (registerData.nearest_service_point.trim()) {
+          registerPayload.nearest_service_point = registerData.nearest_service_point.trim()
         }
 
         const registerRes = await fetch(`${API_BASE}/customers`, {
@@ -200,7 +317,19 @@ function AuthModal({ show, onClose, onAuth, locale }) {
         if (!registerRes.ok) {
           if (registerDataRes && registerDataRes.errors) {
             const firstKey = Object.keys(registerDataRes.errors)[0]
-            setError(registerDataRes.errors[firstKey][0])
+            const errorMessage = registerDataRes.errors[firstKey][0]
+            // Map server error messages to user-friendly messages
+            if (errorMessage.includes('unique') || errorMessage.includes('already')) {
+              if (firstKey === 'phone') {
+                setError(labels.phoneAlreadyRegistered)
+              } else if (firstKey === 'email') {
+                setError(labels.emailAlreadyRegistered)
+              } else {
+                setError(errorMessage)
+              }
+            } else {
+              setError(errorMessage)
+            }
           } else {
             setError(registerDataRes.message || (locale === 'ar' ? 'فشل إنشاء الحساب.' : 'Registration failed.'))
           }
@@ -211,7 +340,7 @@ function AuthModal({ show, onClose, onAuth, locale }) {
         setActiveTab('login')
         setLoginData({ identifier: cleanPhone, password: '' })
         setNotice(locale === 'ar' ? 'تم إنشاء الحساب بنجاح. يرجى تسجيل الدخول للمتابعة.' : 'Account created successfully. Please log in to continue.')
-        setRegisterData({ name: '', identifier: '', password: '', confirmPassword: '', governorate_id: '' })
+        setRegisterData({ name: '', email: '', identifier: '', password: '', confirmPassword: '', governorate_id: '', address: '', nearest_service_point: '' })
       } catch (err) {
         console.error(err)
         setError(locale === 'ar' ? 'حدث خطأ أثناء التسجيل.' : 'An error occurred during registration.')
@@ -225,7 +354,7 @@ function AuthModal({ show, onClose, onAuth, locale }) {
     setError('')
     setNotice('')
     setLoginData({ identifier: '', password: '' })
-    setRegisterData({ name: '', identifier: '', password: '', confirmPassword: '', governorate_id: '' })
+    setRegisterData({ name: '', email: '', identifier: '', password: '', confirmPassword: '', governorate_id: '', address: '', nearest_service_point: '' })
     if (typeof onClose === 'function') onClose()
   }
 
@@ -308,27 +437,43 @@ function AuthModal({ show, onClose, onAuth, locale }) {
                 value={registerData.name}
                 onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
                 placeholder={labels.enterName}
+                maxLength="255"
                 required
               />
+              <small className="text-muted">{registerData.name.length}/255</small>
             </Form.Group>
+
             <Form.Group className="mb-3">
-              <Form.Label>{labels.phone || labels.emailOrPhone}</Form.Label>
+              <Form.Label>{labels.phone}</Form.Label>
               <Form.Control
                 type="text"
                 value={registerData.identifier}
                 onChange={(e) => setRegisterData({ ...registerData, identifier: e.target.value })}
-                placeholder={locale === 'ar' ? 'ادخل رقم الهاتف العراقي' : 'Enter Iraqi phone number'}
+                placeholder={locale === 'ar' ? 'ادخل رقم الهاتف العراقي (مثل: 07701234567)' : 'Enter Iraqi phone number (e.g., 07701234567)'}
                 required
               />
             </Form.Group>
+
             <Form.Group className="mb-3">
-              <Form.Label>{locale === 'ar' ? 'المحافظة' : 'Governorate'}</Form.Label>
+              <Form.Label>{labels.email}</Form.Label>
+              <Form.Control
+                type="email"
+                value={registerData.email}
+                onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+                placeholder={labels.enterEmailAddr}
+                maxLength="255"
+              />
+              <small className="text-muted">{registerData.email.length}/255</small>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>{labels.governorate}</Form.Label>
               <Form.Select
                 value={registerData.governorate_id}
                 onChange={(e) => setRegisterData({ ...registerData, governorate_id: e.target.value })}
                 required
               >
-                <option value="">{locale === 'ar' ? '-- اختر المحافظة --' : '-- Select governorate --'}</option>
+                <option value="">{labels.selectGovernorate}</option>
                 {governorates.map((gov) => (
                   <option key={gov.id} value={gov.id}>
                     {locale === 'ar' ? gov.name_ar || gov.name_en : gov.name_en || gov.name_ar}
@@ -336,6 +481,33 @@ function AuthModal({ show, onClose, onAuth, locale }) {
                 ))}
               </Form.Select>
             </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>{labels.address}</Form.Label>
+              <Form.Control
+                type="text"
+                as="textarea"
+                rows={2}
+                value={registerData.address}
+                onChange={(e) => setRegisterData({ ...registerData, address: e.target.value })}
+                placeholder={labels.enterAddress}
+                maxLength="255"
+              />
+              <small className="text-muted">{registerData.address.length}/255</small>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>{labels.nearestServicePoint}</Form.Label>
+              <Form.Control
+                type="text"
+                value={registerData.nearest_service_point}
+                onChange={(e) => setRegisterData({ ...registerData, nearest_service_point: e.target.value })}
+                placeholder={labels.enterServicePoint}
+                maxLength="255"
+              />
+              <small className="text-muted">{registerData.nearest_service_point.length}/255</small>
+            </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Label>{labels.password}</Form.Label>
               <Form.Control
@@ -345,7 +517,14 @@ function AuthModal({ show, onClose, onAuth, locale }) {
                 placeholder={labels.enterPassword}
                 required
               />
+              <small className="text-muted d-block mt-1">
+                {locale === 'ar' 
+                  ? '• الحد الأدنى: 8 أحرف • لا توجد مسافات'
+                  : '• Minimum: 8 characters • No spaces'
+                }
+              </small>
             </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Label>{labels.confirmPassword}</Form.Label>
               <Form.Control
@@ -356,6 +535,7 @@ function AuthModal({ show, onClose, onAuth, locale }) {
                 required
               />
             </Form.Group>
+
             <Button type="submit" variant="success" className="w-100" disabled={isLoading}>
               {isLoading ? '...' : labels.submitRegister}
             </Button>

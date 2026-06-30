@@ -122,7 +122,7 @@ function AdminLayout({ onLogout }) {
         </div>
       </aside>
 
-      <div className="admin-overlay" onClick={() => setSidebarOpen(false)} />
+      {sidebarOpen && <div className="admin-overlay" onClick={() => setSidebarOpen(false)} />}
 
       <main className="admin-main">
         <Outlet />

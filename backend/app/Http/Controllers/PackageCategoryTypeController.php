@@ -61,8 +61,8 @@ class PackageCategoryTypeController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name_en' => ['required', 'string', 'max:255'],
-            'name_ar' => ['required', 'string', 'max:255'],
+            'name_en' => ['required', 'string', 'max:255', 'unique:package_category_types,name_en'],
+            'name_ar' => ['required', 'string', 'max:255', 'unique:package_category_types,name_ar'],
             'description_en' => ['nullable', 'string'],
             'description_ar' => ['nullable', 'string'],
         ]);
@@ -109,8 +109,8 @@ class PackageCategoryTypeController extends Controller
         $packageCategoryType = PackageCategoryType::findOrFail($id);
 
         $data = $request->validate([
-            'name_en' => ['sometimes', 'required', 'string', 'max:255'],
-            'name_ar' => ['sometimes', 'required', 'string', 'max:255'],
+            'name_en' => ['sometimes', 'required', 'string', 'max:255', 'unique:package_category_types,name_en,' . $id],
+            'name_ar' => ['sometimes', 'required', 'string', 'max:255', 'unique:package_category_types,name_ar,' . $id],
             'description_en' => ['nullable', 'string'],
             'description_ar' => ['nullable', 'string'],
         ]);
@@ -136,7 +136,6 @@ class PackageCategoryTypeController extends Controller
     {
         $packageCategoryType = PackageCategoryType::findOrFail($id);
         $packageCategoryType->delete();
-
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Package category type deleted successfully.'], 200);
     }
 }
