@@ -3,13 +3,13 @@ import { Table, Button, Spinner, Alert, Form } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faPen, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import Pagination from '../../components/admins/Pagination.jsx'
+import ConfirmDeleteModal from '../../components/admins/ConfirmDeleteModal'
 import ItemEditModal from '../../components/admins/ItemEditModal.jsx'
 import SearchBar from '../../components/admins/SearchBar.jsx'
 
 const API_BASE = '/api/games'
 const PLATFORMS_API = '/api/game-platforms?per_page=100'
 const TOKEN_KEY = 'authToken'
-const CONFIRM_DELETE = 'Delete this game?'
 const DEFAULT_PER_PAGE = 15
 
 function AdminGames() {
@@ -19,6 +19,8 @@ function AdminGames() {
   const [error, setError] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing] = useState(null)
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
   const [total, setTotal] = useState(0)
@@ -70,14 +72,18 @@ function AdminGames() {
   const openEdit = (item) => { setEditing(item); setShowModal(true) }
   const handleSaved = () => { setShowModal(false); load() }
 
-  const handleDelete = async (id) => {
-    if (!window.confirm(CONFIRM_DELETE)) return
+  const handleDelete = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
     try {
-      const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE', headers: { ...headers, 'Content-Type': 'application/json' } })
+      const res = await fetch(`${API_BASE}/${deleteTarget}`, { method: 'DELETE', headers: { ...headers, 'Content-Type': 'application/json' } })
       if (!res.ok) throw new Error('Delete failed')
+      setDeleteTarget(null)
       load()
     } catch (e) {
       setError(e.message)
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -149,7 +155,7 @@ function AdminGames() {
                     {item.active ? 'Deactivate' : 'Activate'}
                   </Button>
                   <Button variant="outline-primary" size="sm" className="me-1" onClick={() => openEdit(item)}><FontAwesomeIcon icon={faPen} /></Button>
-                  <Button variant="outline-danger" size="sm" onClick={() => handleDelete(item.id)}><FontAwesomeIcon icon={faTrashCan} /></Button>
+                  <Button variant="outline-danger" size="sm" onClick={() => setDeleteTarget(item.id)}><FontAwesomeIcon icon={faTrashCan} /></Button>
                 </td>
               </tr>
             ))}
@@ -174,6 +180,15 @@ function AdminGames() {
         apiBase={API_BASE}
         categoriesApi="/api/game-categories"
         title="Game"
+      />
+
+      <ConfirmDeleteModal
+        show={!!deleteTarget}
+        onHide={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Game"
+        message="Are you sure you want to delete this game? This action cannot be undone."
+        loading={deleting}
       />
     </>
   )

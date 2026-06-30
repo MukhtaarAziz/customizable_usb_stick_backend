@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
+import { Modal, Button, Form, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
@@ -14,6 +14,7 @@ function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi,
   const [categories, setCategories] = useState([])
   const [tagsInput, setTagsInput] = useState('')
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState(null)
   const token = localStorage.getItem(TOKEN_KEY)
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' }
 
@@ -128,7 +129,7 @@ function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi,
       }
       onSaved()
     } catch (e) {
-      alert(e.message)
+      setError(e.message)
     } finally {
       setSaving(false)
     }
@@ -141,6 +142,7 @@ function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi,
         <button className="modal-close-btn" onClick={onHide}><FontAwesomeIcon icon={faXmark} /></button>
       </Modal.Header>
       <Modal.Body>
+        {error && <Alert variant="danger" dismissible onClose={() => setError(null)}>{error}</Alert>}
         <Form.Group className="mb-3">
           <Form.Label>Platform</Form.Label>
           <Form.Select value={form.platform_id} isInvalid={!!errors.platform_id} onChange={e => handleFieldChange('platform_id', e.target.value)}>

@@ -30,6 +30,7 @@ import AdminCustomers from './pages/admins/Customers.jsx'
 import AdminSettings from './pages/admins/Settings.jsx'
 import AdminStorageDeviceTypes from './pages/admins/StorageDeviceTypes.jsx'
 import AdminStorageDevices from './pages/admins/StorageDevices.jsx'
+import { AdminThemeProvider } from './contexts/AdminThemeContext'
 
 const translations = {
   en: {
@@ -146,6 +147,7 @@ function App() {
       const token = localStorage.getItem('authToken')
       const userJson = localStorage.getItem('user')
       const settingsJson = localStorage.getItem('siteSettings')
+      const adminSettingsJson = localStorage.getItem('adminSettings')
 
       if (userJson) {
         setUser(JSON.parse(userJson))
@@ -157,7 +159,12 @@ function App() {
         if (settings.theme) setTheme(settings.theme)
       }
 
-      // keep token in storage; optional: set default auth header globally if needed
+      if (adminSettingsJson) {
+        const as = JSON.parse(adminSettingsJson)
+        if (as.language) setLocale(as.language)
+        setTheme(as.darkmode ? 'dark' : 'light')
+      }
+
       if (token) {
         // future: attach token to global fetch or axios
       }
@@ -165,6 +172,32 @@ function App() {
       console.error('Failed to restore auth from storage', err)
     }
   }, [])
+
+  // Fetch admin settings from backend when admin logs in
+  useEffect(() => {
+    const token = localStorage.getItem('authToken')
+    const stored = localStorage.getItem('adminSettings')
+    if (!user || user.role !== 'admin' || !token) return
+    if (stored) return
+
+    async function fetchAdminSettings() {
+      try {
+        const res = await fetch('/api/admin/settings', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        if (res.ok) {
+          const json = await res.json()
+          const s = json.data ?? json
+          localStorage.setItem('adminSettings', JSON.stringify(s))
+          if (s.language) setLocale(s.language)
+          setTheme(s.darkmode ? 'dark' : 'light')
+        }
+      } catch (e) {
+        console.error('Failed to load admin settings', e)
+      }
+    }
+    fetchAdminSettings()
+  }, [user])
 
   useEffect(() => {
     document.body.classList.toggle('theme-dark', theme === 'dark')
@@ -307,6 +340,11 @@ function App() {
         if (u.settings.locale) setLocale(u.settings.locale)
         if (u.settings.theme) setTheme(u.settings.theme)
       }
+      if (u.admin_settings) {
+        localStorage.setItem('adminSettings', JSON.stringify(u.admin_settings))
+        if (u.admin_settings.language) setLocale(u.admin_settings.language)
+        setTheme(u.admin_settings.darkmode ? 'dark' : 'light')
+      }
     } else {
       setUser(u)
       try {
@@ -326,6 +364,7 @@ function App() {
     localStorage.removeItem('authToken')
     localStorage.removeItem('user')
     localStorage.removeItem('package_cart')
+    localStorage.removeItem('adminSettings')
   }
 
   const handleProfileClick = () => {
@@ -389,7 +428,7 @@ function App() {
         <Route path="/support" element={<SupportPage locale={locale} t={t} />} />
         <Route path="*" element={<NotFoundPage locale={locale} t={t} onNavigate={confirmLeaveDesign} />} />
       </Route>
-      <Route path="/admin" element={<AdminLayout onLogout={handleLogout} />}>
+      <Route path="/admin" element={<AdminThemeProvider><AdminLayout onLogout={handleLogout} /></AdminThemeProvider>}>
         <Route index element={<AdminDashboard />} />
         <Route path="packages" element={<AdminPackages />} />
         <Route path="games" element={<AdminGames />} />

@@ -2,10 +2,13 @@ import { useEffect, useState, useCallback } from 'react'
 import { Table, Button, Spinner, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faPen, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import Pagination from '../../components/admins/Pagination'
+import ConfirmDeleteModal from '../../components/admins/ConfirmDeleteModal'
 import NameEditModal from '../../components/admins/NameEditModal'
 
 const API_BASE = '/api/storage-device-types'
 const TOKEN_KEY = 'authToken'
+const DEFAULT_PER_PAGE = 15
 
 function AdminStorageDeviceTypes() {
   const [items, setItems] = useState([])
@@ -13,16 +16,25 @@ function AdminStorageDeviceTypes() {
   const [error, setError] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing] = useState(null)
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
+  const [page, setPage] = useState(1)
+  const [lastPage, setLastPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE)
   const token = localStorage.getItem(TOKEN_KEY)
   const headers = { Authorization: `Bearer ${token}` }
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (p = page, pp = perPage) => {
     setLoading(true)
     try {
-      const res = await fetch(API_BASE, { headers })
+      const res = await fetch(`${API_BASE}?page=${p}&per_page=${pp}`, { headers })
       if (!res.ok) throw new Error('Failed to load')
       const json = await res.json()
       setItems(json.data ?? json ?? [])
+      setPage(json.current_page ?? p)
+      setLastPage(json.last_page ?? 1)
+      setTotal(json.total ?? 0)
     } catch (e) {
       setError(e.message)
     } finally {
@@ -30,24 +42,29 @@ function AdminStorageDeviceTypes() {
     }
   }, [])
 
-  useEffect(() => { load() }, [])
+  useEffect(() => { load(1, DEFAULT_PER_PAGE) }, [])
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this storage device type?')) return
+  const handlePageChange = (p) => { setPage(p); load(p, perPage) }
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
     setError(null)
     try {
-      const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE', headers })
+      const res = await fetch(`${API_BASE}/${deleteTarget}`, { method: 'DELETE', headers })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
         throw new Error(body.message || 'Delete failed')
       }
-      await load()
+      setDeleteTarget(null)
+      await load(page, perPage)
     } catch (e) { setError(e.message) }
+    finally { setDeleting(false) }
   }
 
   const handleSaved = () => {
     setShowModal(false)
-    load()
+    load(page, perPage)
   }
 
   if (loading) return <div className="text-center py-5"><Spinner animation="border" /></div>
@@ -88,7 +105,7 @@ function AdminStorageDeviceTypes() {
                   <Button variant="outline-primary" size="sm" className="me-1" onClick={() => { setEditing(item); setShowModal(true) }}>
                     <FontAwesomeIcon icon={faPen} />
                   </Button>
-                  <Button variant="outline-danger" size="sm" onClick={() => handleDelete(item.id)}>
+                  <Button variant="outline-danger" size="sm" onClick={() => setDeleteTarget(item.id)}>
                     <FontAwesomeIcon icon={faTrashCan} />
                   </Button>
                 </td>
@@ -98,6 +115,15 @@ function AdminStorageDeviceTypes() {
         </Table>
       </div>
 
+      <Pagination
+        currentPage={page}
+        lastPage={lastPage}
+        total={total}
+        perPage={perPage}
+        onPageChange={handlePageChange}
+        onPerPageChange={(n) => { setPerPage(n); setPage(1); load(1, n) }}
+      />
+
       <NameEditModal
         show={showModal}
         onHide={() => setShowModal(false)}
@@ -106,6 +132,15 @@ function AdminStorageDeviceTypes() {
         apiBase={API_BASE}
         title="Storage Device Type"
         withDescription
+      />
+
+      <ConfirmDeleteModal
+        show={!!deleteTarget}
+        onHide={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Storage Device Type"
+        message="Are you sure you want to delete this storage device type? This action cannot be undone."
+        loading={deleting}
       />
     </>
   )

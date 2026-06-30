@@ -32,7 +32,7 @@ function SearchBar({ value: externalValue, onChange, placeholder = 'Search...', 
 
   return (
     <InputGroup style={{ minWidth: 220 }}>
-      <InputGroup.Text className="bg-white"><FontAwesomeIcon icon={faSearch} size="sm" /></InputGroup.Text>
+      <InputGroup.Text className="admin-searchbar-addon"><FontAwesomeIcon icon={faSearch} size="sm" /></InputGroup.Text>
       <Form.Control
         size="sm"
         value={internalValue}
@@ -40,7 +40,7 @@ function SearchBar({ value: externalValue, onChange, placeholder = 'Search...', 
         placeholder={placeholder}
       />
       {internalValue && (
-        <InputGroup.Text className="bg-white cursor-pointer" onClick={handleClear} style={{ cursor: 'pointer' }}>
+        <InputGroup.Text className="admin-searchbar-addon" onClick={handleClear} style={{ cursor: 'pointer' }}>
           <FontAwesomeIcon icon={faXmark} />
         </InputGroup.Text>
       )}

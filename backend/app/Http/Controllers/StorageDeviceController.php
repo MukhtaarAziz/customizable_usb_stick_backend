@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\StorageDevice;
 use App\Models\StorageDeviceType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 /**
  * @group Storage Devices
@@ -169,8 +170,8 @@ class StorageDeviceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name_en' => 'required|string|max:255|unique:storage_devices,name_en',
-            'name_ar' => 'required|string|max:255|unique:storage_devices,name_ar',
+            'name_en' => ['required', 'string', 'max:255', Rule::unique('storage_devices', 'name_en')],
+            'name_ar' => ['required', 'string', 'max:255', Rule::unique('storage_devices', 'name_ar')],
             'description_en' => 'nullable|string',
             'description_ar' => 'nullable|string',
             'storage_type_id' => 'required|exists:storage_device_types,id',
@@ -223,8 +224,8 @@ class StorageDeviceController extends Controller
         $device = StorageDevice::findOrFail($id);
         
         $validated = $request->validate([
-            'name_en' => 'required|string|max:255|unique:storage_devices,name_en,' . $id,
-            'name_ar' => 'required|string|max:255|unique:storage_devices,name_ar,' . $id,
+            'name_en' => ['required', 'string', 'max:255', Rule::unique('storage_devices', 'name_en')->ignore($id)],
+            'name_ar' => ['required', 'string', 'max:255', Rule::unique('storage_devices', 'name_ar')->ignore($id)],
             'description_en' => 'nullable|string',
             'description_ar' => 'nullable|string',
             'storage_type_id' => 'required|exists:storage_device_types,id',

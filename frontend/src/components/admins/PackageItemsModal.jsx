@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Modal, Button, Table, Form, Badge, Alert, Spinner } from 'react-bootstrap'
+import ConfirmDeleteModal from './ConfirmDeleteModal'
 
 const TOKEN_KEY = 'authToken'
 const GAME_CLASS = 'App\\Models\\Game'
@@ -12,6 +13,7 @@ function PackageItemsModal({ show, onHide, pkg, onChanged }) {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const [removeTarget, setRemoveTarget] = useState(null)
   const [selectedType, setSelectedType] = useState('game')
   const [selectedId, setSelectedId] = useState('')
   const [searchInput, setSearchInput] = useState('')
@@ -89,12 +91,12 @@ function PackageItemsModal({ show, onHide, pkg, onChanged }) {
     }
   }
 
-  const handleRemove = async (itemId) => {
-    if (!pkg?.id) return
+  const handleRemove = async () => {
+    if (!pkg?.id || !removeTarget) return
     setSaving(true)
     setError(null)
     try {
-      const res = await fetch(`/api/packages/${pkg.id}/items/${itemId}`, {
+      const res = await fetch(`/api/packages/${pkg.id}/items/${removeTarget}`, {
         method: 'DELETE',
         headers: authHeaders,
       })
@@ -106,6 +108,7 @@ function PackageItemsModal({ show, onHide, pkg, onChanged }) {
         } catch (e) {}
         throw new Error(errorMsg)
       }
+      setRemoveTarget(null)
       await loadAll()
       onChanged?.()
     } catch (e) {
@@ -164,7 +167,7 @@ function PackageItemsModal({ show, onHide, pkg, onChanged }) {
         ) : (
           <div className="table-responsive">
             <Table striped hover size="sm" className="mb-0">
-              <thead className="table-light">
+              <thead>
                 <tr>
                   <th>ID</th>
                   <th>Type</th>
@@ -185,7 +188,7 @@ function PackageItemsModal({ show, onHide, pkg, onChanged }) {
                       <td><Badge bg={isGame ? 'primary' : 'success'}>{isGame ? 'Game' : 'Program'}</Badge></td>
                       <td>{title}</td>
                       <td>
-                        <Button size="sm" variant="outline-danger" disabled={saving} onClick={() => handleRemove(item.id)}>Remove</Button>
+                        <Button size="sm" variant="outline-danger" disabled={saving} onClick={() => setRemoveTarget(item.id)}>Remove</Button>
                       </td>
                     </tr>
                   )
@@ -198,6 +201,15 @@ function PackageItemsModal({ show, onHide, pkg, onChanged }) {
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>Close</Button>
       </Modal.Footer>
+
+      <ConfirmDeleteModal
+        show={!!removeTarget}
+        onHide={() => setRemoveTarget(null)}
+        onConfirm={handleRemove}
+        title="Remove Item"
+        message="Are you sure you want to remove this item from the package? This action cannot be undone."
+        loading={saving}
+      />
     </Modal>
   )
 }

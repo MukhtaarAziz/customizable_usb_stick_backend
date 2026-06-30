@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\StorageDeviceOrder
@@ -68,5 +69,33 @@ class StorageDeviceOrder extends Model
     public function storageDevice(): BelongsTo
     {
         return $this->belongsTo(StorageDevice::class);
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(StorageDeviceOrderItem::class);
+    }
+
+    public function toArray()
+    {
+        $data = parent::toArray();
+
+        $data['games'] = $this->items
+            ->where('itemable_type', Game::class)
+            ->map(fn ($item) => $item->itemable)
+            ->filter()
+            ->values()
+            ->toArray();
+
+        $data['programs'] = $this->items
+            ->where('itemable_type', Program::class)
+            ->map(fn ($item) => $item->itemable)
+            ->filter()
+            ->values()
+            ->toArray();
+
+        unset($data['items']);
+
+        return $data;
     }
 }

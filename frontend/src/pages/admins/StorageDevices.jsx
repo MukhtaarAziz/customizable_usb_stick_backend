@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { Table, Button, Spinner, Alert, Modal, Form } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faPen, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons'
+import ConfirmDeleteModal from '../../components/admins/ConfirmDeleteModal'
 import Pagination from '../../components/admins/Pagination'
 
 const API_BASE = '/api/storage-devices'
@@ -29,6 +30,8 @@ function AdminStorageDevices() {
   const [error, setError] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing] = useState(null)
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
   const [form, setForm] = useState(EMPTY_FORM)
   const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
@@ -138,17 +141,20 @@ function AdminStorageDevices() {
     }
   }
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this storage device?')) return
+  const handleDelete = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
     setError(null)
     try {
-      const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE', headers })
+      const res = await fetch(`${API_BASE}/${deleteTarget}`, { method: 'DELETE', headers })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
         throw new Error(body.message || 'Delete failed')
       }
+      setDeleteTarget(null)
       await load(meta.currentPage, meta.perPage)
     } catch (e) { setError(e.message) }
+    finally { setDeleting(false) }
   }
 
   const handlePageChange = (page) => load(page, meta.perPage)
@@ -198,7 +204,7 @@ function AdminStorageDevices() {
                   <Button variant="outline-primary" size="sm" className="me-1" onClick={() => openEdit(item)}>
                     <FontAwesomeIcon icon={faPen} />
                   </Button>
-                  <Button variant="outline-danger" size="sm" onClick={() => handleDelete(item.id)}>
+                  <Button variant="outline-danger" size="sm" onClick={() => setDeleteTarget(item.id)}>
                     <FontAwesomeIcon icon={faTrashCan} />
                   </Button>
                 </td>
@@ -309,6 +315,15 @@ function AdminStorageDevices() {
           <Button size="sm" onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
         </Modal.Footer>
       </Modal>
+
+      <ConfirmDeleteModal
+        show={!!deleteTarget}
+        onHide={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Storage Device"
+        message="Are you sure you want to delete this storage device? This action cannot be undone."
+        loading={deleting}
+      />
     </>
   )
 }

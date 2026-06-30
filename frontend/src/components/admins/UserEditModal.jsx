@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
+import { Modal, Button, Form, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
@@ -15,6 +15,7 @@ const EMPTY_FORM = { name: '', email: '', password: '', role: 'client' }
 function UserEditModal({ show, onHide, onSaved, editing }) {
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState(null)
   const token = localStorage.getItem(TOKEN_KEY)
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' }
 
@@ -44,7 +45,7 @@ function UserEditModal({ show, onHide, onSaved, editing }) {
       if (!res.ok) throw new Error('Save failed')
       onSaved()
     } catch (e) {
-      alert(e.message)
+      setError(e.message)
     } finally {
       setSaving(false)
     }
@@ -57,6 +58,7 @@ function UserEditModal({ show, onHide, onSaved, editing }) {
         <button className="modal-close-btn" onClick={onHide}><FontAwesomeIcon icon={faXmark} /></button>
       </Modal.Header>
       <Modal.Body>
+        {error && <Alert variant="danger" dismissible onClose={() => setError(null)}>{error}</Alert>}
         <Form.Group className="mb-2">
           <Form.Label>Name</Form.Label>
           <Form.Control value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />

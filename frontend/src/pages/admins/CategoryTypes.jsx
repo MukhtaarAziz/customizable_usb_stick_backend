@@ -3,6 +3,7 @@ import { Table, Button, Spinner, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faPen, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import Pagination from '../../components/admins/Pagination'
+import ConfirmDeleteModal from '../../components/admins/ConfirmDeleteModal'
 import NameEditModal from '../../components/admins/NameEditModal'
 
 const API_BASE = '/api/category-types'
@@ -15,6 +16,8 @@ function AdminCategoryTypes() {
   const [error, setError] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing] = useState(null)
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
   const token = localStorage.getItem(TOKEN_KEY)
   const headers = { Authorization: `Bearer ${token}` }
 
@@ -40,13 +43,16 @@ function AdminCategoryTypes() {
 
   useEffect(() => { load(1, meta.perPage) }, [])
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this category type?')) return
+  const handleDelete = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
     try {
-      const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE', headers })
+      const res = await fetch(`${API_BASE}/${deleteTarget}`, { method: 'DELETE', headers })
       if (!res.ok) throw new Error('Delete failed')
+      setDeleteTarget(null)
       load(meta.currentPage, meta.perPage)
     } catch (e) { setError(e.message) }
+    finally { setDeleting(false) }
   }
 
   const handleSaved = () => {
@@ -91,7 +97,7 @@ function AdminCategoryTypes() {
                   <Button variant="outline-primary" size="sm" className="me-1" onClick={() => { setEditing(item); setShowModal(true) }}>
                     <FontAwesomeIcon icon={faPen} />
                   </Button>
-                  <Button variant="outline-danger" size="sm" onClick={() => handleDelete(item.id)}>
+                  <Button variant="outline-danger" size="sm" onClick={() => setDeleteTarget(item.id)}>
                     <FontAwesomeIcon icon={faTrashCan} />
                   </Button>
                 </td>
@@ -117,6 +123,15 @@ function AdminCategoryTypes() {
         editing={editing}
         apiBase={API_BASE}
         title="Category Type"
+      />
+
+      <ConfirmDeleteModal
+        show={!!deleteTarget}
+        onHide={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Category Type"
+        message="Are you sure you want to delete this category type? This action cannot be undone."
+        loading={deleting}
       />
     </>
   )

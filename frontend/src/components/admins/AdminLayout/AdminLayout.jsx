@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGauge, faBox, faGamepad, faCode, faMicrochip, faTag, faLayerGroup, faList, faShoppingCart, faUsers, faUserGroup, faGear, faArrowRightFromBracket, faBars, faXmark, faChevronDown, faCompactDisc, faHardDrive } from '@fortawesome/free-solid-svg-icons'
+import { useAdminTheme } from '../../../contexts/AdminThemeContext'
+import AdminDarkModeToggle from '../AdminDarkModeToggle'
 import './AdminLayout.css'
 
 const sidebarLinks = [
@@ -30,6 +32,7 @@ const sidebarLinks = [
 
 function AdminLayout({ onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { isDark } = useAdminTheme()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -55,7 +58,7 @@ function AdminLayout({ onLogout }) {
   }
 
   return (
-    <div className="admin-layout">
+    <div className="admin-layout" data-theme={isDark ? 'dark' : 'light'}>
       <button className="admin-sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
         <FontAwesomeIcon icon={sidebarOpen ? faXmark : faBars} />
       </button>
@@ -115,6 +118,7 @@ function AdminLayout({ onLogout }) {
         </nav>
 
         <div className="admin-sidebar__footer">
+          <AdminDarkModeToggle />
           <button className="admin-sidebar__link admin-sidebar__link--logout" onClick={handleLogout}>
             <FontAwesomeIcon icon={faArrowRightFromBracket} className="admin-sidebar__link-icon" />
             <span>Logout</span>

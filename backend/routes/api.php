@@ -16,6 +16,7 @@ use App\Http\Controllers\UsbStickOrderController;
 use App\Http\Controllers\StorageDeviceOrderController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminSettingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\StorageDeviceController;
 use App\Http\Controllers\StorageDeviceTypeController;
@@ -93,6 +94,9 @@ Route::get('/usb-stick-orders', [UsbStickOrderController::class, 'index']);
 Route::post('/usb-stick-orders', [UsbStickOrderController::class, 'store']);
 Route::get('/storage-device-orders', [StorageDeviceOrderController::class, 'index']);
 Route::post('/storage-device-orders', [StorageDeviceOrderController::class, 'store']);
+Route::get('/storage-device-orders/{storage_device_order}', [StorageDeviceOrderController::class, 'show']);
+Route::put('/storage-device-orders/{storage_device_order}', [StorageDeviceOrderController::class, 'update']);
+Route::delete('/storage-device-orders/{storage_device_order}', [StorageDeviceOrderController::class, 'destroy']);
 
 // Catalog endpoints
 Route::get('/catalog', [CatalogController::class, 'index']);
@@ -123,13 +127,15 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::patch('/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
     Route::patch('/admin/package-orders/{id}/status', [AdminController::class, 'updatePackageOrderStatus']);
     Route::patch('/admin/usb-stick-orders/{id}/status', [AdminController::class, 'updateUsbStickOrderStatus']);
+    Route::get('/admin/storage-device-orders', [AdminController::class, 'storageDeviceOrders']);
+    Route::patch('/admin/storage-device-orders/{id}/status', [AdminController::class, 'updateStorageDeviceOrderStatus']);
     Route::get('/admin/users', [AdminController::class, 'users']);
     Route::patch('/admin/users/{id}/role', [AdminController::class, 'updateUserRole']);
     Route::post('/admin/users', [AdminController::class, 'storeUser']);
     Route::put('/admin/users/{id}', [AdminController::class, 'updateUser']);
     Route::delete('/admin/users/{id}', [AdminController::class, 'destroyUser']);
-    Route::get('/admin/settings', [AdminController::class, 'settings']);
-    Route::post('/admin/settings', [AdminController::class, 'updateSettings']);
+    Route::get('/admin/settings', [AdminSettingController::class, 'index']);
+    Route::put('/admin/settings', [AdminSettingController::class, 'update']);
 
     // Admin package management
     Route::post('/games', [GameController::class, 'store']);

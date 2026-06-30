@@ -3,6 +3,7 @@ import { Table, Button, Spinner, Alert, Modal, Form, Badge } from 'react-bootstr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faPen, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons'
 import Pagination from '../../components/admins/Pagination'
+import ConfirmDeleteModal from '../../components/admins/ConfirmDeleteModal'
 import PackageItemsModal from '../../components/admins/PackageItemsModal.jsx'
 
 const API_BASE = '/api/packages'
@@ -27,6 +28,8 @@ function AdminPackages() {
   const [error, setError] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [showItemsModal, setShowItemsModal] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
   const [managingItems, setManagingItems] = useState(null)
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
@@ -195,13 +198,16 @@ function AdminPackages() {
     }
   }
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this package?')) return
+  const handleDelete = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
     try {
-      const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE', headers })
+      const res = await fetch(`${API_BASE}/${deleteTarget}`, { method: 'DELETE', headers })
       if (!res.ok) throw new Error('Delete failed')
+      setDeleteTarget(null)
       load(meta.currentPage, meta.perPage)
     } catch (e) { setError(e.message) }
+    finally { setDeleting(false) }
   }
 
   const handleToggleActive = async (item) => {
@@ -288,7 +294,7 @@ function AdminPackages() {
                     {item.active ? 'Deactivate' : 'Activate'}
                   </Button>
                   <Button variant="outline-primary" size="sm" className="me-1" onClick={() => openEdit(item)}><FontAwesomeIcon icon={faPen} /></Button>
-                  <Button variant="outline-danger" size="sm" onClick={() => handleDelete(item.id)}><FontAwesomeIcon icon={faTrashCan} /></Button>
+                  <Button variant="outline-danger" size="sm" onClick={() => setDeleteTarget(item.id)}><FontAwesomeIcon icon={faTrashCan} /></Button>
                 </td>
               </tr>
             ))}
@@ -491,6 +497,15 @@ function AdminPackages() {
         onHide={() => setShowItemsModal(false)}
         pkg={managingItems}
         onChanged={() => load(meta.currentPage, meta.perPage)}
+      />
+
+      <ConfirmDeleteModal
+        show={!!deleteTarget}
+        onHide={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Package"
+        message="Are you sure you want to delete this package? This action cannot be undone."
+        loading={deleting}
       />
     </>
   )

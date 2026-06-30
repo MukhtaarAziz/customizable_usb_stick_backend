@@ -9,6 +9,7 @@ use Database\Seeders\CustomersTableSeeder;
 use Database\Seeders\GamesTableSeeder;
 use Database\Seeders\ProgramsTableSeeder;
 use Database\Seeders\UsbSticksTableSeeder;
+use Database\Seeders\AdminSettingsTableSeeder;
 use Database\Seeders\PackageCategoryTypesTableSeeder;
 use Database\Seeders\PackagesTableSeeder;
 use Database\Seeders\StorageDeviceTypesTableSeeder;
@@ -49,5 +50,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StorageDevicesTableSeeder::class);
         $this->call(PackageCategoryTypesTableSeeder::class);
         $this->call(PackagesTableSeeder::class);
+        $this->call(AdminSettingsTableSeeder::class);
     }
 }

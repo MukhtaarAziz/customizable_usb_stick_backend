@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Container, Row, Col, Card, Button, Spinner, Alert, Form, InputGroup, Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faArrowRight, faArrowLeft, faShoppingCart, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faShoppingCart, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import PackageCard from '../components/PackageCard/PackageCard.jsx'
 import PackageDetailsModal from '../components/PackageDetailsModal/PackageDetailsModal.jsx'
+import Pagination from '../components/admins/Pagination'
 import Cart from '../components/Cart/Cart.jsx'
 import './PackagesPage.css'
 
@@ -293,30 +294,14 @@ function PackagesPage({ locale, t, user, onShowAuth }) {
                 </Row>
               )}
 
-              {meta.last_page > 1 && (
-                <div className="d-flex justify-content-center mt-4">
-                  <Button
-                    variant="outline-secondary"
-                    disabled={page === 1}
-                    onClick={() => setPage(page - 1)}
-                    className="me-2"
-                  >
-                    <FontAwesomeIcon icon={faArrowLeft} className="me-1" />
-                    {locale === 'ar' ? 'السابق' : 'Previous'}
-                  </Button>
-                  <span className="align-self-center mx-3">
-                    {locale === 'ar' ? 'صفحة' : 'Page'} {page} {locale === 'ar' ? 'من' : 'of'} {meta.last_page}
-                  </span>
-                  <Button
-                    variant="outline-secondary"
-                    disabled={page === meta.last_page}
-                    onClick={() => setPage(page + 1)}
-                  >
-                    {locale === 'ar' ? 'التالي' : 'Next'}
-                    <FontAwesomeIcon icon={faArrowRight} className="ms-1" />
-                  </Button>
-                </div>
-              )}
+              <Pagination
+                currentPage={meta.current_page ?? page}
+                lastPage={meta.last_page ?? 1}
+                total={meta.total ?? 0}
+                perPage={meta.per_page ?? perPage}
+                onPageChange={(p) => setPage(p)}
+                onPerPageChange={(n) => { setPerPage(n); setPage(1) }}
+              />
             </>
           )}
         </Col>

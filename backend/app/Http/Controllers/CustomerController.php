@@ -29,9 +29,10 @@ class CustomerController extends Controller
      * @responseField email string Email address.
      * @responseField governorate object The customer's governorate.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Customer::with('governorate')->get());
+        $perPage = $request->integer('per_page', 15);
+        return response()->json(Customer::with('governorate')->paginate($perPage));
     }
 
     /**

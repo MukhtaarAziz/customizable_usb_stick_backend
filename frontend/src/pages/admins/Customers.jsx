@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Table, Button, Spinner, Alert, Modal, Form } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPen, faTrashCan, faRotate, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faPen, faTrashCan, faRotate, faXmark } from '@fortawesome/free-solid-svg-icons'
+import ConfirmDeleteModal from '../../components/admins/ConfirmDeleteModal'
+import Pagination from '../../components/admins/Pagination'
 
 const API_CUSTOMERS = '/api/customers'
 const API_GOVERNORATES = '/api/governorates'
@@ -19,12 +21,16 @@ const EMPTY_FORM = {
 function AdminCustomers() {
   const [items, setItems] = useState([])
   const [governorates, setGovernorates] = useState([])
+  const [meta, setMeta] = useState({ currentPage: 1, lastPage: 1, total: 0, perPage: 15 })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing] = useState(null)
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
   const [form, setForm] = useState(EMPTY_FORM)
+  const [fieldErrors, setFieldErrors] = useState({})
   const [saving, setSaving] = useState(false)
   const token = localStorage.getItem(TOKEN_KEY)
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' }
@@ -36,13 +42,19 @@ function AdminCustomers() {
       .catch(() => {})
   }, [])
 
-  const load = async () => {
+  const load = async (page = 1, perPage = 15) => {
     setLoading(true)
     try {
-      const res = await fetch(API_CUSTOMERS, { headers: { Authorization: `Bearer ${token}` } })
+      const res = await fetch(`${API_CUSTOMERS}?page=${page}&per_page=${perPage}`, { headers: { Authorization: `Bearer ${token}` } })
       if (!res.ok) throw new Error('Failed to load')
-      const data = await res.json()
-      setItems(data.data ?? data ?? [])
+      const json = await res.json()
+      setItems(json.data ?? [])
+      setMeta({
+        currentPage: json.current_page ?? page,
+        lastPage: json.last_page ?? 1,
+        total: json.total ?? 0,
+        perPage: json.per_page ?? perPage,
+      })
     } catch (e) {
       setError(e.message)
     } finally {
@@ -50,10 +62,27 @@ function AdminCustomers() {
     }
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => { load(1, meta.perPage) }, [])
+
+  const validate = () => {
+    const errs = {}
+    if (!form.name.trim()) errs.name = 'Name is required'
+    if (!form.phone.trim()) {
+      errs.phone = 'Phone is required'
+    } else if (!/^(\+964|0)\d{10,12}$/.test(form.phone.trim())) {
+      errs.phone = 'Invalid phone number'
+    }
+    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      errs.email = 'Invalid email address'
+    }
+    if (!form.governorate_id) errs.governorate_id = 'Governorate is required'
+    setFieldErrors(errs)
+    return Object.keys(errs).length === 0
+  }
 
   const openEdit = (item) => {
     setEditing(item)
+    setFieldErrors({})
     setForm({
       name: item.name || '',
       phone: item.phone || '',
@@ -67,38 +96,48 @@ function AdminCustomers() {
 
   const openCreate = () => {
     setEditing(null)
+    setFieldErrors({})
     setForm(EMPTY_FORM)
     setShowModal(true)
   }
 
   const handleSave = async () => {
+    if (!validate()) return
     setSaving(true)
     try {
+      const body = {
+        ...form,
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim() || undefined,
+        governorate_id: Number(form.governorate_id),
+      }
       let res
       if (editing) {
         res = await fetch(`${API_CUSTOMERS}/${editing.id}`, {
           method: 'PUT',
           headers,
-          body: JSON.stringify({
-            ...form,
-            governorate_id: form.governorate_id === '' ? undefined : Number(form.governorate_id),
-          }),
+          body: JSON.stringify(body),
         })
       } else {
         res = await fetch(API_CUSTOMERS, {
           method: 'POST',
           headers,
-          body: JSON.stringify({
-            ...form,
-            governorate_id: form.governorate_id === '' ? undefined : Number(form.governorate_id),
-            password: form.password ?? 'password123'
-          }),
+          body: JSON.stringify({ ...body, password: 'password123' }),
         })
       }
-      if (!res.ok) throw new Error('Save failed')
+      if (!res.ok) {
+        if (res.status === 422) {
+          const data = await res.json().catch(() => ({}))
+          setFieldErrors(data.errors || {})
+          return
+        }
+        throw new Error('Save failed')
+      }
       setShowModal(false)
+      setFieldErrors({})
       setSuccess(editing ? 'Customer updated' : 'Customer created')
-      load()
+      load(editing ? meta.currentPage : 1, meta.perPage)
     } catch (e) {
       setError(e.message)
     } finally {
@@ -106,14 +145,21 @@ function AdminCustomers() {
     }
   }
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this customer?')) return
+  const handleDelete = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
     try {
-      const res = await fetch(`${API_CUSTOMERS}/${id}`, { method: 'DELETE', headers })
+      const res = await fetch(`${API_CUSTOMERS}/${deleteTarget}`, { method: 'DELETE', headers })
       if (!res.ok) throw new Error('Delete failed')
-      load()
+      setDeleteTarget(null)
+      setSuccess('Customer deleted')
+      load(meta.currentPage, meta.perPage)
     } catch (e) { setError(e.message) }
+    finally { setDeleting(false) }
   }
+
+  const handlePageChange = (page) => load(page, meta.perPage)
+  const handlePerPageChange = (perPage) => load(1, perPage)
 
   const getGovernorateName = (item) => item.governorate?.name_en ?? '-'
 
@@ -123,7 +169,10 @@ function AdminCustomers() {
     <>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h4 className="fw-bold mb-0">Customers</h4>
-        <Button size="sm" variant="outline-secondary" onClick={load}><FontAwesomeIcon icon={faRotate} className="me-1" /> Refresh</Button>
+        <div>
+          <Button size="sm" className="me-2" onClick={openCreate}><FontAwesomeIcon icon={faPlus} className="me-1" /> Create</Button>
+          <Button size="sm" variant="outline-secondary" onClick={() => load(meta.currentPage, meta.perPage)}><FontAwesomeIcon icon={faRotate} className="me-1" /> Refresh</Button>
+        </div>
       </div>
       {error && <Alert variant="danger" dismissible onClose={() => setError(null)}>{error}</Alert>}
       <div className="table-responsive">
@@ -155,7 +204,7 @@ function AdminCustomers() {
                 <td>{new Date(item.created_at).toLocaleDateString()}</td>
                 <td>
                   <Button variant="outline-primary" size="sm" className="me-1" onClick={() => openEdit(item)}><FontAwesomeIcon icon={faPen} /></Button>
-                  <Button variant="outline-danger" size="sm" onClick={() => handleDelete(item.id)}><FontAwesomeIcon icon={faTrashCan} /></Button>
+                  <Button variant="outline-danger" size="sm" onClick={() => setDeleteTarget(item.id)}><FontAwesomeIcon icon={faTrashCan} /></Button>
                 </td>
               </tr>
             ))}
@@ -163,32 +212,45 @@ function AdminCustomers() {
         </Table>
       </div>
 
+      <Pagination
+        currentPage={meta.currentPage}
+        lastPage={meta.lastPage}
+        total={meta.total}
+        perPage={meta.perPage}
+        onPageChange={handlePageChange}
+        onPerPageChange={handlePerPageChange}
+      />
+
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header>
-          <Modal.Title>Edit Customer</Modal.Title>
+          <Modal.Title>{editing ? 'Edit Customer' : 'Create Customer'}</Modal.Title>
           <button className="modal-close-btn" onClick={() => setShowModal(false)}><FontAwesomeIcon icon={faXmark} /></button>
         </Modal.Header>
         <Modal.Body>
           <Form.Group className="mb-2">
             <Form.Label>Name</Form.Label>
-            <Form.Control value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+            <Form.Control value={form.name} isInvalid={!!fieldErrors.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+            <Form.Control.Feedback type="invalid">{fieldErrors.name}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-2">
             <Form.Label>Phone</Form.Label>
-            <Form.Control value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+            <Form.Control value={form.phone} isInvalid={!!fieldErrors.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+            <Form.Control.Feedback type="invalid">{fieldErrors.phone}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-2">
             <Form.Label>Email</Form.Label>
-            <Form.Control type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+            <Form.Control type="email" value={form.email} isInvalid={!!fieldErrors.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+            <Form.Control.Feedback type="invalid">{fieldErrors.email}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-2">
             <Form.Label>Governorate</Form.Label>
-            <Form.Select value={form.governorate_id} onChange={e => setForm({ ...form, governorate_id: e.target.value })}>
+            <Form.Select value={form.governorate_id} isInvalid={!!fieldErrors.governorate_id} onChange={e => setForm({ ...form, governorate_id: e.target.value })}>
               <option value="">Select governorate...</option>
               {governorates.map(g => (
                 <option key={g.id} value={g.id}>{g.name_en} / {g.name_ar}</option>
               ))}
             </Form.Select>
+            <Form.Control.Feedback type="invalid">{fieldErrors.governorate_id}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-2">
             <Form.Label>Address</Form.Label>
@@ -204,6 +266,15 @@ function AdminCustomers() {
           <Button size="sm" onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
         </Modal.Footer>
       </Modal>
+
+      <ConfirmDeleteModal
+        show={!!deleteTarget}
+        onHide={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Customer"
+        message="Are you sure you want to delete this customer? This action cannot be undone."
+        loading={deleting}
+      />
     </>
   )
 }
