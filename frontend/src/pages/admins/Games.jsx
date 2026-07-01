@@ -142,7 +142,7 @@ function AdminGames() {
                 <td>{item.name_ar}</td>
                 <td>{item.platform?.name_en || '-'}</td>
                 <td>{item.category?.name_en || '-'}</td>
-                <td>{item.size_gb ?? '-'}</td>
+                <td>{item.size_mb ?? '-'}</td>
                 <td>{Array.isArray(item.tags) ? item.tags.join(', ') : '-'}</td>
                 <td className={item.active ? 'text-success' : 'text-danger'}>{item.active ? 'Active' : 'Inactive'}</td>
                 <td>

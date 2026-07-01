@@ -19,6 +19,7 @@ class Package extends Model
         'description_ar',
         'platform_id',
         'package_category_type_id',
+        'storage_device_id',
         'active',
         'price_iqd',
         'discount',
@@ -42,6 +43,11 @@ class Package extends Model
     public function packageCategoryType(): BelongsTo
     {
         return $this->belongsTo(PackageCategoryType::class);
+    }
+
+    public function storageDevice(): BelongsTo
+    {
+        return $this->belongsTo(StorageDevice::class);
     }
 
     public function items(): HasMany

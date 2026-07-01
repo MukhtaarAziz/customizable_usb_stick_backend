@@ -126,15 +126,6 @@ function DesignStepper({ activeStep, locale, langText }) {
               <div className="ds-node__label-wrap">
                 <span className="ds-node__label">{step.label}</span>
               </div>
-
-              {/* Connector line (after each step except last) */}
-              {index < steps.length - 1 && (
-                <div className={`
-                  ds-connector
-                  ${isCompleted ? 'ds-connector--active' : ''}
-                  ${isActive ? 'ds-connector--partial' : ''}
-                `} />
-              )}
             </div>
           )
         })}

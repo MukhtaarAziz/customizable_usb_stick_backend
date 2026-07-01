@@ -10,7 +10,7 @@ import PackageDetailsModal from './components/PackageDetailsModal/PackageDetails
 import ClientLayout from './components/ClientLayout/ClientLayout.jsx'
 import PackagesPage from './pages/PackagesPage.jsx'
 import PackagesCheckout from './pages/PackagesCheckout/PackagesCheckout.jsx'
-import DesignUsbStick from './pages/DesignUsbStick.jsx'
+import DesignStorageDevice from './pages/DesignStorageDevice.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
 import SupportPage from './pages/SupportPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
@@ -30,6 +30,7 @@ import AdminCustomers from './pages/admins/Customers.jsx'
 import AdminSettings from './pages/admins/Settings.jsx'
 import AdminStorageDeviceTypes from './pages/admins/StorageDeviceTypes.jsx'
 import AdminStorageDevices from './pages/admins/StorageDevices.jsx'
+import AdminStorageDeviceOrders from './pages/admins/StorageDeviceOrders.jsx'
 import { AdminThemeProvider } from './contexts/AdminThemeContext'
 
 const translations = {
@@ -408,7 +409,7 @@ function App() {
         <Route
           path="/design"
           element={
-            <DesignUsbStick
+            <DesignStorageDevice
               locale={locale}
               t={t}
               user={user}
@@ -440,6 +441,7 @@ function App() {
         <Route path="orders" element={<Navigate to="orders/packages" replace />} />
         <Route path="orders/packages" element={<AdminPackageOrders />} />
         <Route path="orders/usb-sticks" element={<AdminUsbStickOrders />} />
+        <Route path="orders/storage-devices" element={<AdminStorageDeviceOrders />} />
         <Route path="sub-orders" element={<Navigate to="orders/usb-sticks" replace />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="customers" element={<AdminCustomers />} />

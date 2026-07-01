@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Row, Col, Form, InputGroup, Button, Spinner, Alert } from 'react-bootstrap'
+import { Row, Col, Spinner, Alert } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faFilter, faList, faLayerGroup, faFolderOpen, faGamepad, faCode } from '@fortawesome/free-solid-svg-icons'
 import GameCard from '../GameCard/GameCard.jsx'
 import CustomPagination from '../CustomPagination/CustomPagination.jsx'
+import CustomDropdown from '../CustomDropdown/CustomDropdown.jsx'
 import { PER_PAGE_OPTIONS } from '../../config'
 import './GamesCatalog.css'
 
@@ -68,74 +69,71 @@ function GamesCatalog({
       <div className="games-catalog__filters mb-4">
         <Row className="g-3">
           <Col xs={12} md={3}>
-            <InputGroup>
-              <InputGroup.Text className="bg-transparent">
-                <FontAwesomeIcon icon={faSearch} className="text-muted" />
-              </InputGroup.Text>
-              <Form.Control
-                type="search"
-                placeholder={locale === 'ar' ? 'ابحث بالاسم...' : 'Search by name...'}
-                value={search}
-                onChange={onSearchChange}
-                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); onSearchSubmit?.() } }}
-              />
-              {search && (
-                <Button variant="outline-secondary" onClick={onSearchClear}>
-                  {locale === 'ar' ? 'مسح' : 'Clear'}
-                </Button>
-              )}
-              <Button variant="primary" onClick={onSearchSubmit}>
+            <div className="gc-search-row">
+              <div className="gc-search">
+                <span className="gc-search__icon">
+                  <FontAwesomeIcon icon={faSearch} />
+                </span>
+                <input
+                  className="gc-search__input"
+                  type="text"
+                  placeholder={locale === 'ar' ? 'ابحث بالاسم...' : 'Search by name...'}
+                  value={search}
+                  onChange={onSearchChange}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); onSearchSubmit?.() } }}
+                />
+                {search && (
+                  <button className="gc-search__clear" onClick={onSearchClear} type="button" aria-label="Clear search">
+                    ✕
+                  </button>
+                )}
+              </div>
+              <button className="gc-search-btn" onClick={onSearchSubmit} type="button" aria-label="Search">
                 <FontAwesomeIcon icon={faSearch} />
-              </Button>
-            </InputGroup>
+              </button>
+            </div>
           </Col>
 
           <Col xs={12} md={3}>
-            <InputGroup>
-              <InputGroup.Text className="bg-transparent">
-                <FontAwesomeIcon icon={faFilter} className="text-muted" />
-              </InputGroup.Text>
-              <Form.Select value={catalogType} onChange={onTypeChange}>
-                {typeOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {locale === 'ar' ? opt.labelAr : opt.labelEn}
-                  </option>
-                ))}
-              </Form.Select>
-            </InputGroup>
+            <CustomDropdown
+              icon={faFilter}
+              placeholder={locale === 'ar' ? 'كل الأنواع' : 'All types'}
+              value={catalogType}
+              onChange={onTypeChange}
+              locale={locale}
+              options={typeOptions.map(o => ({ value: o.value, label: locale === 'ar' ? o.labelAr : o.labelEn }))}
+            />
           </Col>
 
           <Col xs={12} md={3}>
-            <InputGroup>
-              <InputGroup.Text className="bg-transparent">
-                <FontAwesomeIcon icon={faFilter} className="text-muted" />
-              </InputGroup.Text>
-              <Form.Select value={platformId} onChange={onPlatformChange}>
-                <option value="">{locale === 'ar' ? 'كل المنصات' : 'All platforms'}</option>
-                {platforms.map((platform) => (
-                  <option key={platform.id} value={platform.id}>
-                    {locale === 'ar' ? platform.name_ar || platform.name_en : platform.name_en || platform.name_ar}
-                  </option>
-                ))}
-              </Form.Select>
-            </InputGroup>
+            <CustomDropdown
+              icon={faFilter}
+              placeholder={locale === 'ar' ? 'كل المنصات' : 'All platforms'}
+              value={platformId}
+              onChange={onPlatformChange}
+              locale={locale}
+              options={[
+                { value: '', label: locale === 'ar' ? 'الكل' : 'All' },
+                ...platforms.map(p => ({ value: String(p.id), label: locale === 'ar' ? p.name_ar || p.name_en : p.name_en || p.name_ar })),
+              ]}
+            />
           </Col>
 
           <Col xs={12} md={3}>
-            <InputGroup>
-              <InputGroup.Text className="bg-transparent">
-                <FontAwesomeIcon icon={faList} className="text-muted" />
-              </InputGroup.Text>
-              <Form.Select value={categoryId} onChange={onCategoryChange}>
-                <option value="">{locale === 'ar' ? 'كل التصنيفات' : 'All categories'}</option>
-                {filteredCategories.map((category) => (
-                  <option key={`${category.type}-${category.id}`} value={category.id}>
-                    {locale === 'ar' ? category.name_ar || category.name_en : category.name_en || category.name_ar}
-                    {catalogType === 'all' && ` [${category.type === 'game' ? (locale === 'ar' ? 'لعبة' : 'Game') : (locale === 'ar' ? 'برنامج' : 'App')}]`}
-                  </option>
-                ))}
-              </Form.Select>
-            </InputGroup>
+            <CustomDropdown
+              icon={faList}
+              placeholder={locale === 'ar' ? 'كل التصنيفات' : 'All categories'}
+              value={categoryId}
+              onChange={onCategoryChange}
+              locale={locale}
+              options={[
+                { value: '', label: locale === 'ar' ? 'الكل' : 'All' },
+                ...filteredCategories.map(c => ({
+                  value: String(c.id),
+                  label: `${locale === 'ar' ? c.name_ar || c.name_en : c.name_en || c.name_ar}${catalogType === 'all' ? ` [${c.type === 'game' ? (locale === 'ar' ? 'لعبة' : 'Game') : (locale === 'ar' ? 'برنامج' : 'App')}]` : ''}`,
+                })),
+              ]}
+            />
           </Col>
         </Row>
       </div>
@@ -165,20 +163,17 @@ function GamesCatalog({
 
       {/* Bottom Controls */}
       <div className="games-catalog__controls d-flex flex-row justify-content-between align-items-center mt-4 gap-2">
-        <Form.Group className="mb-0" style={{ minWidth: '130px' }}>
-          <InputGroup size="sm">
-            <InputGroup.Text className="bg-transparent text-muted small">
-              {locale === 'ar' ? 'عرض' : 'Show'}
-            </InputGroup.Text>
-            <Form.Select value={perPage} onChange={onPerPageChange} size="sm">
-              {PER_PAGE_OPTIONS.map((count) => (
-                <option key={count} value={count}>
-                  {count}
-                </option>
-              ))}
-            </Form.Select>
-          </InputGroup>
-        </Form.Group>
+        <div className="d-flex align-items-center gap-2">
+          <span className="text-muted small text-nowrap">{locale === 'ar' ? 'عرض' : 'Show'}</span>
+          <div style={{ width: '90px' }}>
+            <CustomDropdown
+              value={perPage}
+              onChange={onPerPageChange}
+              locale={locale}
+              options={PER_PAGE_OPTIONS.map(n => ({ value: String(n), label: String(n) }))}
+            />
+          </div>
+        </div>
 
         <div className="view-mode-toggle">
           <button

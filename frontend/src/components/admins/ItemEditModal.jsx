@@ -5,7 +5,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 const TOKEN_KEY = 'authToken'
 
-const EMPTY_FORM = { name_en: '', name_ar: '', platform_id: '', category_id: '', tags: [], size_gb: '', downloads: '', date_release: '', active: true }
+const EMPTY_FORM = { name_en: '', name_ar: '', platform_id: '', category_id: '', tags: [], size_mb: '', downloads: '', date_release: '', active: true }
 
 function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi, title }) {
   const [form, setForm] = useState(EMPTY_FORM)
@@ -41,7 +41,7 @@ function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi,
         platform_id: editing.platform_id ?? '',
         category_id: editing.category_id ?? '',
         tags: [],
-        size_gb: editing.size_gb ?? '',
+        size_mb: editing.size_mb ?? '',
         downloads: editing.downloads ?? '',
         date_release: editing.date_release ?? '',
         active: editing.active ?? true,
@@ -71,9 +71,10 @@ function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi,
       case 'category_id':
         if (!value) return 'Category is required'
         return null
-      case 'size_gb':
+      case 'size_mb':
         if (value === '' || value == null) return 'Size is required'
         if (isNaN(Number(value))) return 'Size must be a valid number'
+        if (!Number.isInteger(Number(value))) return 'Size must be a whole number'
         if (Number(value) < 0) return 'Size cannot be negative'
         return null
       case 'downloads':
@@ -86,7 +87,7 @@ function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi,
 
   const validate = () => {
     const errs = {}
-    for (const field of ['name_en', 'name_ar', 'platform_id', 'category_id', 'size_gb']) {
+    for (const field of ['name_en', 'name_ar', 'platform_id', 'category_id', 'size_mb']) {
       const err = validateField(field, form[field])
       if (err) errs[field] = err
     }
@@ -112,7 +113,7 @@ function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi,
         ...form,
         name_en: form.name_en.trim(),
         name_ar: form.name_ar.trim(),
-        size_gb: form.size_gb === '' ? 0 : Number(form.size_gb),
+        size_mb: form.size_mb === '' ? 0 : Number(form.size_mb),
         downloads: form.downloads === '' ? 0 : Number(form.downloads),
         tags: tagsInput
           ? tagsInput.split(',').map(t => t.trim()).filter(Boolean)
@@ -176,9 +177,9 @@ function ItemEditModal({ show, onHide, onSaved, editing, apiBase, categoriesApi,
           <small className="text-muted d-block mt-1">{form.name_ar.length}/255</small>
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Size (GB)</Form.Label>
-          <Form.Control type="number" step="0.01" value={form.size_gb} isInvalid={!!errors.size_gb} onChange={e => handleFieldChange('size_gb', e.target.value)} />
-          {errors.size_gb && <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>{errors.size_gb}</Form.Control.Feedback>}
+          <Form.Label>Size (MB)</Form.Label>
+          <Form.Control type="number" step="1" value={form.size_mb} isInvalid={!!errors.size_mb} onChange={e => handleFieldChange('size_mb', e.target.value)} />
+          {errors.size_mb && <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>{errors.size_mb}</Form.Control.Feedback>}
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Downloads</Form.Label>

@@ -1,0 +1,140 @@
+/* StorageDetailsModal design tokens */
+.sd-details-modal {
+  --sdm-close-btn-bg: rgba(15, 23, 42, 0.05);
+  --sdm-remove-hover-color: #dc2626;
+}
+
+.sd-details-modal {
+  z-index: 1200 !important;
+}
+
+.sd-details-modal__backdrop {
+  z-index: 1199 !important;
+}
+
+body:has(.sd-details-modal.show) .mobile-bottom-nav {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+body:has(.sd-details-modal.show) .design-usb__fab {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.7);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.sd-details-modal__content {
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-lg) !important;
+  background: var(--surface-overlay) !important;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15);
+}
+
+.sd-details-modal__close-btn {
+  background: var(--sdm-close-btn-bg);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.sd-details-modal__close-btn:hover {
+  background: var(--color-danger);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.sd-details-modal__items-card {
+  padding: 1.25rem;
+  background: var(--surface-page);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  max-height: 400px;
+}
+
+.sd-details-modal__sidebar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  flex-grow: 1;
+}
+
+[dir="rtl"] .sd-details-modal__sidebar-list {
+  padding-right: 0;
+  padding-left: 0.25rem;
+}
+
+.sd-details-modal__sidebar-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sd-details-modal__sidebar-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sd-details-modal__sidebar-list::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.sd-details-modal__sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  background: var(--surface-card);
+  border: 1px solid var(--border-color-light);
+  border-radius: 0.75rem;
+  transition: var(--transition-fast);
+}
+
+.sd-details-modal__sidebar-item:hover {
+  background: var(--surface-page);
+  border-color: var(--border-color);
+}
+
+.sd-details-modal__sidebar-item-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sd-details-modal__sidebar-item-size {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.sd-details-modal__sidebar-item-remove {
+  background: transparent;
+  border: none;
+  color: var(--color-danger);
+  padding: 0.25rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.sd-details-modal__sidebar-item-remove:hover {
+  transform: scale(1.1);
+  color: var(--sdm-remove-hover-color);
+}

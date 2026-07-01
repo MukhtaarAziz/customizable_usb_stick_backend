@@ -36,7 +36,7 @@ class PackageController extends Controller
         $perPage = (int) $request->query('per_page', 15);
         $perPage = max(1, min($perPage, 100));
 
-        $query = Package::with(['platform', 'packageCategoryType', 'items.itemable']);
+        $query = Package::with(['platform', 'packageCategoryType', 'storageDevice', 'items.itemable']);
 
         if (!$request->query('show_all')) {
             $query->where('active', true);
@@ -93,6 +93,7 @@ class PackageController extends Controller
             'description_ar' => ['nullable', 'string'],
             'platform_id' => ['required', 'exists:platforms,id'],
             'package_category_type_id' => ['required', 'exists:package_category_types,id'],
+            'storage_device_id' => ['nullable', 'exists:storage_devices,id'],
             'price_iqd' => ['nullable', 'numeric', 'min:0'],
             'discount' => ['nullable', 'numeric', 'min:0', 'max:1'],
             'active' => ['nullable', 'boolean'],
@@ -119,7 +120,7 @@ class PackageController extends Controller
      */
     public function show(string $id)
     {
-        return Package::with(['platform', 'packageCategoryType', 'items.itemable'])->findOrFail($id);
+        return Package::with(['platform', 'packageCategoryType', 'storageDevice', 'items.itemable'])->findOrFail($id);
     }
 
     /**
@@ -152,6 +153,7 @@ class PackageController extends Controller
             'description_ar' => ['nullable', 'string'],
             'platform_id' => ['sometimes', 'required', 'exists:platforms,id'],
             'package_category_type_id' => ['sometimes', 'required', 'exists:package_category_types,id'],
+            'storage_device_id' => ['nullable', 'exists:storage_devices,id'],
             'price_iqd' => ['nullable', 'numeric', 'min:0'],
             'discount' => ['nullable', 'numeric', 'min:0', 'max:1'],
             'active' => ['nullable', 'boolean'],
@@ -159,7 +161,7 @@ class PackageController extends Controller
 
         $package->update($data);
 
-        return $package->load(['platform', 'packageCategoryType', 'items.itemable']);
+        return $package->load(['platform', 'packageCategoryType', 'storageDevice', 'items.itemable']);
     }
 
     /**

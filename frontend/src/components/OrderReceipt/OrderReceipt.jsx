@@ -19,11 +19,11 @@ function OrderReceipt({ selectedUsb, selectedItems, totalItemsSize, locale, lang
           
           <div className="receipt-item">
             <span className="text-muted">{locale === 'ar' ? 'المنفذ' : 'Interface'}</span>
-            <span>USB {selectedUsb?.interface || '3.0'}</span>
+            <span>{selectedUsb?.interface || '3.0'}</span>
           </div>
 
           <div className="receipt-item">
-            <span className="text-muted">{locale === 'ar' ? 'سعة الفلاشة' : 'USB Capacity'}</span>
+            <span className="text-muted">{locale === 'ar' ? 'السعة' : 'Capacity'}</span>
             <span className="fw-bold">{selectedUsb?.size_gb} GB</span>
           </div>
 

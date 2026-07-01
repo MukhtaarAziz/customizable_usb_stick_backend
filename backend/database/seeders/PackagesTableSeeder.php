@@ -8,6 +8,7 @@ use App\Models\PackageCategoryType;
 use App\Models\PackageItem;
 use App\Models\Platform;
 use App\Models\Program;
+use App\Models\StorageDevice;
 use Illuminate\Database\Seeder;
 
 class PackagesTableSeeder extends Seeder
@@ -18,6 +19,7 @@ class PackagesTableSeeder extends Seeder
         $types = PackageCategoryType::pluck('id', 'name_en');
         $games = Game::pluck('id', 'name_en');
         $programs = Program::pluck('id', 'name_en');
+        $storageDeviceIds = StorageDevice::pluck('id');
 
         $packages = [
             // ---- GAME PACKAGES ----
@@ -157,6 +159,7 @@ class PackagesTableSeeder extends Seeder
                 'active' => $pkg['active'] ?? true,
                 'price_iqd' => $pkg['price'],
                 'discount' => $pkg['discount'] ?? 0.00,
+                'storage_device_id' => $storageDeviceIds->isNotEmpty() ? $storageDeviceIds->random() : null,
                 'views' => rand(100, 5000),
                 'order_count' => rand(10, 500),
             ]);

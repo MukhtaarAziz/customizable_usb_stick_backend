@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Table, Button, Spinner, Alert, Modal, Form } from 'react-bootstrap'
+import { Table, Button, Spinner, Alert, Modal, Form, InputGroup } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faPen, faTrashCan, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faPen, faTrashCan, faXmark, faSearch, faRotate } from '@fortawesome/free-solid-svg-icons'
 import ConfirmDeleteModal from '../../components/admins/ConfirmDeleteModal'
 import Pagination from '../../components/admins/Pagination'
+import './StorageDevices.css'
 
 const API_BASE = '/api/storage-devices'
 const API_TYPES = '/api/storage-device-types'
@@ -20,6 +21,7 @@ const EMPTY_FORM = {
   price_iqd: '',
   marka: '',
   interface: '',
+  customizable: false,
 }
 
 function AdminStorageDevices() {
@@ -35,6 +37,8 @@ function AdminStorageDevices() {
   const [form, setForm] = useState(EMPTY_FORM)
   const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
+  const [search, setSearch] = useState('')
+  const [filterType, setFilterType] = useState('')
   const token = localStorage.getItem(TOKEN_KEY)
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' }
 
@@ -45,10 +49,13 @@ function AdminStorageDevices() {
       .catch(() => {})
   }, [])
 
-  const load = useCallback(async (page = 1, perPage = 15) => {
+  const load = useCallback(async (page = 1, perPage = 15, searchTerm = '', typeId = '') => {
     setLoading(true)
     try {
-      const res = await fetch(`${API_BASE}?page=${page}&per_page=${perPage}`, { headers })
+      const params = new URLSearchParams({ page, per_page: perPage })
+      if (searchTerm) params.set('search', searchTerm)
+      if (typeId) params.set('storage_type_id', typeId)
+      const res = await fetch(`${API_BASE}?${params}`, { headers })
       if (!res.ok) throw new Error('Failed to load')
       const json = await res.json()
       setItems(json.data ?? [])
@@ -65,7 +72,10 @@ function AdminStorageDevices() {
     }
   }, [])
 
-  useEffect(() => { load(1, meta.perPage) }, [])
+  useEffect(() => { load(1, meta.perPage, search, filterType) }, [])
+
+  const handleSearch = () => load(1, meta.perPage, search, filterType)
+  const handleReset = () => { setSearch(''); setFilterType(''); load(1, meta.perPage, '', '') }
 
   const openCreate = () => {
     setEditing(null)
@@ -87,6 +97,7 @@ function AdminStorageDevices() {
       price_iqd: item.price_iqd ?? '',
       marka: item.marka || '',
       interface: item.interface || '',
+      customizable: item.customizable ?? false,
     })
     setErrors({})
     setShowModal(true)
@@ -120,6 +131,7 @@ function AdminStorageDevices() {
         real_size_mb: form.real_size_mb === '' ? null : Number(form.real_size_mb),
         price_iqd: Number(form.price_iqd),
         storage_type_id: Number(form.storage_type_id),
+        customizable: Boolean(form.customizable),
       }
       const url = editing ? `${API_BASE}/${editing.id}` : API_BASE
       const method = editing ? 'PUT' : 'POST'
@@ -133,7 +145,7 @@ function AdminStorageDevices() {
         throw new Error('Save failed')
       }
       setShowModal(false)
-      load(editing ? meta.currentPage : 1, meta.perPage)
+      load(editing ? meta.currentPage : 1, meta.perPage, search, filterType)
     } catch (e) {
       setError(e.message)
     } finally {
@@ -152,13 +164,13 @@ function AdminStorageDevices() {
         throw new Error(body.message || 'Delete failed')
       }
       setDeleteTarget(null)
-      await load(meta.currentPage, meta.perPage)
+      await load(meta.currentPage, meta.perPage, search, filterType)
     } catch (e) { setError(e.message) }
     finally { setDeleting(false) }
   }
 
-  const handlePageChange = (page) => load(page, meta.perPage)
-  const handlePerPageChange = (perPage) => load(1, perPage)
+  const handlePageChange = (page) => load(page, meta.perPage, search, filterType)
+  const handlePerPageChange = (perPage) => load(1, perPage, search, filterType)
 
   if (loading) return <div className="text-center py-5"><Spinner animation="border" /></div>
 
@@ -170,6 +182,37 @@ function AdminStorageDevices() {
           <FontAwesomeIcon icon={faPlus} className="me-1" /> Create
         </Button>
       </div>
+
+      <div className="sd-admin-filters">
+        <div className="sd-admin-filters__search">
+          <InputGroup>
+            <InputGroup.Text className="sd-admin-filters__search-icon">
+              <FontAwesomeIcon icon={faSearch} />
+            </InputGroup.Text>
+            <Form.Control
+              className="sd-admin-filters__input"
+              placeholder="Search by name, brand, or interface..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSearch()}
+            />
+          </InputGroup>
+        </div>
+        <Form.Select
+          className="sd-admin-filters__select"
+          value={filterType}
+          onChange={e => { setFilterType(e.target.value); load(1, meta.perPage, search, e.target.value) }}
+        >
+          <option value="">All Types</option>
+          {types.map(t => (
+            <option key={t.id} value={t.id}>{t.name_en} / {t.name_ar}</option>
+          ))}
+        </Form.Select>
+        <button className="sd-admin-filters__reset" onClick={handleReset} title="Reset filters">
+          <FontAwesomeIcon icon={faRotate} />
+        </button>
+      </div>
+
       {error && <Alert variant="danger" dismissible onClose={() => setError(null)}>{error}</Alert>}
       <div className="table-responsive">
         <Table striped hover className="bg-white rounded shadow-sm">
@@ -182,13 +225,14 @@ function AdminStorageDevices() {
               <th>Size</th>
               <th>Brand</th>
               <th>Interface</th>
+              <th>Customizable</th>
               <th>Price (IQD)</th>
               <th style={{ width: 100 }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {items.length === 0 && (
-              <tr><td colSpan={9} className="text-center text-muted py-3">No storage devices found.</td></tr>
+              <tr><td colSpan={10} className="text-center text-muted py-3">No storage devices found.</td></tr>
             )}
             {items.map(item => (
               <tr key={item.id}>
@@ -199,6 +243,7 @@ function AdminStorageDevices() {
                 <td>{item.size_mb ? `${item.size_mb} MB` : '-'}</td>
                 <td>{item.marka}</td>
                 <td>{item.interface}</td>
+                <td>{item.customizable ? <span className="badge bg-success">Yes</span> : <span className="badge bg-secondary">No</span>}</td>
                 <td>{Number(item.price_iqd).toLocaleString()}</td>
                 <td>
                   <Button variant="outline-primary" size="sm" className="me-1" onClick={() => openEdit(item)}>
@@ -284,6 +329,17 @@ function AdminStorageDevices() {
                 <Form.Label>Interface</Form.Label>
                 <Form.Control value={form.interface} onChange={e => { setForm({ ...form, interface: e.target.value }); setErrors(prev => { const n = { ...prev }; delete n.interface; return n }) }} isInvalid={!!errors.interface} />
                 <Form.Control.Feedback type="invalid">{errors.interface}</Form.Control.Feedback>
+              </Form.Group>
+            </div>
+            <div className="col-md-4 d-flex align-items-end">
+              <Form.Group className="mb-2">
+                <Form.Check
+                  type="switch"
+                  id="customizable-switch"
+                  label="Customizable"
+                  checked={form.customizable}
+                  onChange={e => setForm({ ...form, customizable: e.target.checked })}
+                />
               </Form.Group>
             </div>
           </div>

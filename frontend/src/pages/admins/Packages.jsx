@@ -9,13 +9,14 @@ import PackageItemsModal from '../../components/admins/PackageItemsModal.jsx'
 const API_BASE = '/api/packages'
 const PLATFORMS_API = '/api/game-platforms?per_page=100'
 const CATEGORY_TYPES_API = '/api/package-category-types?per_page=100'
+const STORAGE_DEVICES_API = '/api/storage-devices?per_page=100'
 const TOKEN_KEY = 'authToken'
 const CURRENCY = 'IQD'
 
 const EMPTY_FORM = {
   name_en: '', name_ar: '',
   description_en: '', description_ar: '',
-  platform_id: '', package_category_type_id: '',
+  platform_id: '', package_category_type_id: '', storage_device_id: '',
   price_iqd: '', discount: '', active: true,
 }
 
@@ -23,6 +24,7 @@ function AdminPackages() {
   const [items, setItems] = useState([])
   const [platforms, setPlatforms] = useState([])
   const [categoryTypes, setCategoryTypes] = useState([])
+  const [storageDevices, setStorageDevices] = useState([])
   const [meta, setMeta] = useState({ currentPage: 1, lastPage: 1, total: 0, perPage: 15 })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -103,13 +105,15 @@ function AdminPackages() {
   }
 
   useEffect(() => {
-    const auth = { Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}` }
+    const auth = { Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`, Accept: 'application/json' }
     Promise.all([
       fetch(PLATFORMS_API, { headers: auth }).then(r => r.json()),
       fetch(CATEGORY_TYPES_API, { headers: auth }).then(r => r.json()),
-    ]).then(([pData, ctData]) => {
+      fetch(STORAGE_DEVICES_API, { headers: auth }).then(r => r.json()),
+    ]).then(([pData, ctData, sdData]) => {
       setPlatforms(pData.data ?? [])
       setCategoryTypes(ctData.data ?? [])
+      setStorageDevices(sdData.data ?? sdData ?? [])
     }).catch(() => {})
   }, [])
 
@@ -151,6 +155,7 @@ function AdminPackages() {
       description_ar: item.description_ar || '',
       platform_id: item.platform_id || '',
       package_category_type_id: item.package_category_type_id || '',
+      storage_device_id: item.storage_device_id ?? '',
       price_iqd: item.price_iqd ?? '',
       discount: item.discount ?? '',
       active: item.active ?? true,
@@ -233,6 +238,7 @@ function AdminPackages() {
 
   const getPlatformName = (item) => item.platform?.name_en ?? item.platform_id
   const getCategoryTypeName = (item) => item.package_category_type?.name_en ?? item.package_category_type_id
+  const getStorageDeviceName = (item) => item.storage_device?.storage_name ?? '-'
   const finalPrice = (item) => {
     const price = Number(item.price_iqd) || 0
     const disc = Number(item.discount) || 0
@@ -257,6 +263,7 @@ function AdminPackages() {
               <th>Name (AR)</th>
               <th>Type</th>
               <th>Platform</th>
+              <th>Storage Device</th>
               <th>Price</th>
               <th>Discount</th>
               <th>Final</th>
@@ -268,7 +275,7 @@ function AdminPackages() {
           </thead>
           <tbody>
             {items.length === 0 && (
-              <tr><td colSpan={12} className="text-center text-muted py-3">No packages found.</td></tr>
+              <tr><td colSpan={13} className="text-center text-muted py-3">No packages found.</td></tr>
             )}
             {items.map(item => (
               <tr key={item.id}>
@@ -277,6 +284,7 @@ function AdminPackages() {
                 <td>{item.name_ar}</td>
                 <td><Badge bg="info">{getCategoryTypeName(item)}</Badge></td>
                 <td><Badge bg="secondary">{getPlatformName(item)}</Badge></td>
+                <td>{getStorageDeviceName(item)}</td>
                 <td>{Number(item.price_iqd).toLocaleString()} {CURRENCY}</td>
                 <td>{item.discount > 0 ? `${(item.discount * 100).toFixed(0)}%` : '-'}</td>
                 <td>{Number(finalPrice(item)).toLocaleString()} {CURRENCY}</td>
@@ -432,6 +440,22 @@ function AdminPackages() {
                     {fieldErrors.platform_id}
                   </Form.Control.Feedback>
                 )}
+              </Form.Group>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-6">
+              <Form.Group className="mb-3">
+                <Form.Label>Storage Device</Form.Label>
+                <Form.Select
+                  value={form.storage_device_id}
+                  onChange={e => handleFieldChange('storage_device_id', e.target.value)}
+                >
+                  <option value="">None</option>
+                  {storageDevices.map(sd => (
+                    <option key={sd.id} value={sd.id}>{sd.storage_name}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
             </div>
           </div>

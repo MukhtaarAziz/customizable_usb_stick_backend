@@ -1,0 +1,168 @@
+/* StorageDevicePreview design tokens */
+.sd-preview-card {
+  --sdc-over-capacity-border: rgba(239, 68, 68, 0.4);
+  --sdc-over-capacity-shadow: 0 20px 40px rgba(239, 68, 68, 0.08);
+  --sdc-fill-gradient: linear-gradient(to top, var(--color-primary) 0%, #06b6d4 100%);
+  --sdc-fill-danger-gradient: linear-gradient(to top, var(--color-danger) 0%, #f43f5e 100%);
+}
+
+.sd-preview-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface-overlay);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition-base);
+}
+
+.sd-preview-card.over-capacity {
+  border-color: var(--sdc-over-capacity-border);
+  box-shadow: var(--sdc-over-capacity-shadow);
+}
+
+.sd-preview-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.sd-preview-card__type-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-primary);
+  border-radius: 10px;
+  color: white;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.sd-preview-card__header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sd-preview-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.1rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.sd-preview-card__brand {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+}
+
+.sd-preview-card__specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.sd-preview-card__spec {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--surface-page);
+  border-radius: 8px;
+  border: 1px solid var(--border-color-light);
+}
+
+.sd-preview-card__spec-icon {
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.sd-preview-card__spec-body {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.sd-preview-card__spec-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.sd-preview-card__spec-value {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.sd-preview-card__price {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-info);
+  margin-bottom: 0;
+}
+
+.sd-storage-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sd-storage-meter__header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.sd-storage-meter__bar-bg {
+  height: 8px;
+  background: var(--border-color);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.sd-storage-meter__bar-fill {
+  height: 100%;
+  border-radius: var(--radius-xl);
+  transition: width 0.4s ease, background-color 0.3s ease;
+}
+
+.sd-storage-meter__footer {
+  font-size: 0.73rem;
+  font-weight: 600;
+}
+
+.sd-status-alert {
+  display: flex;
+  align-items: center;
+}
+
+.sd-preview-card__description {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  padding: 0.6rem 0.75rem;
+  background: var(--surface-page);
+  border-radius: 8px;
+  border: 1px solid var(--border-color-light);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .sd-preview-card__specs-grid {
+    grid-template-columns: 1fr;
+  }
+}

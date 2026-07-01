@@ -72,6 +72,10 @@ class StorageDeviceController extends Controller
             });
         }
         
+        if ($request->has('customizable')) {
+            $query->where('customizable', filter_var($request->customizable, FILTER_VALIDATE_BOOLEAN));
+        }
+        
         $perPage = $request->input('per_page', 15);
         $devices = $query->paginate($perPage);
         
@@ -180,6 +184,7 @@ class StorageDeviceController extends Controller
             'price_iqd' => 'required|numeric|min:0',
             'marka' => 'required|string|max:255',
             'interface' => 'required|string|max:255',
+            'customizable' => 'nullable|boolean',
         ]);
 
         $device = StorageDevice::create($validated);
@@ -234,6 +239,7 @@ class StorageDeviceController extends Controller
             'price_iqd' => 'required|numeric|min:0',
             'marka' => 'required|string|max:255',
             'interface' => 'required|string|max:255',
+            'customizable' => 'nullable|boolean',
         ]);
 
         $device->update($validated);

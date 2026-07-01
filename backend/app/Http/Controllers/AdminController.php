@@ -42,7 +42,7 @@ class AdminController extends Controller
 
     public function packageOrders()
     {
-        $orders = PackageOrder::with(['customer', 'items.package.items.itemable', 'governorate'])
+        $orders = PackageOrder::with(['customer', 'items.package.items.itemable', 'governorate', 'statuses'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -51,7 +51,7 @@ class AdminController extends Controller
 
     public function usbStickOrders()
     {
-        $orders = UsbStickOrder::with(['customer', 'usbStick'])->orderBy('created_at', 'desc')->get();
+        $orders = UsbStickOrder::with(['customer', 'usbStick', 'statuses'])->orderBy('created_at', 'desc')->get();
         return response()->json(['data' => $orders]);
     }
 
@@ -65,31 +65,71 @@ class AdminController extends Controller
 
     public function updatePackageOrderStatus(Request $request, $id)
     {
-        $request->validate(['status' => 'required|string']);
+        $statuses = PackageOrder::STATUSES;
+        $request->validate(['status' => ['required', 'string', Rule::in(array_keys($statuses))]]);
         $order = PackageOrder::findOrFail($id);
         $order->update(['status' => $request->status]);
+        $order->statuses()->create(['status' => $request->status]);
         return response()->json(['message' => 'Status updated']);
     }
 
     public function updateUsbStickOrderStatus(Request $request, $id)
     {
-        $request->validate(['status' => 'required|string']);
+        $statuses = UsbStickOrder::STATUSES;
+        $request->validate(['status' => ['required', 'string', Rule::in(array_keys($statuses))]]);
         $order = UsbStickOrder::findOrFail($id);
         $order->update(['status' => $request->status]);
+        $order->statuses()->create(['status' => $request->status]);
         return response()->json(['message' => 'Status updated']);
     }
 
+    /**
+     * List storage device orders
+     *
+     * Get all storage device orders with customer and device details. Admin only.
+     *
+     * @subgroup Admin
+     * @authenticated
+     *
+     * @responseField data array List of storage device orders.
+     * @responseField data[].id int Order ID.
+     * @responseField data[].customer object The customer who placed the order.
+     * @responseField data[].storage_device object The ordered storage device.
+     * @responseField data[].games array Games included in the order.
+     * @responseField data[].programs array Programs included in the order.
+     * @responseField data[].quantity int Quantity ordered.
+     * @responseField data[].unit_price string Unit price in IQD.
+     * @responseField data[].total_price string Total price in IQD.
+     * @responseField data[].status string Order status.
+     */
     public function storageDeviceOrders()
     {
-        $orders = StorageDeviceOrder::with(['customer', 'storageDevice', 'items.itemable'])->orderBy('created_at', 'desc')->get();
+        $orders = StorageDeviceOrder::with(['customer', 'storageDevice', 'items.itemable', 'statuses'])->orderBy('created_at', 'desc')->get();
         return response()->json(['data' => $orders]);
     }
 
+    /**
+     * Update storage device order status
+     *
+     * Update the status of a storage device order. Admin only.
+     *
+     * @subgroup Admin
+     * @authenticated
+     *
+     * @urlParam id int required The order ID. Example: 1
+     * @bodyParam status string required New status. Must be one of: pending, processing, shipped, delivered, cancelled. Example: processing
+     *
+     * @response {"message": "Status updated"}
+     */
     public function updateStorageDeviceOrderStatus(Request $request, $id)
     {
-        $request->validate(['status' => 'required|string']);
+        $statuses = StorageDeviceOrder::STATUSES;
+        $request->validate([
+            'status' => ['required', 'string', Rule::in(array_keys($statuses))],
+        ]);
         $order = StorageDeviceOrder::findOrFail($id);
         $order->update(['status' => $request->status]);
+        $order->statuses()->create(['status' => $request->status]);
         return response()->json(['message' => 'Status updated']);
     }
 

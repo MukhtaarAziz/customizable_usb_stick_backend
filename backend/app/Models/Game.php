@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $category_id
  * @property int $platform_id
  * @property array|null $tags
- * @property float $size_gb
+ * @property int $size_mb
  * @property int $downloads
  * @property \Illuminate\Support\Carbon|null $date_release
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -40,18 +40,25 @@ class Game extends Model
         'category_id',
         'platform_id',
         'tags',
-        'size_gb',
+        'size_mb',
         'downloads',
         'date_release',
         'active',
     ];
 
+    protected $appends = ['size_gb'];
+
     protected $casts = [
         'tags' => 'array',
         'date_release' => 'date',
-        'size_gb' => 'double',
+        'size_mb' => 'integer',
         'active' => 'boolean',
     ];
+
+    public function getSizeGbAttribute(): float
+    {
+        return $this->size_mb / 1024;
+    }
 
     public function category(): BelongsTo
     {

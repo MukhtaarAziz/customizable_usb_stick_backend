@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $price_iqd
  * @property string $marka
  * @property string $interface
+ * @property bool $customizable
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
@@ -38,13 +39,17 @@ class StorageDevice extends Model
         'price_iqd',
         'marka',
         'interface',
+        'customizable',
     ];
 
     protected $casts = [
         'size_mb' => 'integer',
         'real_size_mb' => 'integer',
         'price_iqd' => 'decimal:2',
+        'customizable' => 'boolean',
     ];
+
+    protected $appends = ['size_gb', 'real_size_gb'];
 
     public function storageType()
     {
@@ -74,5 +79,10 @@ class StorageDevice extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(StorageDeviceOrder::class);
+    }
+
+    public function packages(): HasMany
+    {
+        return $this->hasMany(Package::class);
     }
 }

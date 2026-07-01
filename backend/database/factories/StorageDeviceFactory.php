@@ -33,6 +33,7 @@ class StorageDeviceFactory extends Factory
             'price_iqd' => $priceIQD,
             'marka' => fake()->randomElement($brands),
             'interface' => fake()->randomElement($interfaces),
+            'customizable' => false,
         ];
     }
 

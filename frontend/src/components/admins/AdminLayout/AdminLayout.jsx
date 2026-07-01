@@ -23,6 +23,7 @@ const sidebarLinks = [
     children: [
       { path: '/admin/orders/packages', label: 'Packages' },
       { path: '/admin/orders/usb-sticks', label: 'USB Sticks' },
+      { path: '/admin/orders/storage-devices', label: 'Storage Devices' },
     ],
   },
   { path: '/admin/users', icon: faUsers, label: 'Users' },
