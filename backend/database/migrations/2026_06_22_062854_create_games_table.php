@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('games', function (Blueprint $table) {
@@ -20,16 +17,14 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->foreignId('platform_id')->constrained('platforms')->cascadeOnDelete();
             $table->json('tags')->nullable();
-            $table->double('size_gb', 8, 2)->default(0.00);
+            $table->integer('size_mb')->default(0);
             $table->unsignedBigInteger('downloads')->default(0);
             $table->date('date_release')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('games');

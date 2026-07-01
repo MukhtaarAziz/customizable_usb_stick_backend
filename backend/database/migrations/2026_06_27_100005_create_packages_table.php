@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('description_ar')->nullable();
             $table->foreignId('platform_id')->constrained('platforms')->cascadeOnDelete();
             $table->foreignId('package_category_type_id')->constrained('package_category_types')->cascadeOnDelete();
+            $table->foreignId('storage_device_id')->nullable()->constrained('storage_devices')->nullOnDelete();
             $table->boolean('active')->default(true);
             $table->decimal('price_iqd', 10, 2)->default(0);
             $table->decimal('discount', 3, 2)->default(0.00);

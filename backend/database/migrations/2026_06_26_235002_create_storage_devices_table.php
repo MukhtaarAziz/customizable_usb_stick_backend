@@ -15,11 +15,12 @@ return new class extends Migration
             $table->text('description_en')->nullable();
             $table->text('description_ar')->nullable();
             $table->foreignId('storage_type_id')->constrained('storage_device_types')->cascadeOnDelete();
-            $table->integer('size_mb'); // Nominal/advertised size in MB
-            $table->integer('real_size_mb')->nullable(); // Actual usable size in MB
-            $table->decimal('price_iqd', 12, 2); // Price in Iraqi Dinar
-            $table->string('marka'); // Brand
-            $table->string('interface'); // USB 2.0, USB 3.0, USB-C, SATA, etc.
+            $table->integer('size_mb');
+            $table->integer('real_size_mb')->nullable();
+            $table->decimal('price_iqd', 12, 2);
+            $table->string('marka');
+            $table->string('interface');
+            $table->boolean('customizable')->default(false);
             $table->timestamps();
         });
     }
