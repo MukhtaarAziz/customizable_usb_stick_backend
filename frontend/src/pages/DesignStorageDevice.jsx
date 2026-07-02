@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Container, Row, Col, Card, Button, Spinner, Alert, Badge } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -125,6 +124,7 @@ function DesignStorageDevice({
   locale,
   user,
   onShowAuth,
+  onNavigate,
   selectedUsbId,
   setSelectedUsbId,
   selectedItems,
@@ -157,8 +157,6 @@ function DesignStorageDevice({
   const [showItemDetails, setShowItemDetails] = useState(false)
   const [currentItem, setCurrentItem] = useState(null)
   const [typeFilter, setTypeFilter] = useState('all')
-
-  const navigate = useNavigate()
 
   const [checkoutForm, setCheckoutForm] = useState({
     name: '',
@@ -630,7 +628,7 @@ function DesignStorageDevice({
                 <span className="ds-step-btn__label">{locale === 'ar' ? 'رجوع' : 'Back'}</span>
               </button>
             ) : (
-              <button className="ds-step-btn ds-step-btn--exit" onClick={() => navigate('/')}>
+              <button className="ds-step-btn ds-step-btn--exit" onClick={() => onNavigate('/')}>
                 <FontAwesomeIcon icon={locale === 'ar' ? faArrowRight : faArrowRightFromBracket} />
                 <span className="ds-step-btn__label">{locale === 'ar' ? 'خروج' : 'Exit'}</span>
               </button>

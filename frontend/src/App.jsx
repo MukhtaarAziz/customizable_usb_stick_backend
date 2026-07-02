@@ -32,6 +32,7 @@ import AdminStorageDeviceTypes from './pages/admins/StorageDeviceTypes.jsx'
 import AdminStorageDevices from './pages/admins/StorageDevices.jsx'
 import AdminStorageDeviceOrders from './pages/admins/StorageDeviceOrders.jsx'
 import { AdminThemeProvider } from './contexts/AdminThemeContext'
+import LeaveConfirmationModal from './components/LeaveConfirmationModal/LeaveConfirmationModal.jsx'
 
 const translations = {
   en: {
@@ -115,6 +116,15 @@ function App() {
   const [showUsbModal, setShowUsbModal] = useState(false)
   const [activeStep, setActiveStep] = useState(1)
   const packagesRef = useRef(null)
+
+  // Leave guard state
+  const [showLeaveModal, setShowLeaveModal] = useState(false)
+  const [pendingPath, setPendingPath] = useState(null)
+  const wasOnDesignRef = useRef(false)
+  const isRevertingRef = useRef(false)
+
+  const hasActiveConfig = selectedUsbId || selectedItems.length > 0
+  const shouldGuard = hasActiveConfig && activeStep !== 4
   const t = translations[locale]
 
   useEffect(() => {
@@ -228,30 +238,67 @@ function App() {
     window.scrollTo(0, 0)
   }, [location.pathname])
 
+  // Guard: revert browser back/forward navigation away from /design
+  useEffect(() => {
+    if (location.pathname === '/design') {
+      if (isRevertingRef.current) {
+        isRevertingRef.current = false
+      } else {
+        wasOnDesignRef.current = true
+      }
+      return
+    }
+
+    if (wasOnDesignRef.current && shouldGuard && !isRevertingRef.current) {
+      isRevertingRef.current = true
+      setPendingPath(location.pathname)
+      navigate('/design', { replace: true })
+      setShowLeaveModal(true)
+      wasOnDesignRef.current = false
+      return
+    }
+
+    wasOnDesignRef.current = false
+  }, [location.pathname, shouldGuard])
+
+  // beforeunload for tab/window close
+  useEffect(() => {
+    if (!shouldGuard) return
+    const handler = (e) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [shouldGuard])
+
   const confirmLeaveDesign = (path) => {
     if (path === '/design') {
       navigate(path)
       return
     }
 
-    if (
-      location.pathname === '/design' &&
-      activeStep !== 4 &&
-      (selectedUsbId || selectedItems.length > 0)
-    ) {
-      const msg = locale === 'ar'
-        ? 'لديك إعدادات USB نشطة. مغادرة هذه الصفحة ستؤدي إلى مسح اختياراتك. هل أنت متأكد من المغادرة؟'
-        : 'You have an active USB configuration. Leaving this page will clear your selection. Are you sure you want to leave?'
-
-      if (!window.confirm(msg)) {
-        return
-      }
-      // If confirmed, reset configuration
-      setSelectedUsbId('')
-      setSelectedItems([])
-      setActiveStep(1)
+    if (shouldGuard) {
+      setPendingPath(path)
+      setShowLeaveModal(true)
+      return
     }
+
     navigate(path)
+  }
+
+  const handleConfirmLeave = () => {
+    wasOnDesignRef.current = false
+    setSelectedUsbId('')
+    setSelectedItems([])
+    setActiveStep(1)
+    setShowLeaveModal(false)
+    navigate(pendingPath)
+  }
+
+  const handleCancelLeave = () => {
+    setShowLeaveModal(false)
+    isRevertingRef.current = false
   }
 
   const goHome = () => confirmLeaveDesign('/')
@@ -380,6 +427,7 @@ function App() {
   const handleCloseAuth = () => setShowAuth(false)
 
   return (
+    <>
     <Routes>
       <Route
         element={
@@ -414,6 +462,7 @@ function App() {
               t={t}
               user={user}
               onShowAuth={() => setShowAuth(true)}
+              onNavigate={confirmLeaveDesign}
               selectedUsbId={selectedUsbId}
               setSelectedUsbId={setSelectedUsbId}
               selectedItems={selectedItems}
@@ -450,7 +499,14 @@ function App() {
         <Route path="settings" element={<AdminSettings />} />
       </Route>
     </Routes>
-  )
+
+    <LeaveConfirmationModal
+      show={showLeaveModal}
+      onHide={handleCancelLeave}
+      onConfirm={handleConfirmLeave}
+      locale={locale}
+    />
+    </>  )
 }
 
 export default App
