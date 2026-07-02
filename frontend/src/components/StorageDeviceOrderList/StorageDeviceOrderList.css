@@ -1,0 +1,94 @@
+.storage-device-order-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.storage-device-order-card {
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+}
+
+.storage-device-order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md) !important;
+}
+
+.storage-device-order-card__header {
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.storage-device-order-status-badge {
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-xl);
+  font-weight: 500;
+}
+
+.storage-device-order-detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--surface-page);
+  border-radius: var(--radius-sm);
+  height: 100%;
+}
+
+.storage-device-order-detail-item__icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-card);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.storage-device-order-detail-item__content {
+  flex: 1;
+}
+
+.storage-device-order-detail-item__content small {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.storage-device-order-detail-item__content p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.storage-device-order-message {
+  border: 1px solid var(--border-color);
+}
+
+body.theme-dark .storage-device-order-detail-item {
+  background: var(--surface-overlay);
+}
+
+body.theme-dark .storage-device-order-detail-item__icon {
+  background: var(--surface-page);
+}
+
+@media (max-width: 768px) {
+  .storage-device-order-card__header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .storage-device-order-status-badge {
+    align-self: flex-start;
+  }
+}

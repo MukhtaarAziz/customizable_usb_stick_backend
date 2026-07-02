@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Container, Row, Col, Card, Button, Spinner, Alert, Form, InputGroup, Modal } from 'react-bootstrap'
+import { Container, Row, Col, Card, Button, Spinner, Alert, Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faShoppingCart, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faShoppingCart, faTrashCan, faLayerGroup, faDesktop, faTimes, faSlidersH } from '@fortawesome/free-solid-svg-icons'
 import PackageCard from '../components/PackageCard/PackageCard.jsx'
 import PackageDetailsModal from '../components/PackageDetailsModal/PackageDetailsModal.jsx'
 import Pagination from '../components/admins/Pagination'
 import Cart from '../components/Cart/Cart.jsx'
+import CustomDropdown from '../components/CustomDropdown/CustomDropdown.jsx'
 import './PackagesPage.css'
 
 function PackagesPage({ locale, t, user, onShowAuth }) {
@@ -135,6 +136,16 @@ function PackagesPage({ locale, t, user, onShowAuth }) {
     setPage(1)
   }
 
+  const platformOptions = useMemo(() =>
+    platforms.map(p => ({ value: String(p.id), label: locale === 'ar' ? (p.name_ar || p.name_en) : (p.name_en || p.name_ar) })),
+    [platforms, locale]
+  )
+
+  const packageTypeOptions = useMemo(() =>
+    packageTypes.map(t => ({ value: String(t.id), label: locale === 'ar' ? (t.name_ar || t.name_en) : (t.name_en || t.name_ar) })),
+    [packageTypes, locale]
+  )
+
   const handleViewPackage = (pkg) => {
     setSelectedPackage(pkg)
     setShowDetailsModal(true)
@@ -198,65 +209,66 @@ function PackagesPage({ locale, t, user, onShowAuth }) {
 
       <Row className="g-4">
         <Col xs={12} lg={8}>
-          <Card className="shadow-sm border-0 mb-4">
-            <Card.Header className="d-flex justify-content-between align-items-center bg-transparent border-bottom">
-              <span className="fw-semibold">{locale === 'ar' ? 'تصفية' : 'Filters'}</span>
-              <Button variant="outline-danger" size="sm" onClick={handleClearAll}>
-                <FontAwesomeIcon icon={faTrashCan} className="me-1" />
-                {locale === 'ar' ? 'مسح' : 'Clear'}
-              </Button>
-            </Card.Header>
-            <Card.Body>
+          <Card className="shadow-sm border-0 mb-4 filters-card">
+            <Card.Body className="py-4">
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="d-flex align-items-center gap-2">
+                  <FontAwesomeIcon icon={faSlidersH} className="text-muted" />
+                  <span className="fw-semibold filters-title">
+                    {locale === 'ar' ? 'تصفية الحزم' : 'Filter Packages'}
+                  </span>
+                </div>
+                <Button variant="outline-danger" size="sm" onClick={handleClearAll} className="btn-clear-all">
+                  <FontAwesomeIcon icon={faTrashCan} className="me-1" />
+                  {locale === 'ar' ? 'مسح الكل' : 'Clear All'}
+                </Button>
+              </div>
+
               <Row className="g-3">
                 <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>{locale === 'ar' ? 'البحث' : 'Search'}</Form.Label>
-                    <InputGroup>
-                      <Form.Control
+                  <div className="search-wrapper">
+                    <div className="search-input-group">
+                      <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                      <input
                         type="text"
+                        className="search-field"
                         placeholder={locale === 'ar' ? 'ابحث باسم الحزمة...' : 'Search by package name...'}
                         value={searchInput}
                         onChange={handleSearchChange}
-                        onKeyPress={(e) => e.key === 'Enter' && handleSearchSubmit()}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
                       />
-                      <Button variant="outline-secondary" onClick={handleSearchSubmit}>
-                        <FontAwesomeIcon icon={faSearch} />
-                      </Button>
-                      {search && (
-                        <Button variant="outline-danger" onClick={handleSearchClear}>
-                          {locale === 'ar' ? 'مسح' : 'Clear'}
-                        </Button>
+                      {searchInput && (
+                        <button className="search-clear" onClick={() => setSearchInput('')} type="button">
+                          <FontAwesomeIcon icon={faTimes} />
+                        </button>
                       )}
-                    </InputGroup>
-                  </Form.Group>
+                      <button className="search-btn" onClick={handleSearchSubmit} type="button">
+                        {locale === 'ar' ? 'بحث' : 'Search'}
+                      </button>
+                    </div>
+                  </div>
                 </Col>
 
                 <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>{locale === 'ar' ? 'نوع الحزمة' : 'Package Type'}</Form.Label>
-                    <Form.Select value={packageTypeId} onChange={handlePackageTypeChange}>
-                      <option value="">{locale === 'ar' ? 'الكل' : 'All'}</option>
-                      {packageTypes.map((type) => (
-                        <option key={type.id} value={type.id}>
-                          {locale === 'ar' ? type.name_ar || type.name_en : type.name_en || type.name_ar}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
+                  <CustomDropdown
+                    options={[{ value: '', label: locale === 'ar' ? 'كل الأنواع' : 'All Types' }, ...packageTypeOptions]}
+                    value={packageTypeId}
+                    onChange={handlePackageTypeChange}
+                    placeholder={locale === 'ar' ? 'اختر النوع...' : 'Select type...'}
+                    locale={locale}
+                    icon={faLayerGroup}
+                  />
                 </Col>
 
                 <Col md={4}>
-                  <Form.Group>
-                    <Form.Label>{locale === 'ar' ? 'المنصة' : 'Platform'}</Form.Label>
-                    <Form.Select value={platformId} onChange={handlePlatformChange}>
-                      <option value="">{locale === 'ar' ? 'كل المنصات' : 'All platforms'}</option>
-                      {platforms.map((platform) => (
-                        <option key={platform.id} value={platform.id}>
-                          {locale === 'ar' ? platform.name_ar || platform.name_en : platform.name_en || platform.name_ar}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
+                  <CustomDropdown
+                    options={[{ value: '', label: locale === 'ar' ? 'كل المنصات' : 'All Platforms' }, ...platformOptions]}
+                    value={platformId}
+                    onChange={handlePlatformChange}
+                    placeholder={locale === 'ar' ? 'اختر المنصة...' : 'Select platform...'}
+                    locale={locale}
+                    icon={faDesktop}
+                  />
                 </Col>
               </Row>
             </Card.Body>

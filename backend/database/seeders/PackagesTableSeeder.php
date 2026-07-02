@@ -17,175 +17,135 @@ class PackagesTableSeeder extends Seeder
     {
         $platforms = Platform::pluck('id', 'name_en');
         $types = PackageCategoryType::pluck('id', 'name_en');
-        $games = Game::pluck('id', 'name_en');
-        $programs = Program::pluck('id', 'name_en');
+        $games = Game::all();
+        $programs = Program::all();
         $storageDeviceIds = StorageDevice::pluck('id');
 
-        $packages = [
-            // ---- GAME PACKAGES ----
-            [
-                'name_en' => 'PS5 Action Pack',
-                'name_ar' => 'باقة ألعاب الأكشن PS5',
-                'description_en' => 'Top action titles for PlayStation 5 including God of War, Spider-Man and more.',
-                'description_ar' => 'أفضل ألعاب الأكشن على بلاي ستيشن 5 بما في ذلك غود أوف وار وسبايدر مان والمزيد.',
-                'platform' => 'PS5',
-                'type' => 'Games',
-                'price' => 149.99,
-                'active' => true,
-                'discount' => 0.15,
-                'items' => [
-                    ['type' => 'game', 'name' => 'God of War Ragnarok'],
-                    ['type' => 'game', 'name' => 'Spider-Man 2'],
-                    ['type' => 'game', 'name' => 'Horizon Forbidden West'],
-                    ['type' => 'game', 'name' => 'The Last of Us Part I'],
-                ],
+        if ($storageDeviceIds->isEmpty()) {
+            $storageDeviceIds = collect([null]);
+        }
+
+        $gamesByPlatform = $games->groupBy('platform_id');
+        $programsByPlatform = $programs->groupBy('platform_id');
+
+        $packages = [];
+        $typeNames = ['Games', 'Programs', 'Mixed'];
+
+        $nameTemplates = [
+            'Games' => [
+                'prefix_en' => ['Action', 'Ultimate', 'Mega', 'Elite', 'Premium', 'Classic', 'Legendary', 'Epic', 'Power', 'Golden'],
+                'suffix_en' => ['Pack', 'Bundle', 'Collection', 'Set', 'Kit'],
+                'prefix_ar' => ['أكشن', 'ألتميت', 'ميغا', 'إيليت', 'بريميوم', 'كلاسيك', 'أسطوري', 'ملحمي', 'قوي', 'ذهبي'],
+                'suffix_ar' => ['باقة', 'حزمة', 'مجموعة', 'طقم'],
             ],
-            [
-                'name_en' => 'Xbox Essentials Pack',
-                'name_ar' => 'باقة أساسيات إكس بوكس',
-                'description_en' => 'Must-have Xbox games featuring Halo, Forza, and Starfield.',
-                'description_ar' => 'ألعاب إكس بوكس الأساسية بما في ذلك هالو وفورزا وستارفيلد.',
-                'platform' => 'Xbox',
-                'type' => 'Games',
-                'price' => 129.99,
-                'items' => [
-                    ['type' => 'game', 'name' => 'Halo Infinite'],
-                    ['type' => 'game', 'name' => 'Forza Horizon 5'],
-                    ['type' => 'game', 'name' => 'Starfield'],
-                    ['type' => 'game', 'name' => 'Gears 5'],
-                ],
+            'Programs' => [
+                'prefix_en' => ['Pro', 'Essential', 'Business', 'Creative', 'Developer', 'Master', 'Expert', 'Studio', 'Digital', 'Smart'],
+                'suffix_en' => ['Suite', 'Bundle', 'Collection', 'Pack', 'Kit'],
+                'prefix_ar' => ['برو', 'أساسي', 'أعمال', 'إبداعي', 'مطور', 'ماهر', 'خبير', 'ستوديو', 'رقمي', 'ذكي'],
+                'suffix_ar' => ['مجموعة', 'حزمة', 'باقة', 'طقم'],
             ],
-            [
-                'name_en' => 'PC Gaming Mega Pack',
-                'name_ar' => 'باقة ألعاب الكمبيوتر الضخمة',
-                'description_en' => 'The ultimate PC gaming collection with competitive shooters and RPGs.',
-                'description_ar' => 'مجموعة ألعاب الكمبيوتر المثالية مع ألعاب التصويب التنافسية وألعاب تقمص الأدوار.',
-                'platform' => 'PC',
-                'type' => 'Games',
-                'price' => 99.99,
-                'items' => [
-                    ['type' => 'game', 'name' => 'Counter-Strike 2'],
-                    ['type' => 'game', 'name' => 'Valorant'],
-                    ['type' => 'game', 'name' => 'PUBG: Battlegrounds'],
-                    ['type' => 'game', 'name' => 'Rocket League'],
-                    ['type' => 'game', 'name' => 'Path of Exile'],
-                ],
-            ],
-            // ---- PROGRAM PACKAGES ----
-            [
-                'name_en' => 'Office Productivity Suite',
-                'name_ar' => 'باقة الإنتاجية المكتبية',
-                'description_en' => 'Complete office and productivity programs for Windows.',
-                'description_ar' => 'مجموعة متكاملة من برامج المكتب والإنتاجية لويندوز.',
-                'platform' => 'Windows',
-                'type' => 'Programs',
-                'price' => 199.99,
-                'items' => [
-                    ['type' => 'program', 'name' => 'Microsoft Office 2024'],
-                    ['type' => 'program', 'name' => 'Microsoft Word'],
-                    ['type' => 'program', 'name' => 'Microsoft Excel'],
-                    ['type' => 'program', 'name' => 'Microsoft PowerPoint'],
-                    ['type' => 'program', 'name' => 'Microsoft Outlook'],
-                ],
-            ],
-            [
-                'name_en' => 'Creative Design Bundle',
-                'name_ar' => 'باقة التصميم الإبداعي',
-                'description_en' => 'Professional creative tools for designers and content creators.',
-                'description_ar' => 'أدوات إبداعية احترافية للمصممين ومنشئي المحتوى.',
-                'platform' => 'Windows',
-                'type' => 'Programs',
-                'price' => 299.99,
-                'items' => [
-                    ['type' => 'program', 'name' => 'Adobe Photoshop 2025'],
-                    ['type' => 'program', 'name' => 'Adobe Premiere Pro'],
-                    ['type' => 'program', 'name' => 'Adobe After Effects'],
-                    ['type' => 'program', 'name' => 'Adobe Illustrator'],
-                    ['type' => 'program', 'name' => 'Adobe Lightroom'],
-                ],
-            ],
-            [
-                'name_en' => 'Developer Toolbox',
-                'name_ar' => 'صندوق أدوات المطور',
-                'description_en' => 'Essential development tools and environments for programmers.',
-                'description_ar' => 'أدوات وبيئات تطوير أساسية للمبرمجين.',
-                'platform' => 'Windows',
-                'type' => 'Programs',
-                'price' => 49.99,
-                'items' => [
-                    ['type' => 'program', 'name' => 'Visual Studio Code'],
-                    ['type' => 'program', 'name' => 'GitHub Desktop'],
-                    ['type' => 'program', 'name' => 'Docker Desktop'],
-                    ['type' => 'program', 'name' => 'Postman'],
-                    ['type' => 'program', 'name' => 'MySQL Workbench'],
-                ],
-            ],
-            // ---- MIXED PACKAGES ----
-            [
-                'name_en' => 'Ultimate PC Experience',
-                'name_ar' => 'تجربة الكمبيوتر الشاملة',
-                'description_en' => 'A perfect blend of top games and essential programs for your PC.',
-                'description_ar' => 'مزيج مثالي من أفضل الألعاب والبرامج الأساسية لجهاز الكمبيوتر الخاص بك.',
-                'platform' => 'PC',
-                'type' => 'Mixed',
-                'price' => 249.99,
-                'items' => [
-                    ['type' => 'game', 'name' => 'Minecraft'],
-                    ['type' => 'game', 'name' => 'Rocket League'],
-                    ['type' => 'program', 'name' => 'Visual Studio Code'],
-                    ['type' => 'program', 'name' => 'Discord'],
-                    ['type' => 'program', 'name' => 'Google Chrome'],
-                ],
+            'Mixed' => [
+                'prefix_en' => ['Ultimate', 'Complete', 'Total', 'Supreme', 'All-in-One', 'Master', 'Platinum', 'Deluxe', 'Premium', 'Hyper'],
+                'suffix_en' => ['Experience', 'Combo', 'Bundle', 'Package', 'Edition'],
+                'prefix_ar' => ['شاملة', 'كاملة', 'توتال', 'سوبريم', 'كل في واحد', 'ماستر', 'بلاتينيوم', 'ديلوكس', 'بريميوم', 'هايبر'],
+                'suffix_ar' => ['تجربة', 'مزيج', 'حزمة', 'باقة', 'إصدار'],
             ],
         ];
 
-        $createdPackages = [];
+        $seed = 42;
+
+        for ($i = 0; $i < 50; $i++) {
+            $typeKey = $typeNames[$i % 3];
+            $typeId = $types[$typeKey] ?? null;
+            if (!$typeId) continue;
+
+            $platformId = $platforms->random();
+            $tmpl = $nameTemplates[$typeKey];
+            $ti = $i % count($tmpl['prefix_en']);
+            $si = ($i * 3 + 7) % count($tmpl['suffix_en']);
+
+            $items = [];
+            $firstItemEn = '';
+            $firstItemAr = '';
+            $itemCount = 0;
+
+            if ($typeKey === 'Games' || $typeKey === 'Mixed') {
+                $pool = $gamesByPlatform->get($platformId, $games);
+                if ($pool->isEmpty()) $pool = $games;
+                $pick = $pool->random(min(rand(2, 5), $pool->count()));
+                foreach ($pick as $g) {
+                    $items[] = ['type' => 'game', 'id' => $g->id];
+                }
+                $firstItemEn = $pick->first()->name_en;
+                $firstItemAr = $pick->first()->name_ar;
+                $itemCount += $pick->count();
+            }
+
+            if ($typeKey === 'Programs' || $typeKey === 'Mixed') {
+                $pool = $programsByPlatform->get($platformId, $programs);
+                if ($pool->isEmpty()) $pool = $programs;
+                $pick = $pool->random(min(rand(2, 5), $pool->count()));
+                foreach ($pick as $p) {
+                    $items[] = ['type' => 'program', 'id' => $p->id];
+                }
+                if (empty($firstItemEn)) {
+                    $firstItemEn = $pick->first()->name_en;
+                    $firstItemAr = $pick->first()->name_ar;
+                }
+                $itemCount += $pick->count();
+            }
+
+            if (empty($items)) continue;
+
+            $nameEn = $tmpl['prefix_en'][$ti] . ' ' . $firstItemEn . ' ' . $tmpl['suffix_en'][$si];
+            $nameAr = $tmpl['prefix_ar'][$ti] . ' ' . $firstItemAr . ' ' . $tmpl['suffix_ar'][$si];
+            $descEn = ($typeKey === 'Mixed'
+                ? "A perfect blend of games and programs featuring {$firstItemEn} and {$itemCount} total items for your device."
+                : "{$tmpl['prefix_en'][$ti]} collection featuring {$firstItemEn} and {$itemCount} carefully selected items.");
+            $descAr = ($typeKey === 'Mixed'
+                ? "مزيج مثالي من الألعاب والبرامج يضم {$firstItemAr} و{$itemCount} عنصراً لجهازك."
+                : "مجموعة {$tmpl['prefix_ar'][$ti]} تضم {$firstItemAr} و{$itemCount} عنصراً مختاراً بعناية.");
+            $price = round(mt_rand(5000, 80000) / 100, 2);
+            $discount = round(mt_rand(0, 3000) / 10000, 2);
+
+            $packages[] = [
+                'name_en' => $nameEn,
+                'name_ar' => $nameAr,
+                'description_en' => $descEn,
+                'description_ar' => $descAr,
+                'platform_id' => $platformId,
+                'type' => $typeKey,
+                'price' => $price,
+                'discount' => $discount,
+                'active' => true,
+                'items' => $items,
+            ];
+        }
 
         foreach ($packages as $pkg) {
-            $platformId = $platforms[$pkg['platform']] ?? null;
             $typeId = $types[$pkg['type']] ?? null;
-
-            if (!$platformId || !$typeId) {
-                continue;
-            }
+            if (!$typeId) continue;
 
             $created = Package::create([
                 'name_en' => $pkg['name_en'],
                 'name_ar' => $pkg['name_ar'],
                 'description_en' => $pkg['description_en'],
                 'description_ar' => $pkg['description_ar'],
-                'platform_id' => $platformId,
+                'platform_id' => $pkg['platform_id'],
                 'package_category_type_id' => $typeId,
-                'active' => $pkg['active'] ?? true,
+                'active' => $pkg['active'],
                 'price_iqd' => $pkg['price'],
-                'discount' => $pkg['discount'] ?? 0.00,
-                'storage_device_id' => $storageDeviceIds->isNotEmpty() ? $storageDeviceIds->random() : null,
-                'views' => rand(100, 5000),
-                'order_count' => rand(10, 500),
+                'discount' => $pkg['discount'],
+                'storage_device_id' => $storageDeviceIds->random(),
+                'views' => mt_rand(100, 5000),
+                'order_count' => mt_rand(10, 500),
             ]);
 
-            $createdPackages[] = $created;
-
             foreach ($pkg['items'] as $item) {
-                $itemableId = null;
-                $itemableClass = null;
-
-                if ($item['type'] === 'game') {
-                    $itemableId = $games[$item['name']] ?? null;
-                    $itemableClass = Game::class;
-                } else {
-                    $itemableId = $programs[$item['name']] ?? null;
-                    $itemableClass = Program::class;
-                }
-
-                if (!$itemableId || !$itemableClass) {
-                    continue;
-                }
-
                 PackageItem::create([
                     'package_id' => $created->id,
-                    'itemable_type' => $itemableClass,
-                    'itemable_id' => $itemableId,
+                    'itemable_type' => $item['type'] === 'game' ? Game::class : Program::class,
+                    'itemable_id' => $item['id'],
                 ]);
             }
         }

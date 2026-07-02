@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { Container, Row, Col, Card, Button } from 'react-bootstrap'
+import { Container, Row, Col, Card, Button, Collapse } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faEnvelope, faPhone, faArrowLeft, faArrowRightFromBracket, faBox, faLocationDot, faMapLocation } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faEnvelope, faPhone, faArrowLeft, faArrowRightFromBracket, faBox, faLocationDot, faMapLocation, faChevronDown, faChevronUp, faHardDrive } from '@fortawesome/free-solid-svg-icons'
 import OrderList from '../components/OrderList/OrderList.jsx'
 import PackageOrderList from '../components/PackageOrderList/PackageOrderList.jsx'
+import StorageDeviceOrderList from '../components/StorageDeviceOrderList/StorageDeviceOrderList.jsx'
 import CustomPagination from '../components/CustomPagination/CustomPagination.jsx'
 import './ProfilePage.css'
 
@@ -20,6 +21,11 @@ function ProfilePage({ user, onLogout, locale, t }) {
   const [packageOrders, setPackageOrders] = useState([])
   const [packageOrdersLoading, setPackageOrdersLoading] = useState(true)
   const [packageOrdersError, setPackageOrdersError] = useState(null)
+
+  const [storageOrders, setStorageOrders] = useState([])
+  const [storageOrdersLoading, setStorageOrdersLoading] = useState(true)
+  const [storageOrdersError, setStorageOrdersError] = useState(null)
+  const [storageOrdersOpen, setStorageOrdersOpen] = useState(false)
 
   useEffect(() => {
     async function loadOrders(page = 1) {
@@ -129,6 +135,59 @@ function ProfilePage({ user, onLogout, locale, t }) {
     }
 
     loadPackageOrders()
+  }, [user, locale])
+
+  useEffect(() => {
+    async function loadStorageOrders() {
+      try {
+        setStorageOrdersLoading(true)
+        setStorageOrdersError(null)
+
+        if (!user) {
+          setStorageOrdersError(locale === 'ar' ? 'يرجى تسجيل الدخول' : 'Please login')
+          setStorageOrdersLoading(false)
+          return
+        }
+
+        const token = user?.token || localStorage.getItem('authToken')
+
+        if (!token) {
+          setStorageOrdersError(locale === 'ar' ? 'يرجى تسجيل الدخول' : 'Please login')
+          setStorageOrdersLoading(false)
+          return
+        }
+
+        const response = await fetch('/api/storage-device-orders', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+          }
+        })
+
+        if (!response.ok) {
+          throw new Error(locale === 'ar' ? 'فشل تحميل طلبات أجهزة التخزين' : 'Failed to load storage device orders')
+        }
+
+        const data = await response.json()
+
+        let ordersArray = []
+        if (Array.isArray(data)) {
+          ordersArray = data
+        } else if (data.data && Array.isArray(data.data)) {
+          ordersArray = data.data
+        } else if (data.data && typeof data.data === 'object') {
+          ordersArray = [data.data]
+        }
+
+        setStorageOrders(ordersArray)
+      } catch (err) {
+        setStorageOrdersError(err.message)
+      } finally {
+        setStorageOrdersLoading(false)
+      }
+    }
+
+    loadStorageOrders()
   }, [user, locale])
 
   const handlePageChange = (page) => {
@@ -342,6 +401,50 @@ function ProfilePage({ user, onLogout, locale, t }) {
                       loading={packageOrdersLoading}
                       error={packageOrdersError}
                     />
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+
+            <Row className="mt-4">
+              <Col xs={12}>
+                <Card className="profile-panel shadow-sm">
+                  <Card.Body className="p-3 p-md-4">
+                    <div
+                      className="d-flex align-items-center gap-3 mb-0"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setStorageOrdersOpen(!storageOrdersOpen)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setStorageOrdersOpen(!storageOrdersOpen) } }}
+                    >
+                      <div className="panel-icon panel-icon--orders">
+                        <FontAwesomeIcon icon={faHardDrive} />
+                      </div>
+                      <div className="flex-grow-1">
+                        <h5 className="fw-bold mb-0">
+                          {locale === 'ar' ? 'طلبات أجهزة التخزين' : 'Storage Device Orders'}
+                        </h5>
+                        <p className="text-muted small mb-0">
+                          {locale === 'ar' ? 'سجل طلباتك لأجهزة التخزين' : 'Your storage device order history'}
+                        </p>
+                      </div>
+                      <FontAwesomeIcon
+                        icon={storageOrdersOpen ? faChevronUp : faChevronDown}
+                        className="text-muted"
+                      />
+                    </div>
+
+                    <Collapse in={storageOrdersOpen}>
+                      <div className="mt-3">
+                        <StorageDeviceOrderList
+                          orders={storageOrders}
+                          locale={locale}
+                          loading={storageOrdersLoading}
+                          error={storageOrdersError}
+                        />
+                      </div>
+                    </Collapse>
                   </Card.Body>
                 </Card>
               </Col>
